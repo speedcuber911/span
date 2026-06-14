@@ -29,12 +29,15 @@
 		6DC8B95BE30D261BB5755ACA /* AboutYouView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FE800D2814DFDB773AB206 /* AboutYouView.swift */; };
 		70ACC7E07A2BDEA7EA8D5E2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9335FD5DC81DC03019E7A6A7 /* Assets.xcassets */; };
 		733A99151FE08DE2BF7C784E /* Sparkline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813012D56F9803601D460709 /* Sparkline.swift */; };
+		7526A74FDE7CAB95A63D941A /* CGMConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52745DC6E9087ABBA806E4E6 /* CGMConnectionManager.swift */; };
 		78C17984D46696B7F6DC5716 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACED1C8E65CE6B9D067BE32 /* TodayView.swift */; };
 		7CCA3FA76E5BB6FEE8C56112 /* MockSpanAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19431407D93B55FBF64F7ABC /* MockSpanAPI.swift */; };
 		7F335627F0D5631809445A36 /* NaturalFrequencyGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298D7EBA7E957ACAF3786007 /* NaturalFrequencyGrid.swift */; };
+		89111CBEA8C6B92F6B534CB0 /* GlucoseAlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D053F2F2C8363BE0A9BE1D /* GlucoseAlertManager.swift */; };
 		8F793C759C2ADB24C1A547F0 /* CitationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7F3F7E826D7924A63CF38 /* CitationSheet.swift */; };
 		9603CDF41037273F73E6EA18 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5EC306D7FD293906B93FB0 /* DTOs.swift */; };
 		989974B89E44EF6495718FBE /* ViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B725A94BD048A8E30BC6A33 /* ViewModels.swift */; };
+		9A359D5AD66DDDE2AD5FF66A /* GlucoseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36973307E08CF3E6F38D84A /* GlucoseStore.swift */; };
 		A042A1D5D88D54152C3AA428 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6336F2F37A568A5D58A2E6C8 /* AppEnvironment.swift */; };
 		A290AC2725FA0853E9B5547F /* DoctorVisitPrepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE034CA10F81E36BCF4C7388 /* DoctorVisitPrepView.swift */; };
 		A6C4D11107D862891C1B7AA3 /* SystemsOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EAB0BA990547E07743A4CE /* SystemsOverviewView.swift */; };
@@ -74,6 +77,7 @@
 		427EF1D0CB5E4382D52D9EE5 /* SharedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViews.swift; sourceTree = "<group>"; };
 		4ACED1C8E65CE6B9D067BE32 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		4E5EC306D7FD293906B93FB0 /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		52745DC6E9087ABBA806E4E6 /* CGMConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGMConnectionManager.swift; sourceTree = "<group>"; };
 		53DC20EB63293A03E9EC993F /* Glow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Glow.swift; sourceTree = "<group>"; };
 		53E34D50235BA544DCE11B6F /* CitationChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationChip.swift; sourceTree = "<group>"; };
 		54D1C101B42F63595B03BE07 /* ZoneIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneIndicator.swift; sourceTree = "<group>"; };
@@ -87,6 +91,7 @@
 		7EC5F79104920DE8BAA0628D /* AskSpanPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskSpanPill.swift; sourceTree = "<group>"; };
 		813012D56F9803601D460709 /* Sparkline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sparkline.swift; sourceTree = "<group>"; };
 		865AFEBB506E06AF846EC971 /* SpanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpanApp.swift; sourceTree = "<group>"; };
+		86D053F2F2C8363BE0A9BE1D /* GlucoseAlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseAlertManager.swift; sourceTree = "<group>"; };
 		8E3E9064C0FC7C4FBB61C695 /* LiveSpanAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSpanAPI.swift; sourceTree = "<group>"; };
 		9335FD5DC81DC03019E7A6A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		94F371F90844CC174CEA0821 /* sample-data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "sample-data.json"; sourceTree = "<group>"; };
@@ -104,6 +109,7 @@
 		E41482A2FA2D088C06E40BBD /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		EF84EE857B80FECEFD5485E7 /* HealthContextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthContextView.swift; sourceTree = "<group>"; };
 		F23063D1FA522C1A05A5E35A /* TrafficLightDot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficLightDot.swift; sourceTree = "<group>"; };
+		F36973307E08CF3E6F38D84A /* GlucoseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseStore.swift; sourceTree = "<group>"; };
 		F7F5C92C8595BBC6014EFBCC /* CheckInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInView.swift; sourceTree = "<group>"; };
 		FD78E18085AA8DE31134323D /* BluetoothScanManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothScanManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,8 +120,11 @@
 			children = (
 				AA4BFF557AC3487CCEF5241B /* AiDEXDecoder.swift */,
 				FD78E18085AA8DE31134323D /* BluetoothScanManager.swift */,
+				52745DC6E9087ABBA806E4E6 /* CGMConnectionManager.swift */,
 				6747E8ADE508D4102AA7F2BA /* CGMView.swift */,
+				86D053F2F2C8363BE0A9BE1D /* GlucoseAlertManager.swift */,
 				01E52BE48CCFBD728E3E09B3 /* GlucoseHealthKitManager.swift */,
+				F36973307E08CF3E6F38D84A /* GlucoseStore.swift */,
 			);
 			path = CGM;
 			sourceTree = "<group>";
@@ -326,6 +335,7 @@
 				F0EEEE2C632A9191C90C3580 /* BiologicalAgeView.swift in Sources */,
 				D931AE4A6AE7C66C4CE212C2 /* BluetoothScanManager.swift in Sources */,
 				521A4C8BC41D55BC2AEAF6C6 /* BundledSpanAPI.swift in Sources */,
+				7526A74FDE7CAB95A63D941A /* CGMConnectionManager.swift in Sources */,
 				5772A19047EFD207F7B8BB82 /* CGMView.swift in Sources */,
 				3CF4156E98449F29E4A9D200 /* CheckInView.swift in Sources */,
 				DA1BE47B80943DBF062D869C /* CitationChip.swift in Sources */,
@@ -336,7 +346,9 @@
 				24F91E81676CA6EF92C22B40 /* DataConsentView.swift in Sources */,
 				A290AC2725FA0853E9B5547F /* DoctorVisitPrepView.swift in Sources */,
 				5F9BDF20B5447298508BF564 /* Glow.swift in Sources */,
+				89111CBEA8C6B92F6B534CB0 /* GlucoseAlertManager.swift in Sources */,
 				D4957F59BD131E46DD5683C8 /* GlucoseHealthKitManager.swift in Sources */,
+				9A359D5AD66DDDE2AD5FF66A /* GlucoseStore.swift in Sources */,
 				BE2670C6B70AB5E17C8590FD /* HealthContextView.swift in Sources */,
 				37B17CF642B55CE6FDFD325C /* LiveSpanAPI.swift in Sources */,
 				7CCA3FA76E5BB6FEE8C56112 /* MockSpanAPI.swift in Sources */,

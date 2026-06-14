@@ -22,14 +22,18 @@
 	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Span connects to your continuous glucose monitor over Bluetooth to read your glucose readings, including in the background, and alert you to highs and lows.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Span uses the camera to scan paper lab reports.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Span reads steps, sleep, HRV, resting heart rate and blood glucose to show whole-person trends and CGM readings.</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Span scans for nearby Bluetooth devices to detect a continuous glucose monitor. It only reads advertised data and never connects or pairs.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Span uses the microphone for the Ask Span voice consultant. Audio is never stored.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
