@@ -4,7 +4,7 @@ Native iOS client for Project Span. Premium-but-restrained "Clinical Precision"
 experience: organ-system tiles (never one composite score), three-zone traffic
 light, cite-and-defer educational tone, India-only.
 
-- **Target:** iOS 17+ · Swift 5.9+ · SwiftUI · bundle id `ai.sigiq.span` · target "Span"
+- **Target:** iOS 17+ · Swift 5.9+ · SwiftUI · bundle id `com.parikshit.span` · target "Span"
 - **Architecture:** Observation framework (`@Observable` models, `@State` /
   `@Environment` / `@Bindable`), `NavigationStack` + type-safe `Route` enum,
   Swift Charts for trends. **Thin client — no medical logic on device:** the

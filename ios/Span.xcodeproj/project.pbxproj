@@ -397,7 +397,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.sigiq.span;
+				PRODUCT_BUNDLE_IDENTIFIER = com.parikshit.span;
 				PRODUCT_NAME = Span;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -419,7 +419,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.sigiq.span;
+				PRODUCT_BUNDLE_IDENTIFIER = com.parikshit.span;
 				PRODUCT_NAME = Span;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
