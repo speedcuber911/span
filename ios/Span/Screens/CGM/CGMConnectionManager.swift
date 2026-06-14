@@ -707,6 +707,13 @@ extension CGMConnectionManager: CBPeripheralDelegate {
         connectionState = .subscribing
         addLog("Subscribing to CGM Measurement 0x2AA7 notifications…", .info)
         peripheral.setNotifyValue(true, for: m)
+
+        // ROBUSTNESS: the subscribe callback can hang silently if the encrypted
+        // characteristic needs pairing the sensor won't complete. Arm the
+        // session-start watchdog NOW (not only after a successful subscribe), so
+        // the fallback still runs even if didUpdateNotificationStateFor never fires.
+        armSessionStartTimer()
+        addLog("Armed \(Int(Self.sessionStartTimeout))s watchdog (fires session-start if no glucose / no subscribe callback).", .info)
     }
 
     func peripheral(_ peripheral: CBPeripheral,

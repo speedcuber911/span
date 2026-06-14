@@ -536,13 +536,15 @@ private struct ConnectProbeView: View {
                 instructionBanner
                 liveCard
                 connectControls
+                // Diagnostic log directly under the status so the GATT trace is
+                // always visible while connecting (no scrolling needed).
+                diagnosticLog
                 if !store.samples.isEmpty {
                     statsRow
                     trendChartCard
                 }
                 alertsSection
                 if let note = manager.featureNote { featureRow(note) }
-                diagnosticLog
             }
             .padding(.horizontal, SpanSpacing.screenH)
             .padding(.top, SpanSpacing.md)
