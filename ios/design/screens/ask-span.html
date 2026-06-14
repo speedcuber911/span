@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Span Health - Span Consultant (Voice)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Listening Pulse Animation */
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+                box-shadow: 0 0 0 0 rgba(0, 91, 191, 0.4);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(0, 91, 191, 0);
+            }
+            100% {
+                transform: scale(0.8);
+                box-shadow: 0 0 0 0 rgba(0, 91, 191, 0);
+            }
+        }
+
+        .pulse-active {
+            animation: pulse-ring 2s infinite;
+        }
+
+        /* Voice Waveform Animation */
+        @keyframes wave {
+            0% { transform: scaleY(1); }
+            50% { transform: scaleY(0.4); }
+            100% { transform: scaleY(1); }
+        }
+
+        .bar {
+            animation: wave 1.2s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+        
+        .bar:nth-child(1) { animation-delay: 0.1s; }
+        .bar:nth-child(2) { animation-delay: 0.3s; }
+        .bar:nth-child(3) { animation-delay: 0.6s; }
+        .bar:nth-child(4) { animation-delay: 0.2s; }
+        .bar:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface": "#1a1c1f",
+                      "surface-bright": "#f9f9fe",
+                      "outline": "#727785",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed-variant": "#004493",
+                      "clinical-band": "rgba(60, 60, 67, 0.12)",
+                      "secondary": "#006e2c",
+                      "optimal-border": "rgba(52, 168, 83, 0.4)",
+                      "on-secondary-container": "#00722f",
+                      "secondary-container": "#86f898",
+                      "on-error-container": "#93000a",
+                      "text-primary": "#000000",
+                      "on-surface-variant": "#414754",
+                      "surface-container-highest": "#e2e2e7",
+                      "surface-container-high": "#e8e8ed",
+                      "primary": "#005bbf",
+                      "primary-fixed-dim": "#adc7ff",
+                      "on-primary": "#ffffff",
+                      "on-background": "#1a1c1f",
+                      "on-secondary": "#ffffff",
+                      "inverse-primary": "#adc7ff",
+                      "error": "#ba1a1a",
+                      "background": "#f9f9fe",
+                      "primary-container": "#1a73e8",
+                      "on-primary-container": "#ffffff",
+                      "surface-tint": "#005bc0",
+                      "tertiary": "#9e4300",
+                      "on-secondary-fixed-variant": "#005320",
+                      "inverse-on-surface": "#f0f0f5",
+                      "status-green-optimal": "#34A853",
+                      "outline-variant": "#c1c6d6",
+                      "on-tertiary-fixed-variant": "#783100",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#ffdbcb",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#c55500",
+                      "on-tertiary-container": "#0e0200",
+                      "inverse-surface": "#2e3034",
+                      "optimal-fill": "#E6F4EA",
+                      "secondary-fixed": "#89fa9b",
+                      "text-tertiary": "#8E8E93",
+                      "on-primary-fixed": "#001a41",
+                      "secondary-fixed-dim": "#6ddd81",
+                      "on-secondary-fixed": "#002108",
+                      "surface-container-low": "#f3f3f8",
+                      "on-tertiary-fixed": "#341100",
+                      "status-red-clinical": "#D93025",
+                      "primary-fixed": "#d8e2ff",
+                      "surface-container": "#ededf2",
+                      "surface-dim": "#d9dade",
+                      "surface-variant": "#e2e2e7",
+                      "status-blue-low": "#1A73E8",
+                      "status-yellow-monitor": "#FBBC04",
+                      "on-error": "#ffffff",
+                      "text-secondary": "#636366",
+                      "surface": "#f9f9fe",
+                      "tertiary-fixed-dim": "#ffb691"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "touch-target": "44px",
+                      "base": "4px",
+                      "md": "16px",
+                      "sm": "12px",
+                      "margin-horizontal": "16px",
+                      "lg": "24px",
+                      "gutter": "12px",
+                      "xs": "8px",
+                      "xl": "32px"
+              },
+              "fontFamily": {
+                      "display-large": ["Inter"],
+                      "footnote": ["Inter"],
+                      "title-2": ["Inter"],
+                      "body": ["Inter"],
+                      "headline": ["Inter"],
+                      "data-value-lg": ["Inter"],
+                      "caption-2": ["Inter"],
+                      "title-2-mobile": ["Inter"],
+                      "callout": ["Inter"]
+              },
+              "fontSize": {
+                      "display-large": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                      "footnote": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.08px", "fontWeight": "400" }],
+                      "title-2": ["22px", { "lineHeight": "28px", "letterSpacing": "0.35px", "fontWeight": "600" }],
+                      "body": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "400" }],
+                      "headline": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "600" }],
+                      "data-value-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                      "caption-2": ["11px", { "lineHeight": "13px", "letterSpacing": "0.06px", "fontWeight": "500" }],
+                      "title-2-mobile": ["20px", { "lineHeight": "25px", "fontWeight": "600" }],
+                      "callout": ["16px", { "lineHeight": "21px", "letterSpacing": "-0.32px", "fontWeight": "400" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body h-screen flex flex-col overflow-hidden antialiased">
+<!-- Top App Bar (Modal variant) -->
+<header class="flex justify-between items-center w-full px-margin-horizontal h-touch-target bg-surface/80 backdrop-blur-md z-40 fixed top-0 border-b border-clinical-band">
+<button aria-label="Close" class="h-touch-target w-touch-target flex items-center justify-start text-text-secondary hover:text-primary transition-colors duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+<div class="font-headline text-headline text-text-primary text-center flex-1">
+            Span Consultant
+        </div>
+<button aria-label="Settings" class="h-touch-target w-touch-target flex items-center justify-end text-text-secondary hover:text-primary transition-colors duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_horiz</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col pt-touch-target pb-32 px-margin-horizontal relative overflow-hidden">
+<!-- AI Disclosure Reminder -->
+<div class="flex justify-center mt-sm mb-lg">
+<div class="inline-flex items-center gap-2 bg-surface-container-low px-sm py-xs rounded-full border border-clinical-band shadow-sm">
+<span class="material-symbols-outlined text-text-secondary text-[16px]" style="font-variation-settings: 'FILL' 0;">info</span>
+<span class="font-footnote text-footnote text-text-secondary">AI generated guidance. Not medical advice.</span>
+</div>
+</div>
+<!-- Live Caption Transcript Area -->
+<div class="flex-1 overflow-y-auto flex flex-col justify-end pb-lg space-y-md" id="transcript-container">
+<!-- Span Consultant Message -->
+<div class="flex flex-col items-start max-w-[85%] animate-fade-in-up">
+<span class="font-caption-2 text-caption-2 text-text-tertiary mb-1 ml-1">Span Consultant</span>
+<div class="bg-surface-container-low text-on-surface p-sm rounded-2xl rounded-tl-sm border border-clinical-band">
+<p class="font-callout text-callout">Hello. I've reviewed your latest lipid panel results. Your LDL cholesterol has improved since the last test, dropping to 95 mg/dL, placing it in the optimal range.</p>
+</div>
+</div>
+<!-- Span Consultant Follow-up -->
+<div class="flex flex-col items-start max-w-[85%] animate-fade-in-up" style="animation-delay: 0.2s;">
+<div class="bg-surface-container-low text-on-surface p-sm rounded-2xl rounded-tl-sm border border-clinical-band">
+<p class="font-callout text-callout">Would you like to discuss the dietary changes that contributed to this, or review your other markers?</p>
+</div>
+</div>
+<!-- User Live Caption (Typing/Listening state) -->
+<div class="flex flex-col items-end self-end max-w-[85%] mt-lg opacity-80 transition-opacity duration-300" id="live-caption">
+<div class="bg-primary-container text-on-primary-container p-sm rounded-2xl rounded-tr-sm">
+<p class="font-callout text-callout flex items-center gap-2">
+                        I think it was the Mediterranean diet. <span class="inline-block w-2 h-4 bg-on-primary-container animate-pulse rounded-full"></span>
+</p>
+</div>
+</div>
+</div>
+<!-- Fade out for top of transcript -->
+<div class="absolute top-touch-target left-0 w-full h-16 bg-gradient-to-b from-surface to-transparent pointer-events-none"></div>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-lg border-t border-clinical-band pb-safe pt-md px-margin-horizontal flex flex-col items-center z-50">
+<!-- Agent State Indicator -->
+<div class="flex items-center gap-3 mb-md h-8">
+<span class="font-footnote text-footnote text-primary font-medium tracking-wide uppercase">Listening</span>
+<div class="flex items-end h-4 gap-1">
+<div class="w-1 bg-primary rounded-full bar h-full"></div>
+<div class="w-1 bg-primary rounded-full bar h-2/3"></div>
+<div class="w-1 bg-primary rounded-full bar h-full"></div>
+<div class="w-1 bg-primary rounded-full bar h-1/2"></div>
+<div class="w-1 bg-primary rounded-full bar h-3/4"></div>
+</div>
+</div>
+<!-- Microphone Pill -->
+<button class="relative group w-full max-w-[280px] h-14 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg transition-transform duration-200 active:scale-95 touch-none pulse-active" id="mic-button">
+<div class="absolute inset-0 bg-white opacity-0 group-active:opacity-20 rounded-full transition-opacity"></div>
+<span class="material-symbols-outlined mr-2" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="font-headline text-headline font-semibold">Hold to Speak</span>
+</button>
+<!-- Fallback Action -->
+<button class="mt-md mb-sm h-touch-target flex items-center justify-center text-text-secondary hover:text-primary transition-colors font-footnote text-footnote">
+<span class="material-symbols-outlined text-[18px] mr-1" style="font-variation-settings: 'FILL' 0;">keyboard</span>
+            Switch to Text
+        </button>
+</div>
+<!-- Safe area padding for newer iPhones -->
+<style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 24px);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+    </style>
+<script>
+        // Simple micro-interaction for the mic button
+        const micButton = document.getElementById('mic-button');
+        const liveCaption = document.getElementById('live-caption');
+        
+        micButton.addEventListener('touchstart', (e) => {
+            micButton.classList.remove('pulse-active');
+            micButton.style.transform = 'scale(0.96)';
+            liveCaption.style.opacity = '1';
+        });
+
+        micButton.addEventListener('touchend', (e) => {
+            micButton.classList.add('pulse-active');
+            micButton.style.transform = 'scale(1)';
+            liveCaption.style.opacity = '0.5';
+        });
+
+        // Prevent default touch behaviors to make it feel like a native app
+        micButton.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body></html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign In - Span Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#ffdbcb",
+                      "status-green-optimal": "#34A853",
+                      "on-tertiary-fixed-variant": "#783100",
+                      "on-primary-fixed": "#001a41",
+                      "text-primary": "#000000",
+                      "tertiary-fixed-dim": "#ffb691",
+                      "primary": "#005bbf",
+                      "inverse-on-surface": "#f0f0f5",
+                      "surface-bright": "#f9f9fe",
+                      "status-red-clinical": "#D93025",
+                      "tertiary-container": "#c55500",
+                      "optimal-fill": "#E6F4EA",
+                      "outline-variant": "#c1c6d6",
+                      "text-tertiary": "#8E8E93",
+                      "inverse-primary": "#adc7ff",
+                      "status-yellow-monitor": "#FBBC04",
+                      "on-background": "#1a1c1f",
+                      "secondary-fixed-dim": "#6ddd81",
+                      "on-primary-container": "#ffffff",
+                      "on-tertiary-fixed": "#341100",
+                      "on-secondary-fixed": "#002108",
+                      "optimal-border": "rgba(52, 168, 83, 0.4)",
+                      "surface-variant": "#e2e2e7",
+                      "primary-container": "#1a73e8",
+                      "outline": "#727785",
+                      "on-secondary-container": "#00722f",
+                      "surface-container": "#ededf2",
+                      "inverse-surface": "#2e3034",
+                      "secondary-fixed": "#89fa9b",
+                      "surface-tint": "#005bc0",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#86f898",
+                      "surface-container-high": "#e8e8ed",
+                      "on-primary-fixed-variant": "#004493",
+                      "primary-fixed": "#d8e2ff",
+                      "secondary": "#006e2c",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e2e2e7",
+                      "surface": "#f9f9fe",
+                      "error-container": "#ffdad6",
+                      "background": "#f9f9fe",
+                      "on-surface": "#1a1c1f",
+                      "text-secondary": "#636366",
+                      "on-error": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "clinical-band": "rgba(60, 60, 67, 0.12)",
+                      "surface-container-low": "#f3f3f8",
+                      "status-blue-low": "#1A73E8",
+                      "on-tertiary-container": "#0e0200",
+                      "on-surface-variant": "#414754",
+                      "surface-dim": "#d9dade",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#adc7ff",
+                      "on-secondary-fixed-variant": "#005320",
+                      "error": "#ba1a1a",
+                      "tertiary": "#9e4300"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-horizontal": "16px",
+                      "base": "4px",
+                      "touch-target": "44px",
+                      "lg": "24px",
+                      "xs": "8px",
+                      "gutter": "12px",
+                      "sm": "12px",
+                      "md": "16px",
+                      "xl": "32px"
+              },
+              "fontFamily": {
+                      "title-2-mobile": [
+                              "Inter"
+                      ],
+                      "display-large": [
+                              "Inter"
+                      ],
+                      "headline": [
+                              "Inter"
+                      ],
+                      "body": [
+                              "Inter"
+                      ],
+                      "callout": [
+                              "Inter"
+                      ],
+                      "footnote": [
+                              "Inter"
+                      ],
+                      "caption-2": [
+                              "Inter"
+                      ],
+                      "data-value-lg": [
+                              "Inter"
+                      ],
+                      "title-2": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "title-2-mobile": [
+                              "20px",
+                              {
+                                      "lineHeight": "25px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-large": [
+                              "34px",
+                              {
+                                      "lineHeight": "41px",
+                                      "letterSpacing": "0.37px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline": [
+                              "17px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.41px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body": [
+                              "17px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.41px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "callout": [
+                              "16px",
+                              {
+                                      "lineHeight": "21px",
+                                      "letterSpacing": "-0.32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "footnote": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "letterSpacing": "-0.08px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "caption-2": [
+                              "11px",
+                              {
+                                      "lineHeight": "13px",
+                                      "letterSpacing": "0.06px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "data-value-lg": [
+                              "34px",
+                              {
+                                      "lineHeight": "41px",
+                                      "letterSpacing": "0.37px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "title-2": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "0.35px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Main Container -->
+<main class="w-full max-w-md px-margin-horizontal flex flex-col flex-1 relative">
+<!-- Header Spacer -->
+<div class="flex-1"></div>
+<!-- Logo & Value Prop Section -->
+<div class="flex flex-col items-center text-center space-y-xl mb-xl">
+<!-- Minimal Logo / Wordmark -->
+<div class="flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[40px] text-primary" style="font-variation-settings: 'FILL' 1;">
+                    health_and_safety
+                </span>
+<h1 class="font-display-large text-display-large text-primary">Span</h1>
+</div>
+<!-- Value Proposition -->
+<div class="space-y-sm px-md">
+<p class="font-title-2-mobile text-title-2-mobile text-on-surface">
+                    Your health data, clearly.
+                </p>
+<p class="font-body text-body text-text-secondary">
+                    Understand trends. Prepare for your next visit.
+                </p>
+</div>
+</div>
+<!-- Action Section -->
+<div class="w-full flex flex-col items-center space-y-lg mb-[88px]">
+<!-- Sign in with Apple Button -->
+<button class="w-full h-touch-target bg-on-background text-on-primary rounded-lg flex items-center justify-center gap-xs hover:bg-inverse-surface transition-colors duration-200 active:scale-[0.98]">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
+<path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z" opacity="0"></path>
+<path d="M15.4 9.1c-.2-.9-.8-1.7-1.4-2.2-.7-.6-1.5-1-2.4-1.2-.1-.1-.3-.1-.4-.1-.1 0-.1.1-.1.1.1 1.2.6 2.3 1.4 3.1.7.7 1.6 1.3 2.6 1.4.1.1.3.1.4.1h.1c-.1-.6-.2-1.2-.2-1.2zm2.1 2.9c-.8.6-1.5 1.5-1.5 2.6 0 1.2.7 2.1 1.6 2.7.2.1.2.3.1.5-.5.7-1.1 1.3-1.8 1.8-.8.6-1.5 1.2-2.4 1.2-.9 0-1.6-.4-2.3-.9-.7-.5-1.4-.5-2.1 0-.7.5-1.5 1-2.3 1-.9 0-1.6-.6-2.4-1.2-.7-.5-1.3-1.2-1.8-1.8-.1-.2-.1-.4.1-.5.9-.6 1.6-1.5 1.6-2.7 0-1.1-.7-2-1.5-2.6-.2-.1-.2-.3-.1-.5.5-.7 1.1-1.3 1.8-1.8.8-.6 1.5-1.2 2.4-1.2.9 0 1.6.4 2.3.9.7.5 1.4.5 2.1 0 .7-.5 1.5-1 2.3-1 .9 0 1.6.6 2.4 1.2.7.5 1.3 1.2 1.8 1.8.1.3.1.5-.1.5z"></path>
+</svg>
+<span class="font-headline text-headline">Sign in with Apple</span>
+</button>
+</div>
+<div class="flex-1"></div>
+<!-- Footer / Legal -->
+<div class="w-full py-xl px-margin-horizontal mb-20 flex flex-col items-center gap-xs text-center border-t border-clinical-band bg-surface-container-low">
+<p class="font-footnote text-footnote text-text-tertiary">
+                By signing in you agree to our <a class="text-primary underline hover:text-primary opacity-90 transition-opacity" href="#">Terms of Service</a> and <a class="text-primary underline hover:text-primary opacity-90 transition-opacity" href="#">Privacy Policy</a>.
+            </p>
+<p class="font-caption-2 text-caption-2 uppercase tracking-widest text-text-tertiary">
+                India only · Data stored in India
+            </p>
+<p class="font-caption-2 text-caption-2 uppercase tracking-widest text-text-tertiary mt-2">
+                 © 2024 Span Health. Clinical data powered by evidence-based research.
+             </p>
+</div>
+</main>
+</body></html>

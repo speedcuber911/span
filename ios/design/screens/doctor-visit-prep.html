@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Doctor-Visit Prep Sheet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1a1c1f",
+                        "surface-bright": "#f9f9fe",
+                        "outline": "#727785",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#004493",
+                        "clinical-band": "rgba(60, 60, 67, 0.12)",
+                        "secondary": "#006e2c",
+                        "optimal-border": "rgba(52, 168, 83, 0.4)",
+                        "on-secondary-container": "#00722f",
+                        "secondary-container": "#86f898",
+                        "on-error-container": "#93000a",
+                        "text-primary": "#000000",
+                        "on-surface-variant": "#414754",
+                        "surface-container-highest": "#e2e2e7",
+                        "surface-container-high": "#e8e8ed",
+                        "primary": "#005bbf",
+                        "primary-fixed-dim": "#adc7ff",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#adc7ff",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9fe",
+                        "primary-container": "#1a73e8",
+                        "on-primary-container": "#ffffff",
+                        "surface-tint": "#005bc0",
+                        "tertiary": "#9e4300",
+                        "on-secondary-fixed-variant": "#005320",
+                        "inverse-on-surface": "#f0f0f5",
+                        "status-green-optimal": "#34A853",
+                        "outline-variant": "#c1c6d6",
+                        "on-tertiary-fixed-variant": "#783100",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcb",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#c55500",
+                        "on-tertiary-container": "#0e0200",
+                        "inverse-surface": "#2e3034",
+                        "optimal-fill": "#E6F4EA",
+                        "secondary-fixed": "#89fa9b",
+                        "text-tertiary": "#8E8E93",
+                        "on-primary-fixed": "#001a41",
+                        "secondary-fixed-dim": "#6ddd81",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-low": "#f3f3f8",
+                        "on-tertiary-fixed": "#341100",
+                        "status-red-clinical": "#D93025",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container": "#ededf2",
+                        "surface-dim": "#d9dade",
+                        "surface-variant": "#e2e2e7",
+                        "status-blue-low": "#1A73E8",
+                        "status-yellow-monitor": "#FBBC04",
+                        "on-error": "#ffffff",
+                        "text-secondary": "#636366",
+                        "surface": "#f9f9fe",
+                        "tertiary-fixed-dim": "#ffb691"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target": "44px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "12px",
+                        "margin-horizontal": "16px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "xs": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "display-large": ["Inter"],
+                        "footnote": ["Inter"],
+                        "title-2": ["Inter"],
+                        "body": ["Inter"],
+                        "headline": ["Inter"],
+                        "data-value-lg": ["Inter"],
+                        "caption-2": ["Inter"],
+                        "title-2-mobile": ["Inter"],
+                        "callout": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-large": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                        "footnote": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.08px", "fontWeight": "400" }],
+                        "title-2": ["22px", { "lineHeight": "28px", "letterSpacing": "0.35px", "fontWeight": "600" }],
+                        "body": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "400" }],
+                        "headline": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "600" }],
+                        "data-value-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                        "caption-2": ["11px", { "lineHeight": "13px", "letterSpacing": "0.06px", "fontWeight": "500" }],
+                        "title-2-mobile": ["20px", { "lineHeight": "25px", "fontWeight": "600" }],
+                        "callout": ["16px", { "lineHeight": "21px", "letterSpacing": "-0.32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 z-40 bg-surface dark:bg-on-background border-b border-clinical-band flex justify-between items-center w-full px-margin-horizontal h-touch-target sticky top-0 backdrop-blur-md bg-opacity-80">
+<button aria-label="Go back" class="flex items-center justify-center w-touch-target h-touch-target text-primary hover:bg-surface-container-low transition-colors duration-200 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back_ios</span>
+</button>
+<h1 class="font-title-2-mobile text-title-2-mobile font-bold text-primary">Span Health</h1>
+<button class="flex items-center justify-center h-touch-target px-xs text-primary font-headline text-headline hover:bg-surface-container-low transition-colors duration-200 rounded-lg gap-xs">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">picture_as_pdf</span>
+<span>Export</span>
+</button>
+</header>
+<main class="px-margin-horizontal py-lg max-w-2xl mx-auto space-y-xl">
+<!-- Header Section -->
+<section class="space-y-sm">
+<h2 class="font-display-large text-display-large text-text-primary">Doctor-Visit Prep</h2>
+<p class="font-body text-body text-text-secondary">A structured summary of your recent data to share with your physician.</p>
+<div class="flex items-center gap-xs mt-sm bg-surface-container-low px-sm py-xs rounded-lg border border-outline-variant inline-flex">
+<span class="material-symbols-outlined text-text-secondary text-[16px]">calendar_today</span>
+<span class="font-footnote text-footnote text-text-secondary">Generated on Oct 24, 2024</span>
+</div>
+</section>
+<!-- Raise This First Section -->
+<section class="space-y-sm">
+<div class="flex items-center gap-xs mb-md border-b border-clinical-band pb-xs">
+<span class="material-symbols-outlined text-status-yellow-monitor">warning</span>
+<h3 class="font-title-2 text-title-2 text-text-primary">Raise This First</h3>
+</div>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<h4 class="font-headline text-headline text-text-primary">HbA1c Trend</h4>
+<p class="font-footnote text-footnote text-text-secondary">Elevated outside optimal range over 6 months.</p>
+</div>
+<div class="bg-status-yellow-monitor/10 text-status-yellow-monitor px-sm py-xs rounded-full flex items-center gap-base border border-status-yellow-monitor/20">
+<span class="material-symbols-outlined text-[16px] font-bold">trending_up</span>
+<span class="font-caption-2 text-caption-2 font-bold uppercase tracking-wide">Monitor</span>
+</div>
+</div>
+<div class="flex items-baseline gap-xs mt-sm">
+<span class="font-data-value-lg text-data-value-lg text-text-primary">5.8</span>
+<span class="font-callout text-callout text-text-secondary">%</span>
+</div>
+<div class="flex items-center gap-base mt-xs">
+<span class="w-2 h-2 rounded-full bg-status-yellow-monitor"></span>
+<span class="font-footnote text-footnote text-text-secondary">Current Value (Oct 15)</span>
+<span class="font-footnote text-footnote text-outline mx-xs">|</span>
+<span class="font-footnote text-footnote text-text-secondary">Previous: 5.6% (Apr 10)</span>
+</div>
+<div class="mt-md bg-surface-container-low p-sm rounded-lg flex items-start gap-sm">
+<span class="material-symbols-outlined text-text-secondary mt-base text-[20px]">lightbulb</span>
+<p class="font-body text-body text-on-surface-variant">Discuss potential early interventions or continuous glucose monitoring (CGM) options with your doctor.</p>
+</div>
+</div>
+</section>
+<!-- Key Markers at a Glance Table -->
+<section class="space-y-sm">
+<div class="flex items-center gap-xs mb-md border-b border-clinical-band pb-xs">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="font-title-2 text-title-2 text-text-primary">Key Markers at a Glance</h3>
+</div>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="py-sm px-md font-caption-2 text-caption-2 text-text-tertiary uppercase tracking-wider font-semibold">Marker</th>
+<th class="py-sm px-md font-caption-2 text-caption-2 text-text-tertiary uppercase tracking-wider font-semibold text-right">Value</th>
+<th class="py-sm px-md font-caption-2 text-caption-2 text-text-tertiary uppercase tracking-wider font-semibold text-center w-24">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-clinical-band">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-sm px-md">
+<p class="font-body text-body text-text-primary">ApoB</p>
+<p class="font-footnote text-footnote text-text-secondary">Cardiovascular</p>
+</td>
+<td class="py-sm px-md text-right">
+<p class="font-headline text-headline text-text-primary">65 <span class="font-footnote text-footnote text-text-secondary font-normal">mg/dL</span></p>
+</td>
+<td class="py-sm px-md text-center">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-optimal-fill border border-optimal-border text-status-green-optimal">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-sm px-md">
+<p class="font-body text-body text-text-primary">Vitamin D</p>
+<p class="font-footnote text-footnote text-text-secondary">Metabolic</p>
+</td>
+<td class="py-sm px-md text-right">
+<p class="font-headline text-headline text-text-primary">32 <span class="font-footnote text-footnote text-text-secondary font-normal">ng/mL</span></p>
+</td>
+<td class="py-sm px-md text-center">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-status-yellow-monitor/10 border border-status-yellow-monitor/30 text-status-yellow-monitor">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-sm px-md">
+<p class="font-body text-body text-text-primary">HS-CRP</p>
+<p class="font-footnote text-footnote text-text-secondary">Inflammation</p>
+</td>
+<td class="py-sm px-md text-right">
+<p class="font-headline text-headline text-text-primary">0.8 <span class="font-footnote text-footnote text-text-secondary font-normal">mg/L</span></p>
+</td>
+<td class="py-sm px-md text-center">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-optimal-fill border border-optimal-border text-status-green-optimal">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Questions to Ask -->
+<section class="space-y-sm">
+<div class="flex items-center gap-xs mb-md border-b border-clinical-band pb-xs mt-lg">
+<span class="material-symbols-outlined text-primary">forum</span>
+<h3 class="font-title-2 text-title-2 text-text-primary">Questions to Ask</h3>
+</div>
+<!-- Group 1 -->
+<div class="mb-md">
+<h4 class="font-caption-2 text-caption-2 text-text-tertiary uppercase tracking-widest mb-sm px-xs">Metabolic Health</h4>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant divide-y divide-clinical-band">
+<label class="flex items-start gap-sm p-sm hover:bg-surface-container-low cursor-pointer transition-colors group">
+<div class="flex items-center h-5 mt-1">
+<input class="w-5 h-5 rounded border-outline text-primary focus:ring-primary focus:ring-offset-surface-container-lowest bg-transparent transition duration-200" type="checkbox"/>
+</div>
+<div class="flex-1">
+<p class="font-body text-body text-text-primary group-hover:text-primary transition-colors">"Given my recent HbA1c trend, would you recommend I start tracking my glucose continuously for a few weeks?"</p>
+</div>
+</label>
+</div>
+</div>
+<!-- Group 2 -->
+<div class="mb-md">
+<h4 class="font-caption-2 text-caption-2 text-text-tertiary uppercase tracking-widest mb-sm px-xs">Cardiovascular</h4>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant divide-y divide-clinical-band">
+<label class="flex items-start gap-sm p-sm hover:bg-surface-container-low cursor-pointer transition-colors group">
+<div class="flex items-center h-5 mt-1">
+<input class="w-5 h-5 rounded border-outline text-primary focus:ring-primary focus:ring-offset-surface-container-lowest bg-transparent transition duration-200" type="checkbox"/>
+</div>
+<div class="flex-1">
+<p class="font-body text-body text-text-primary group-hover:text-primary transition-colors">"My ApoB is well within the optimal range. Can we discuss extending the interval before my next lipid panel?"</p>
+</div>
+</label>
+</div>
+</div>
+</section>
+<!-- Lifestyle & Supplements to Discuss -->
+<section class="space-y-sm mt-lg">
+<div class="flex items-center gap-xs mb-md border-b border-clinical-band pb-xs">
+<span class="material-symbols-outlined text-primary">local_pharmacy</span>
+<h3 class="font-title-2 text-title-2 text-text-primary">Lifestyle &amp; Supplements to Discuss</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-sm">
+<!-- Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-sm flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-headline text-headline text-text-primary">Vitamin D3 Supplementation</h4>
+<span class="bg-surface-container text-text-secondary text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded">Tier 1 Evidence</span>
+</div>
+<p class="font-footnote text-footnote text-text-secondary mb-sm">To address borderline levels. Discuss appropriate dosage (e.g., 2000-4000 IU/day).</p>
+</div>
+<div class="inline-flex items-center gap-base">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">description</span>
+<span class="font-caption-2 text-caption-2 text-text-tertiary">Endocrine Society Guidelines</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-sm flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-headline text-headline text-text-primary">Zone 2 Cardio</h4>
+<span class="bg-surface-container text-text-secondary text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded">Tier 1 Evidence</span>
+</div>
+<p class="font-footnote text-footnote text-text-secondary mb-sm">Aiming for 150-180 min/week to improve mitochondrial function and metabolic flexibility.</p>
+</div>
+<div class="inline-flex items-center gap-base">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">description</span>
+<span class="font-caption-2 text-caption-2 text-text-tertiary">AHA Recommendations</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl px-margin-horizontal mb-20 flex flex-col items-center gap-xs text-center border-t border-clinical-band bg-surface-container-low dark:bg-surface-dim mt-xl">
+<p class="font-caption-2 text-caption-2 uppercase tracking-widest text-text-tertiary dark:text-outline mb-sm">Span Health</p>
+<p class="font-footnote text-footnote text-text-tertiary dark:text-outline max-w-lg">© 2024 Span Health. Clinical data powered by evidence-based research. This document is for informational purposes only and does not constitute medical advice. Always consult your healthcare provider.</p>
+<div class="flex gap-md mt-sm">
+<a class="font-footnote text-footnote text-text-tertiary hover:text-primary transition-colors opacity-90" href="#">Privacy Policy</a>
+<a class="font-footnote text-footnote text-text-tertiary hover:text-primary transition-colors opacity-90" href="#">Medical Disclaimer</a>
+<a class="font-footnote text-footnote text-text-tertiary hover:text-primary transition-colors opacity-90" href="#">Terms of Service</a>
+</div>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center px-margin-horizontal pb-4 pt-2 bg-surface dark:bg-on-background bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md fixed bottom-0 w-full z-50 border-t border-outline-variant dark:border-outline flat no shadows">
+<button class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant hover:opacity-80 scale-95 active:transition-transform group">
+<span class="material-symbols-outlined mb-1 group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-caption-2 text-caption-2">Today</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant hover:opacity-80 scale-95 active:transition-transform group">
+<span class="material-symbols-outlined mb-1 group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">rebase_edit</span>
+<span class="font-caption-2 text-caption-2">Systems</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant hover:opacity-80 scale-95 active:transition-transform group">
+<span class="material-symbols-outlined mb-1 group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">mic</span>
+<span class="font-caption-2 text-caption-2">Ask Span</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant hover:opacity-80 scale-95 active:transition-transform group">
+<span class="material-symbols-outlined mb-1 group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">assignment_turned_in</span>
+<span class="font-caption-2 text-caption-2">Check-in</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-semibold hover:opacity-80 scale-95 active:transition-transform">
+<span class="material-symbols-outlined mb-1 text-primary" style="font-variation-settings: 'FILL' 1;">preliminary</span>
+<span class="font-caption-2 text-caption-2 text-primary">Prep</span>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Span Health - Metabolic System Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1a1c1f",
+                        "surface-bright": "#f9f9fe",
+                        "outline": "#727785",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#004493",
+                        "clinical-band": "rgba(60, 60, 67, 0.12)",
+                        "secondary": "#006e2c",
+                        "optimal-border": "rgba(52, 168, 83, 0.4)",
+                        "on-secondary-container": "#00722f",
+                        "secondary-container": "#86f898",
+                        "on-error-container": "#93000a",
+                        "text-primary": "#000000",
+                        "on-surface-variant": "#414754",
+                        "surface-container-highest": "#e2e2e7",
+                        "surface-container-high": "#e8e8ed",
+                        "primary": "#005bbf",
+                        "primary-fixed-dim": "#adc7ff",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#adc7ff",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9fe",
+                        "primary-container": "#1a73e8",
+                        "on-primary-container": "#ffffff",
+                        "surface-tint": "#005bc0",
+                        "tertiary": "#9e4300",
+                        "on-secondary-fixed-variant": "#005320",
+                        "inverse-on-surface": "#f0f0f5",
+                        "status-green-optimal": "#34A853",
+                        "outline-variant": "#c1c6d6",
+                        "on-tertiary-fixed-variant": "#783100",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcb",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#c55500",
+                        "on-tertiary-container": "#0e0200",
+                        "inverse-surface": "#2e3034",
+                        "optimal-fill": "#E6F4EA",
+                        "secondary-fixed": "#89fa9b",
+                        "text-tertiary": "#8E8E93",
+                        "on-primary-fixed": "#001a41",
+                        "secondary-fixed-dim": "#6ddd81",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-low": "#f3f3f8",
+                        "on-tertiary-fixed": "#341100",
+                        "status-red-clinical": "#D93025",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container": "#ededf2",
+                        "surface-dim": "#d9dade",
+                        "surface-variant": "#e2e2e7",
+                        "status-blue-low": "#1A73E8",
+                        "status-yellow-monitor": "#FBBC04",
+                        "on-error": "#ffffff",
+                        "text-secondary": "#636366",
+                        "surface": "#f9f9fe",
+                        "tertiary-fixed-dim": "#ffb691"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target": "44px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "12px",
+                        "margin-horizontal": "16px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "xs": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "display-large": ["Inter"],
+                        "footnote": ["Inter"],
+                        "title-2": ["Inter"],
+                        "body": ["Inter"],
+                        "headline": ["Inter"],
+                        "data-value-lg": ["Inter"],
+                        "caption-2": ["Inter"],
+                        "title-2-mobile": ["Inter"],
+                        "callout": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-large": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                        "footnote": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.08px", "fontWeight": "400" }],
+                        "title-2": ["22px", { "lineHeight": "28px", "letterSpacing": "0.35px", "fontWeight": "600" }],
+                        "body": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "400" }],
+                        "headline": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "600" }],
+                        "data-value-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                        "caption-2": ["11px", { "lineHeight": "13px", "letterSpacing": "0.06px", "fontWeight": "500" }],
+                        "title-2-mobile": ["20px", { "lineHeight": "25px", "fontWeight": "600" }],
+                        "callout": ["16px", { "lineHeight": "21px", "letterSpacing": "-0.32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9fe; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-fab { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased pb-32">
+<!-- TopAppBar (Semantic Intent: Top Level Destination -> Systems) -->
+<header class="docked full-width top-0 z-40 bg-surface dark:bg-on-background border-b border-clinical-band flex justify-between items-center w-full px-margin-horizontal h-touch-target sticky">
+<button aria-label="Go back" class="text-primary dark:text-primary-fixed hover:bg-surface-container-low transition-colors duration-200 h-touch-target w-touch-target flex items-center justify-center -ml-2 rounded-full">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</button>
+<h1 class="font-title-2-mobile text-title-2-mobile font-bold text-primary">Span Health</h1>
+<div class="text-primary dark:text-primary-fixed h-touch-target w-touch-target flex items-center justify-center rounded-full bg-surface-container overflow-hidden">
+<span class="font-caption-2 text-caption-2">UP</span>
+</div>
+</header>
+<main class="px-margin-horizontal pt-lg max-w-2xl mx-auto">
+<!-- System Header -->
+<div class="mb-lg flex items-center gap-sm">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-title-2">vital_signs</span>
+</div>
+<div>
+<h2 class="font-display-large text-display-large text-text-primary">Metabolic</h2>
+<p class="font-body text-body text-text-secondary">Energy synthesis &amp; storage</p>
+</div>
+</div>
+<!-- Why This Matters Container -->
+<section class="mb-xl bg-surface-container-lowest border border-clinical-band rounded-xl p-md">
+<div class="flex items-start gap-sm mb-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">info</span>
+<h3 class="font-headline text-headline text-text-primary">Why this matters</h3>
+</div>
+<p class="font-body text-body text-on-surface-variant mb-md">
+                Metabolic dysfunction is a primary driver of chronic disease. Optimizing these markers directly impacts healthspan by addressing the root cause of the "Four Horsemen" diseases.
+            </p>
+<!-- Citation Chips -->
+<div class="flex flex-wrap gap-xs">
+<button class="flex items-center gap-1 bg-surface-container-low rounded-full px-3 py-1.5 border border-outline-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[14px]">menu_book</span>
+<span class="font-caption-2 text-caption-2 text-text-secondary">Peter Attia: Four Horsemen</span>
+</button>
+<button class="flex items-center gap-1 bg-surface-container-low rounded-full px-3 py-1.5 border border-outline-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[14px]">menu_book</span>
+<span class="font-caption-2 text-caption-2 text-text-secondary">Hallmarks of Aging</span>
+</button>
+</div>
+</section>
+<!-- Parameters List -->
+<section class="space-y-sm mb-xl">
+<h3 class="font-headline text-headline text-text-primary mb-sm">Key Biomarkers</h3>
+<!-- HbA1c Card (Red/Clinical) -->
+<div class="bg-surface-container-lowest border border-clinical-band rounded-xl p-md flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-headline text-text-primary">HbA1c</h4>
+<p class="font-caption-2 text-caption-2 text-text-secondary mt-1">Average blood sugar (3 mo)</p>
+</div>
+<div class="text-right flex flex-col items-end">
+<span class="font-title-2 text-title-2 text-status-red-clinical">6.9%</span>
+<div class="flex items-center gap-1 text-status-red-clinical bg-error-container px-2 py-0.5 rounded-full mt-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span class="font-caption-2 text-caption-2">High</span>
+</div>
+</div>
+</div>
+<!-- Mini Sparkline Placeholder -->
+<div class="h-8 w-full flex items-end justify-between opacity-70">
+<div class="w-1/6 h-2/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-3/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-4/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-5/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-full bg-status-red-clinical rounded-t-sm"></div>
+</div>
+</div>
+<!-- Fasting Glucose Card (Yellow/Monitor) -->
+<div class="bg-surface-container-lowest border border-clinical-band rounded-xl p-md flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-headline text-text-primary">Fasting Glucose</h4>
+<p class="font-caption-2 text-caption-2 text-text-secondary mt-1">Blood sugar at rest</p>
+</div>
+<div class="text-right flex flex-col items-end">
+<span class="font-title-2 text-title-2 text-status-yellow-monitor">102 <span class="font-footnote text-footnote text-text-secondary">mg/dL</span></span>
+<div class="flex items-center gap-1 text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full mt-1">
+<span class="material-symbols-outlined text-[14px]">trending_flat</span>
+<span class="font-caption-2 text-caption-2">Borderline</span>
+</div>
+</div>
+</div>
+<!-- Mini Sparkline Placeholder -->
+<div class="h-8 w-full flex items-end justify-between opacity-70">
+<div class="w-1/6 h-4/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-3/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-5/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-4/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-5/6 bg-status-yellow-monitor rounded-t-sm"></div>
+</div>
+</div>
+<!-- BMI Card (Green/Optimal) -->
+<div class="bg-surface-container-lowest border border-clinical-band rounded-xl p-md flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-headline text-text-primary">BMI</h4>
+<p class="font-caption-2 text-caption-2 text-text-secondary mt-1">Body Mass Index</p>
+</div>
+<div class="text-right flex flex-col items-end">
+<span class="font-title-2 text-title-2 text-status-green-optimal">26.1</span>
+<div class="flex items-center gap-1 text-on-secondary-container bg-optimal-fill px-2 py-0.5 rounded-full mt-1 border border-optimal-border">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+<span class="font-caption-2 text-caption-2">Improving</span>
+</div>
+</div>
+</div>
+<!-- Mini Sparkline Placeholder -->
+<div class="h-8 w-full flex items-end justify-between opacity-70">
+<div class="w-1/6 h-full bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-5/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-4/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-3/6 bg-outline-variant rounded-t-sm"></div>
+<div class="w-1/6 h-2/6 bg-status-green-optimal rounded-t-sm"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- Contextual FAB (Ask Span) -->
+<div class="fixed bottom-24 left-0 right-0 flex justify-center z-40 pointer-events-none px-margin-horizontal">
+<button class="pointer-events-auto flex items-center gap-2 bg-surface/90 dark:bg-surface-dim/90 glass-fab border border-outline-variant rounded-full px-6 py-3 shadow-sm hover:bg-surface transition-colors">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="font-headline text-headline text-text-primary">Ask Span about my Metabolic health</span>
+</button>
+</div>
+<!-- BottomNavBar (Semantic Intent: Systems active) -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md border-t border-outline-variant dark:border-outline flex justify-around items-center px-margin-horizontal pb-4 pt-2 pb-safe">
+<button class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant scale-95 active:transition-transform hover:opacity-80 w-16">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-caption-2 text-caption-2">Today</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-semibold scale-95 active:transition-transform hover:opacity-80 w-16">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">rebase_edit</span>
+<span class="font-caption-2 text-caption-2">Systems</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant scale-95 active:transition-transform hover:opacity-80 w-16">
+<div class="bg-primary-container text-on-primary-container rounded-full p-2 mb-1 shadow-sm">
+<span class="material-symbols-outlined">mic</span>
+</div>
+<span class="font-caption-2 text-caption-2 sr-only">Ask Span</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant scale-95 active:transition-transform hover:opacity-80 w-16">
+<span class="material-symbols-outlined mb-1">assignment_turned_in</span>
+<span class="font-caption-2 text-caption-2">Check-in</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant scale-95 active:transition-transform hover:opacity-80 w-16">
+<span class="material-symbols-outlined mb-1">preliminary</span>
+<span class="font-caption-2 text-caption-2">Prep</span>
+</button>
+</nav>
+<!-- Safe area spacing for iOS -->
+<style>
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .pb-safe { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
+        }
+    </style>
+</body></html>

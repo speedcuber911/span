@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Profile Capture - Demographics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#ffdbcb",
+                      "status-green-optimal": "#34A853",
+                      "on-tertiary-fixed-variant": "#783100",
+                      "on-primary-fixed": "#001a41",
+                      "text-primary": "#000000",
+                      "tertiary-fixed-dim": "#ffb691",
+                      "primary": "#005bbf",
+                      "inverse-on-surface": "#f0f0f5",
+                      "surface-bright": "#f9f9fe",
+                      "status-red-clinical": "#D93025",
+                      "tertiary-container": "#c55500",
+                      "optimal-fill": "#E6F4EA",
+                      "outline-variant": "#c1c6d6",
+                      "text-tertiary": "#8E8E93",
+                      "inverse-primary": "#adc7ff",
+                      "status-yellow-monitor": "#FBBC04",
+                      "on-background": "#1a1c1f",
+                      "secondary-fixed-dim": "#6ddd81",
+                      "on-primary-container": "#ffffff",
+                      "on-tertiary-fixed": "#341100",
+                      "on-secondary-fixed": "#002108",
+                      "optimal-border": "rgba(52, 168, 83, 0.4)",
+                      "surface-variant": "#e2e2e7",
+                      "primary-container": "#1a73e8",
+                      "outline": "#727785",
+                      "on-secondary-container": "#00722f",
+                      "surface-container": "#ededf2",
+                      "inverse-surface": "#2e3034",
+                      "secondary-fixed": "#89fa9b",
+                      "surface-tint": "#005bc0",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#86f898",
+                      "surface-container-high": "#e8e8ed",
+                      "on-primary-fixed-variant": "#004493",
+                      "primary-fixed": "#d8e2ff",
+                      "secondary": "#006e2c",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e2e2e7",
+                      "surface": "#f9f9fe",
+                      "error-container": "#ffdad6",
+                      "background": "#f9f9fe",
+                      "on-surface": "#1a1c1f",
+                      "text-secondary": "#636366",
+                      "on-error": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "clinical-band": "rgba(60, 60, 67, 0.12)",
+                      "surface-container-low": "#f3f3f8",
+                      "status-blue-low": "#1A73E8",
+                      "on-tertiary-container": "#0e0200",
+                      "on-surface-variant": "#414754",
+                      "surface-dim": "#d9dade",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#adc7ff",
+                      "on-secondary-fixed-variant": "#005320",
+                      "error": "#ba1a1a",
+                      "tertiary": "#9e4300"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-horizontal": "16px",
+                      "base": "4px",
+                      "touch-target": "44px",
+                      "lg": "24px",
+                      "xs": "8px",
+                      "gutter": "12px",
+                      "sm": "12px",
+                      "md": "16px",
+                      "xl": "32px"
+              },
+              "fontFamily": {
+                      "title-2-mobile": [
+                              "Inter"
+                      ],
+                      "display-large": [
+                              "Inter"
+                      ],
+                      "headline": [
+                              "Inter"
+                      ],
+                      "body": [
+                              "Inter"
+                      ],
+                      "callout": [
+                              "Inter"
+                      ],
+                      "footnote": [
+                              "Inter"
+                      ],
+                      "caption-2": [
+                              "Inter"
+                      ],
+                      "data-value-lg": [
+                              "Inter"
+                      ],
+                      "title-2": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "title-2-mobile": [
+                              "20px",
+                              {
+                                      "lineHeight": "25px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-large": [
+                              "34px",
+                              {
+                                      "lineHeight": "41px",
+                                      "letterSpacing": "0.37px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline": [
+                              "17px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.41px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body": [
+                              "17px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.41px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "callout": [
+                              "16px",
+                              {
+                                      "lineHeight": "21px",
+                                      "letterSpacing": "-0.32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "footnote": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "letterSpacing": "-0.08px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "caption-2": [
+                              "11px",
+                              {
+                                      "lineHeight": "13px",
+                                      "letterSpacing": "0.06px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "data-value-lg": [
+                              "34px",
+                              {
+                                      "lineHeight": "41px",
+                                      "letterSpacing": "0.37px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "title-2": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "0.35px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        
+        /* Custom form styling to match iOS HIG */
+        .ios-input {
+            appearance: none;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            text-align: right;
+            color: theme('colors.text-primary');
+            font-size: 17px;
+        }
+        .ios-input:focus { outline: none; }
+        .ios-input::placeholder { color: theme('colors.text-tertiary'); }
+        
+        /* Hide standard date picker icon in Webkit */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface h-screen flex flex-col antialiased">
+<!-- TopAppBar (Transactional - Close/Back only, no full nav) -->
+<header class="flex justify-between items-center w-full px-margin-horizontal h-touch-target bg-surface border-b border-clinical-band z-40 shrink-0">
+<button aria-label="Go back" class="w-touch-target h-touch-target flex items-center justify-start text-primary active:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-[24px]">arrow_back_ios</span>
+</button>
+<div class="font-headline text-headline text-text-primary text-center flex-1">
+            Demographics
+        </div>
+<div class="w-touch-target h-touch-target"></div> <!-- Spacer for centering -->
+</header>
+<!-- Progress Indicator -->
+<div class="w-full px-margin-horizontal pt-md pb-sm shrink-0 bg-surface">
+<div class="flex items-center justify-between font-footnote text-footnote text-text-secondary mb-xs">
+<span>Step 1 of 3</span>
+<span>33%</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-[4px] overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-300" style="width: 33%;"></div>
+</div>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto px-margin-horizontal py-lg flex flex-col gap-xl">
+<div class="text-center">
+<h1 class="font-title-2-mobile text-title-2-mobile text-text-primary mb-xs">Let's set your baseline</h1>
+<p class="font-body text-body text-text-secondary">This helps us tailor your clinical insights and standard ranges.</p>
+</div>
+<!-- iOS List Form Container -->
+<div class="bg-surface-container-lowest rounded-xl border border-clinical-band overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+<!-- Date of Birth -->
+<div class="flex items-center justify-between min-h-touch-target px-md py-sm border-b border-clinical-band relative">
+<label class="font-body text-body text-text-primary shrink-0 mr-md" for="dob">Date of Birth</label>
+<div class="flex-1 flex justify-end items-center">
+<input class="ios-input font-body text-body bg-transparent text-right w-full" id="dob" placeholder="DD/MM/YYYY" type="date"/>
+</div>
+</div>
+<!-- Biological Sex -->
+<div class="flex items-center justify-between min-h-touch-target px-md py-sm border-b border-clinical-band">
+<label class="font-body text-body text-text-primary shrink-0 mr-md" for="sex">Biological Sex</label>
+<div class="flex-1 flex justify-end">
+<select %238e8e93\"="" 0="" 24="" 24\"="" class="ios-input font-body text-body bg-transparent text-right w-full appearance-none pr-6 cursor-pointer" height='\"24\"' id="sex" style="background-image: url('data:image/svg+xml;utf8,&lt;svg fill=\" viewbox='\"0' width='\"24\"' xmlns='\"http://www.w3.org/2000/svg\"'>'); background-repeat: no-repeat; background-position-x: 100%; background-position-y: center;"&gt;
+                        <option disabled="" selected="" value="">Select</option>
+<option value="male">Male</option>
+<option value="female">Female</option>
+<option value="intersex">Intersex / Other</option>
+</select>
+</div>
+</div>
+<!-- Height -->
+<div class="flex items-center justify-between min-h-touch-target px-md py-sm border-b border-clinical-band">
+<label class="font-body text-body text-text-primary shrink-0 mr-md" for="height">Height</label>
+<div class="flex-1 flex justify-end items-center gap-xs">
+<input class="ios-input font-body text-body w-20" id="height" oninput="calculateBMI()" placeholder="0" type="number"/>
+<span class="font-body text-body text-text-tertiary">cm</span>
+</div>
+</div>
+<!-- Weight -->
+<div class="flex items-center justify-between min-h-touch-target px-md py-sm">
+<label class="font-body text-body text-text-primary shrink-0 mr-md" for="weight">Weight</label>
+<div class="flex-1 flex justify-end items-center gap-xs">
+<input class="ios-input font-body text-body w-20" id="weight" oninput="calculateBMI()" placeholder="0" step="0.1" type="number"/>
+<span class="font-body text-body text-text-tertiary">kg</span>
+</div>
+</div>
+</div>
+<!-- Calculated BMI Display (Hidden by default) -->
+<div class="hidden flex items-center justify-between bg-surface-container-low rounded-lg p-md border border-clinical-band transition-all duration-300 opacity-0 transform translate-y-2" id="bmi-container">
+<div class="flex flex-col">
+<span class="font-footnote text-footnote text-text-secondary uppercase tracking-wider mb-base">Calculated BMI</span>
+<span class="font-title-2-mobile text-title-2-mobile text-text-primary" id="bmi-value">--</span>
+</div>
+<div class="px-sm py-xs rounded-full font-caption-2 text-caption-2 bg-surface-variant text-text-secondary border border-clinical-band" id="bmi-status">
+                Awaiting input
+            </div>
+</div>
+<!-- Privacy Citation Chip -->
+<div class="flex justify-center mt-auto pb-sm">
+<div class="inline-flex items-center gap-base px-sm py-xs bg-surface-container-high rounded-full border border-clinical-band">
+<span class="material-symbols-outlined text-[14px] text-text-secondary" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-caption-2 text-caption-2 text-text-secondary">Data encrypted &amp; stored securely</span>
+</div>
+</div>
+</main>
+<!-- Bottom Actions (Fixed) -->
+<footer class="w-full px-margin-horizontal pb-lg pt-sm bg-surface border-t border-clinical-band shrink-0 flex flex-col gap-md">
+<button class="w-full min-h-touch-target bg-primary text-on-primary font-headline text-headline rounded-lg flex items-center justify-center active:opacity-80 transition-opacity">
+            Continue
+        </button>
+<button class="w-full min-h-[30px] text-text-secondary font-callout text-callout flex items-center justify-center active:text-text-primary transition-colors">
+            Skip for now
+        </button>
+</footer>
+<script>
+        function calculateBMI() {
+            const heightInput = document.getElementById('height').value;
+            const weightInput = document.getElementById('weight').value;
+            const bmiContainer = document.getElementById('bmi-container');
+            const bmiValueDisplay = document.getElementById('bmi-value');
+            const bmiStatusDisplay = document.getElementById('bmi-status');
+
+            if (heightInput && weightInput && heightInput > 0 && weightInput > 0) {
+                // Height in meters
+                const heightM = heightInput / 100;
+                const bmi = weightInput / (heightM * heightM);
+                const roundedBmi = bmi.toFixed(1);
+
+                bmiValueDisplay.textContent = roundedBmi;
+                
+                // Show container with animation
+                bmiContainer.classList.remove('hidden');
+                // slight delay to allow display:block to apply before animating opacity
+                setTimeout(() => {
+                    bmiContainer.classList.remove('opacity-0', 'translate-y-2');
+                    bmiContainer.classList.add('opacity-100', 'translate-y-0');
+                }, 10);
+
+                // Determine Status Zone (Simplified clinical zones)
+                let statusClass = "bg-surface-variant text-text-secondary";
+                let statusText = "Pending";
+                
+                if (bmi < 18.5) {
+                    statusClass = "bg-[#fef7e0] text-[#b08d00] border-[#fde293]"; // Yellow-ish warning
+                    statusText = "Underweight";
+                } else if (bmi >= 18.5 && bmi < 25) {
+                    statusClass = "bg-optimal-fill text-on-secondary-container border-optimal-border"; // Green optimal
+                    statusText = "Optimal Range";
+                } else if (bmi >= 25 && bmi < 30) {
+                    statusClass = "bg-[#fef7e0] text-[#b08d00] border-[#fde293]"; // Yellow-ish warning
+                    statusText = "Overweight";
+                } else {
+                    statusClass = "bg-error-container text-on-error-container border-[#ffb4ab]"; // Red clinical
+                    statusText = "Obesity";
+                }
+
+                bmiStatusDisplay.className = `px-sm py-xs rounded-full font-caption-2 text-caption-2 border transition-colors duration-300 ${statusClass}`;
+                bmiStatusDisplay.textContent = statusText;
+
+            } else {
+                // Hide if invalid
+                bmiContainer.classList.remove('opacity-100', 'translate-y-0');
+                bmiContainer.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    if (bmiContainer.classList.contains('opacity-0')) {
+                        bmiContainer.classList.add('hidden');
+                    }
+                }, 300);
+            }
+        }
+    </script>
+</body></html>

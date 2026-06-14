@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Span Health - Today</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1a1c1f",
+                        "surface-bright": "#f9f9fe",
+                        "outline": "#727785",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#004493",
+                        "clinical-band": "rgba(60, 60, 67, 0.12)",
+                        "secondary": "#006e2c",
+                        "optimal-border": "rgba(52, 168, 83, 0.4)",
+                        "on-secondary-container": "#00722f",
+                        "secondary-container": "#86f898",
+                        "on-error-container": "#93000a",
+                        "text-primary": "#000000",
+                        "on-surface-variant": "#414754",
+                        "surface-container-highest": "#e2e2e7",
+                        "surface-container-high": "#e8e8ed",
+                        "primary": "#005bbf",
+                        "primary-fixed-dim": "#adc7ff",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#adc7ff",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9fe",
+                        "primary-container": "#1a73e8",
+                        "on-primary-container": "#ffffff",
+                        "surface-tint": "#005bc0",
+                        "tertiary": "#9e4300",
+                        "on-secondary-fixed-variant": "#005320",
+                        "inverse-on-surface": "#f0f0f5",
+                        "status-green-optimal": "#34A853",
+                        "outline-variant": "#c1c6d6",
+                        "on-tertiary-fixed-variant": "#783100",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcb",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#c55500",
+                        "on-tertiary-container": "#0e0200",
+                        "inverse-surface": "#2e3034",
+                        "optimal-fill": "#E6F4EA",
+                        "secondary-fixed": "#89fa9b",
+                        "text-tertiary": "#8E8E93",
+                        "on-primary-fixed": "#001a41",
+                        "secondary-fixed-dim": "#6ddd81",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-low": "#f3f3f8",
+                        "on-tertiary-fixed": "#341100",
+                        "status-red-clinical": "#D93025",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container": "#ededf2",
+                        "surface-dim": "#d9dade",
+                        "surface-variant": "#e2e2e7",
+                        "status-blue-low": "#1A73E8",
+                        "status-yellow-monitor": "#FBBC04",
+                        "on-error": "#ffffff",
+                        "text-secondary": "#636366",
+                        "surface": "#f9f9fe",
+                        "tertiary-fixed-dim": "#ffb691"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target": "44px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "12px",
+                        "margin-horizontal": "16px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "xs": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "display-large": ["Inter"],
+                        "footnote": ["Inter"],
+                        "title-2": ["Inter"],
+                        "body": ["Inter"],
+                        "headline": ["Inter"],
+                        "data-value-lg": ["Inter"],
+                        "caption-2": ["Inter"],
+                        "title-2-mobile": ["Inter"],
+                        "callout": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-large": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                        "footnote": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.08px", "fontWeight": "400" }],
+                        "title-2": ["22px", { "lineHeight": "28px", "letterSpacing": "0.35px", "fontWeight": "600" }],
+                        "body": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "400" }],
+                        "headline": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "600" }],
+                        "data-value-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                        "caption-2": ["11px", { "lineHeight": "13px", "letterSpacing": "0.06px", "fontWeight": "500" }],
+                        "title-2-mobile": ["20px", { "lineHeight": "25px", "fontWeight": "600" }],
+                        "callout": ["16px", { "lineHeight": "21px", "letterSpacing": "-0.32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .material-symbols-outlined.fill { font-variation-settings: 'FILL' 1; }
+        
+        /* Hide scrollbar for clean UI but keep functionality */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-horizontal h-touch-target bg-surface dark:bg-on-background docked full-width top-0 z-40 border-b border-clinical-band flat no shadows transition-colors duration-200 sticky">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed hover:bg-surface-container-low rounded-full p-1 cursor-pointer">arrow_back_ios</span>
+</div>
+<h1 class="font-title-2-mobile text-title-2-mobile font-bold text-primary">Span Health</h1>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant cursor-pointer hover:bg-surface-container-low">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACWYebvnk3Xau4gnZXdZPMvZPuJU-lUabGXHpgrqqzprrXXeJlH7WQIS7JITAOOvdr5IN36kCZZIVbiGDxNixCTlA7bfRlKzgFy70qDuH1RGmuOkMMn6HN_tI3W33gjGIoTOtvuEqj94J0PngWKiTt962J3qUXJbmpksn2_hMff1XWUCsPSvRQguv2DnGpmrh-XvZu8bC9n6C8PVfKYXFWA4h0KqbLP5i2BKXLsnX6oOQWPsxyVf-y4uE9CBFbgXv9ST1FKsqHqRPB"/>
+</div>
+</header>
+<main class="max-w-3xl mx-auto px-margin-horizontal py-lg flex flex-col gap-lg">
+<!-- PROMIS Overview -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-headline text-headline text-text-primary">How you're feeling</h2>
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-xs">
+<span class="font-footnote text-footnote text-text-secondary uppercase tracking-wider">Physical</span>
+<div class="flex items-end gap-base">
+<span class="font-data-value-lg text-data-value-lg text-text-primary">48</span>
+<span class="font-footnote text-footnote text-text-tertiary mb-1">/ 100</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-2">
+<div class="h-full bg-status-yellow-monitor w-[48%] rounded-full"></div>
+</div>
+<span class="font-caption-2 text-caption-2 text-text-secondary mt-1">Average</span>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-xs">
+<span class="font-footnote text-footnote text-text-secondary uppercase tracking-wider">Mental</span>
+<div class="flex items-end gap-base">
+<span class="font-data-value-lg text-data-value-lg text-text-primary">56</span>
+<span class="font-footnote text-footnote text-text-tertiary mb-1">/ 100</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-2">
+<div class="h-full bg-status-green-optimal w-[56%] rounded-full"></div>
+</div>
+<span class="font-caption-2 text-caption-2 text-text-secondary mt-1">Good</span>
+</div>
+</div>
+<div class="flex justify-start">
+<span class="bg-surface-container p-1 px-2 rounded font-caption-2 text-caption-2 text-text-secondary">PROMIS Global-10</span>
+</div>
+</section>
+<!-- Attention Rail -->
+<section class="bg-error-container rounded-xl p-md border border-error/20 flex flex-col gap-sm w-full">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-red-clinical fill">warning</span>
+<h3 class="font-headline text-headline text-on-error-container">3 markers to discuss</h3>
+</div>
+<div class="flex flex-wrap gap-xs">
+<div class="bg-surface-container-lowest px-3 py-1.5 rounded-full border border-clinical-band flex items-center gap-base">
+<span class="w-2 h-2 rounded-full bg-status-red-clinical"></span>
+<span class="font-footnote text-footnote text-text-primary">LDL</span>
+</div>
+<div class="bg-surface-container-lowest px-3 py-1.5 rounded-full border border-clinical-band flex items-center gap-base">
+<span class="w-2 h-2 rounded-full bg-status-red-clinical"></span>
+<span class="font-footnote text-footnote text-text-primary">HbA1c</span>
+</div>
+<div class="bg-surface-container-lowest px-3 py-1.5 rounded-full border border-clinical-band flex items-center gap-base">
+<span class="w-2 h-2 rounded-full bg-status-yellow-monitor"></span>
+<span class="font-footnote text-footnote text-text-primary">Uric Acid</span>
+</div>
+</div>
+</section>
+<!-- Organ Systems Grid -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-headline text-headline text-text-primary">System Overview</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Metabolic -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-sm hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-red-clinical">glucose</span>
+<span class="font-body text-body text-text-primary font-medium">Metabolic</span>
+</div>
+<span class="material-symbols-outlined text-status-green-optimal">trending_up</span>
+</div>
+<div class="h-12 flex items-end">
+<!-- Simulated Sparkline -->
+<div class="w-full h-8 flex items-end gap-[2px]">
+<div class="w-1/6 h-[30%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[40%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[60%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[80%] bg-status-yellow-monitor/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[90%] bg-status-red-clinical/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[100%] bg-status-red-clinical rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Heart -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-sm hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-yellow-monitor">favorite</span>
+<span class="font-body text-body text-text-primary font-medium">Heart</span>
+</div>
+<span class="material-symbols-outlined text-text-secondary">trending_flat</span>
+</div>
+<div class="h-12 flex items-end">
+<div class="w-full h-8 flex items-end gap-[2px]">
+<div class="w-1/6 h-[70%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[65%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[60%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[70%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[75%] bg-status-yellow-monitor/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[75%] bg-status-yellow-monitor rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Kidney -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-sm hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-green-optimal">water_drop</span>
+<span class="font-body text-body text-text-primary font-medium">Kidney</span>
+</div>
+<span class="material-symbols-outlined text-status-green-optimal">trending_down</span>
+</div>
+<div class="h-12 flex items-end">
+<div class="w-full h-8 flex items-end gap-[2px]">
+<div class="w-1/6 h-[50%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[40%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[30%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[20%] bg-status-green-optimal/30 rounded-t-sm"></div>
+<div class="w-1/6 h-[20%] bg-status-green-optimal/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[20%] bg-status-green-optimal rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Liver -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-sm hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-green-optimal">monitor_heart</span>
+<span class="font-body text-body text-text-primary font-medium">Liver</span>
+</div>
+<span class="material-symbols-outlined text-text-secondary">trending_flat</span>
+</div>
+<div class="h-12 flex items-end">
+<div class="w-full h-8 flex items-end gap-[2px]">
+<div class="w-1/6 h-[30%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[30%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[35%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[30%] bg-status-green-optimal/30 rounded-t-sm"></div>
+<div class="w-1/6 h-[30%] bg-status-green-optimal/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[30%] bg-status-green-optimal rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Hormones -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-sm hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-yellow-monitor">hub</span>
+<span class="font-body text-body text-text-primary font-medium">Hormones</span>
+</div>
+<span class="material-symbols-outlined text-status-red-clinical">trending_up</span>
+</div>
+<div class="h-12 flex items-end">
+<div class="w-full h-8 flex items-end gap-[2px]">
+<div class="w-1/6 h-[40%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[45%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[50%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[60%] bg-status-yellow-monitor/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[80%] bg-status-yellow-monitor/80 rounded-t-sm"></div>
+<div class="w-1/6 h-[85%] bg-status-yellow-monitor rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Immunity -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-sm hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-green-optimal">shield</span>
+<span class="font-body text-body text-text-primary font-medium">Immunity</span>
+</div>
+<span class="material-symbols-outlined text-text-secondary">trending_flat</span>
+</div>
+<div class="h-12 flex items-end">
+<div class="w-full h-8 flex items-end gap-[2px]">
+<div class="w-1/6 h-[20%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[25%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[20%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[20%] bg-status-green-optimal/30 rounded-t-sm"></div>
+<div class="w-1/6 h-[20%] bg-status-green-optimal/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[20%] bg-status-green-optimal rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Nutrients -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-sm hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-yellow-monitor">nutrition</span>
+<span class="font-body text-body text-text-primary font-medium">Nutrients</span>
+</div>
+<span class="material-symbols-outlined text-status-green-optimal">trending_up</span>
+</div>
+<div class="h-12 flex items-end">
+<div class="w-full h-8 flex items-end gap-[2px]">
+<div class="w-1/6 h-[80%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[70%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[60%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[50%] bg-status-yellow-monitor/30 rounded-t-sm"></div>
+<div class="w-1/6 h-[40%] bg-status-yellow-monitor/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[30%] bg-status-yellow-monitor rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Blood -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-clinical-band flex flex-col gap-sm hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-status-green-optimal">bloodtype</span>
+<span class="font-body text-body text-text-primary font-medium">Blood</span>
+</div>
+<span class="material-symbols-outlined text-text-secondary">trending_flat</span>
+</div>
+<div class="h-12 flex items-end">
+<div class="w-full h-8 flex items-end gap-[2px]">
+<div class="w-1/6 h-[25%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[25%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[25%] bg-surface-container-highest rounded-t-sm"></div>
+<div class="w-1/6 h-[25%] bg-status-green-optimal/30 rounded-t-sm"></div>
+<div class="w-1/6 h-[25%] bg-status-green-optimal/50 rounded-t-sm"></div>
+<div class="w-1/6 h-[25%] bg-status-green-optimal rounded-t-sm"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Ask Span Floating Button -->
+<div class="fixed bottom-24 right-margin-horizontal z-50 md:bottom-8">
+<button class="bg-primary/90 backdrop-blur-md text-on-primary w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary-fixed focus:ring-offset-2">
+<span class="material-symbols-outlined text-xl">mic</span>
+</button>
+</div>
+<!-- Footer Disclaimer -->
+<footer class="w-full py-xl px-margin-horizontal mb-20 bg-surface-container-low dark:bg-surface-dim border-t border-clinical-band flat flex flex-col items-center gap-xs text-center md:mb-0">
+<span class="font-footnote text-footnote text-text-tertiary dark:text-outline">© 2024 Span Health. Clinical data powered by evidence-based research.</span>
+<div class="flex gap-md mt-sm">
+<a class="font-footnote text-footnote text-text-tertiary hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-footnote text-footnote text-text-tertiary hover:text-primary transition-colors" href="#">Medical Disclaimer</a>
+<a class="font-footnote text-footnote text-text-tertiary hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center px-margin-horizontal pb-4 pt-2 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md z-50 border-t border-outline-variant dark:border-outline flat no shadows md:hidden">
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-semibold scale-95 active:transition-transform hover:opacity-80" href="#">
+<span class="material-symbols-outlined font-headline-mobile text-headline-mobile text-primary">home</span>
+<span class="font-caption-2 text-caption-2 mt-1">Today</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant scale-95 active:transition-transform hover:opacity-80" href="#">
+<span class="material-symbols-outlined font-headline-mobile text-headline-mobile">rebase_edit</span>
+<span class="font-caption-2 text-caption-2 mt-1">Systems</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant scale-95 active:transition-transform hover:opacity-80" href="#">
+<span class="material-symbols-outlined font-headline-mobile text-headline-mobile">mic</span>
+<span class="font-caption-2 text-caption-2 mt-1">Ask Span</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant scale-95 active:transition-transform hover:opacity-80" href="#">
+<span class="material-symbols-outlined font-headline-mobile text-headline-mobile">assignment_turned_in</span>
+<span class="font-caption-2 text-caption-2 mt-1">Check-in</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary dark:text-on-surface-variant scale-95 active:transition-transform hover:opacity-80" href="#">
+<span class="material-symbols-outlined font-headline-mobile text-headline-mobile">preliminary</span>
+<span class="font-caption-2 text-caption-2 mt-1">Prep</span>
+</a>
+</nav>
+</body></html>

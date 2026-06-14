@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Span Health - Consent</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#ffdbcb",
+                      "status-green-optimal": "#34A853",
+                      "on-tertiary-fixed-variant": "#783100",
+                      "on-primary-fixed": "#001a41",
+                      "text-primary": "#000000",
+                      "tertiary-fixed-dim": "#ffb691",
+                      "primary": "#005bbf",
+                      "inverse-on-surface": "#f0f0f5",
+                      "surface-bright": "#f9f9fe",
+                      "status-red-clinical": "#D93025",
+                      "tertiary-container": "#c55500",
+                      "optimal-fill": "#E6F4EA",
+                      "outline-variant": "#c1c6d6",
+                      "text-tertiary": "#8E8E93",
+                      "inverse-primary": "#adc7ff",
+                      "status-yellow-monitor": "#FBBC04",
+                      "on-background": "#1a1c1f",
+                      "secondary-fixed-dim": "#6ddd81",
+                      "on-primary-container": "#ffffff",
+                      "on-tertiary-fixed": "#341100",
+                      "on-secondary-fixed": "#002108",
+                      "optimal-border": "rgba(52, 168, 83, 0.4)",
+                      "surface-variant": "#e2e2e7",
+                      "primary-container": "#1a73e8",
+                      "outline": "#727785",
+                      "on-secondary-container": "#00722f",
+                      "surface-container": "#ededf2",
+                      "inverse-surface": "#2e3034",
+                      "secondary-fixed": "#89fa9b",
+                      "surface-tint": "#005bc0",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#86f898",
+                      "surface-container-high": "#e8e8ed",
+                      "on-primary-fixed-variant": "#004493",
+                      "primary-fixed": "#d8e2ff",
+                      "secondary": "#006e2c",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e2e2e7",
+                      "surface": "#f9f9fe",
+                      "error-container": "#ffdad6",
+                      "background": "#f9f9fe",
+                      "on-surface": "#1a1c1f",
+                      "text-secondary": "#636366",
+                      "on-error": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "clinical-band": "rgba(60, 60, 67, 0.12)",
+                      "surface-container-low": "#f3f3f8",
+                      "status-blue-low": "#1A73E8",
+                      "on-tertiary-container": "#0e0200",
+                      "on-surface-variant": "#414754",
+                      "surface-dim": "#d9dade",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#adc7ff",
+                      "on-secondary-fixed-variant": "#005320",
+                      "error": "#ba1a1a",
+                      "tertiary": "#9e4300"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-horizontal": "16px",
+                      "base": "4px",
+                      "touch-target": "44px",
+                      "lg": "24px",
+                      "xs": "8px",
+                      "gutter": "12px",
+                      "sm": "12px",
+                      "md": "16px",
+                      "xl": "32px"
+              },
+              "fontFamily": {
+                      "title-2-mobile": ["Inter"],
+                      "display-large": ["Inter"],
+                      "headline": ["Inter"],
+                      "body": ["Inter"],
+                      "callout": ["Inter"],
+                      "footnote": ["Inter"],
+                      "caption-2": ["Inter"],
+                      "data-value-lg": ["Inter"],
+                      "title-2": ["Inter"]
+              },
+              "fontSize": {
+                      "title-2-mobile": ["20px", {"lineHeight": "25px", "fontWeight": "600"}],
+                      "display-large": ["34px", {"lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700"}],
+                      "headline": ["17px", {"lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "600"}],
+                      "body": ["17px", {"lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "400"}],
+                      "callout": ["16px", {"lineHeight": "21px", "letterSpacing": "-0.32px", "fontWeight": "400"}],
+                      "footnote": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.08px", "fontWeight": "400"}],
+                      "caption-2": ["11px", {"lineHeight": "13px", "letterSpacing": "0.06px", "fontWeight": "500"}],
+                      "data-value-lg": ["34px", {"lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700"}],
+                      "title-2": ["22px", {"lineHeight": "28px", "letterSpacing": "0.35px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-surface');
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-variant');
+            border-radius: 4px;
+        }
+        /* Hide scrollbar for clean mobile feel but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Toggle Switch Styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: theme('colors.status-green-optimal');
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: theme('colors.status-green-optimal');
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+        .toggle-label {
+            width: 51px;
+            height: 31px;
+            background-color: theme('colors.surface-variant');
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .toggle-label:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 27px;
+            height: 27px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar (Transactional - simplified) -->
+<header class="flex justify-between items-center w-full px-margin-horizontal h-touch-target bg-surface border-b border-clinical-band docked full-width top-0 z-40 sticky">
+<button aria-label="Go back" class="h-touch-target w-touch-target flex items-center justify-start text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back_ios</span>
+</button>
+<h1 class="font-title-2-mobile text-title-2-mobile font-bold text-primary">Span Health</h1>
+<div class="h-touch-target w-touch-target"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto px-margin-horizontal pt-lg pb-32 no-scrollbar relative" id="scroll-container">
+<!-- Header -->
+<div class="mb-xl">
+<h2 class="font-display-large text-display-large text-on-surface mb-xs">Data Consent</h2>
+<p class="font-body text-body text-text-secondary">
+                Under the Digital Personal Data Protection (DPDP) Act, 2023, we require your explicit consent to process your health data. You maintain complete control over how your information is used.
+            </p>
+</div>
+<!-- Toggles Section (Bento-style cards) -->
+<div class="space-y-sm mb-xl">
+<!-- Ingestion -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md flex items-start justify-between">
+<div class="flex-1 pr-sm">
+<div class="flex items-center gap-xs mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]">upload_file</span>
+<h3 class="font-headline text-headline text-on-surface">Data Ingestion</h3>
+</div>
+<p class="font-footnote text-footnote text-text-secondary">
+                        Allow Span to securely collect and store your lab reports, PDF documents, and connected device data in our encrypted vaults.
+                    </p>
+</div>
+<div class="relative inline-block w-[51px] mt-1 shrink-0">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle-ingestion" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-ingestion"></label>
+</div>
+</div>
+<!-- Extraction -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md flex items-start justify-between">
+<div class="flex-1 pr-sm">
+<div class="flex items-center gap-xs mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]">analytics</span>
+<h3 class="font-headline text-headline text-on-surface">Biomarker Extraction</h3>
+</div>
+<p class="font-footnote text-footnote text-text-secondary">
+                        Permit our clinical algorithms to read, extract, and structure individual biomarkers (e.g., HbA1c, LDL) from your unstructured documents.
+                    </p>
+</div>
+<div class="relative inline-block w-[51px] mt-1 shrink-0">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle-extraction" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-extraction"></label>
+</div>
+</div>
+<!-- Profile -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md flex items-start justify-between">
+<div class="flex-1 pr-sm">
+<div class="flex items-center gap-xs mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]">psychology</span>
+<h3 class="font-headline text-headline text-on-surface">Algorithmic Profiling</h3>
+</div>
+<p class="font-footnote text-footnote text-text-secondary">
+                        Enable the creation of personalized longevity and risk profiles based on extracted data to provide tailored health insights.
+                    </p>
+</div>
+<div class="relative inline-block w-[51px] mt-1 shrink-0">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle-profile" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-profile"></label>
+</div>
+</div>
+</div>
+<!-- Educational Disclaimer Section -->
+<div class="bg-surface-container-low rounded-xl p-md border border-clinical-band mb-lg">
+<div class="flex items-center gap-xs mb-sm">
+<span class="material-symbols-outlined text-status-yellow-monitor text-[24px]" style="font-variation-settings: 'FILL' 1;">info</span>
+<h4 class="font-headline text-headline text-on-surface">Educational Disclaimer</h4>
+</div>
+<div class="font-callout text-callout text-on-surface-variant space-y-3">
+<p>
+                    Span Health provides clinical data structuring and evidence-based literature retrieval. <strong>We do not provide medical diagnosis, treatment, or professional medical advice.</strong>
+</p>
+<p>
+                    The insights generated are for informational and educational purposes only. Always consult a qualified healthcare provider before making any decisions regarding your health or medical conditions based on the information provided by this application.
+                </p>
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-surface-container border border-outline-variant/50 font-caption-2 text-caption-2 text-text-secondary">
+                        Source: DPDP Act 2023 Sec 4
+                    </span>
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-surface-container border border-outline-variant/50 font-caption-2 text-caption-2 text-text-secondary">
+                        NMC Guidelines 2023
+                    </span>
+</div>
+</div>
+</div>
+<!-- Bottom padding for scroll detection target -->
+<div class="h-1 w-full" id="scroll-bottom-anchor"></div>
+</main>
+<!-- Sticky Bottom Action Bar -->
+<div class="fixed bottom-0 w-full bg-surface/90 backdrop-blur-md border-t border-clinical-band px-margin-horizontal py-sm z-50 pb-safe">
+<button class="w-full h-touch-target rounded-lg bg-surface-variant text-text-tertiary font-headline text-headline flex items-center justify-center transition-all duration-300 pointer-events-none opacity-60" disabled="" id="continue-btn">
+            Please scroll to read completely
+        </button>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollContainer = document.getElementById('scroll-container');
+            const bottomAnchor = document.getElementById('scroll-bottom-anchor');
+            const continueBtn = document.getElementById('continue-btn');
+            let hasScrolledToBottom = false;
+
+            // Intersection Observer to detect when the bottom is reached
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !hasScrolledToBottom) {
+                    hasScrolledToBottom = true;
+                    activateButton();
+                }
+            }, {
+                root: scrollContainer,
+                threshold: 1.0
+            });
+
+            observer.observe(bottomAnchor);
+
+            // Fallback for very short screens where scrolling isn't needed
+            setTimeout(() => {
+                if (scrollContainer.scrollHeight <= scrollContainer.clientHeight) {
+                    hasScrolledToBottom = true;
+                    activateButton();
+                }
+            }, 500);
+
+            function activateButton() {
+                continueBtn.disabled = false;
+                continueBtn.textContent = 'I understand — continue';
+                continueBtn.className = 'w-full h-touch-target rounded-lg bg-primary text-on-primary font-headline text-headline flex items-center justify-center transition-all duration-300 shadow-sm active:scale-[0.98] cursor-pointer';
+            }
+            
+            // Toggle Logic (Optional: Require at least 'Ingestion' to proceed, but for this UI we just visually manage them)
+            const toggles = document.querySelectorAll('.toggle-checkbox');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', (e) => {
+                    // Visual feedback or dependency logic could go here
+                    // e.g., if Ingestion is off, Extraction must be off
+                    if(e.target.id === 'toggle-ingestion' && !e.target.checked) {
+                        document.getElementById('toggle-extraction').checked = false;
+                        document.getElementById('toggle-profile').checked = false;
+                    }
+                });
+            });
+        });
+    </script>
+</body></html>

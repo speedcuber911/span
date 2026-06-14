@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Span Health - Onboarding Profile Step 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1a1c1f",
+                        "surface-bright": "#f9f9fe",
+                        "outline": "#727785",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#004493",
+                        "clinical-band": "rgba(60, 60, 67, 0.12)",
+                        "secondary": "#006e2c",
+                        "optimal-border": "rgba(52, 168, 83, 0.4)",
+                        "on-secondary-container": "#00722f",
+                        "secondary-container": "#86f898",
+                        "on-error-container": "#93000a",
+                        "text-primary": "#000000",
+                        "on-surface-variant": "#414754",
+                        "surface-container-highest": "#e2e2e7",
+                        "surface-container-high": "#e8e8ed",
+                        "primary": "#005bbf",
+                        "primary-fixed-dim": "#adc7ff",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#adc7ff",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9fe",
+                        "primary-container": "#1a73e8",
+                        "on-primary-container": "#ffffff",
+                        "surface-tint": "#005bc0",
+                        "tertiary": "#9e4300",
+                        "on-secondary-fixed-variant": "#005320",
+                        "inverse-on-surface": "#f0f0f5",
+                        "status-green-optimal": "#34A853",
+                        "outline-variant": "#c1c6d6",
+                        "on-tertiary-fixed-variant": "#783100",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcb",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#c55500",
+                        "on-tertiary-container": "#0e0200",
+                        "inverse-surface": "#2e3034",
+                        "optimal-fill": "#E6F4EA",
+                        "secondary-fixed": "#89fa9b",
+                        "text-tertiary": "#8E8E93",
+                        "on-primary-fixed": "#001a41",
+                        "secondary-fixed-dim": "#6ddd81",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-low": "#f3f3f8",
+                        "on-tertiary-fixed": "#341100",
+                        "status-red-clinical": "#D93025",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container": "#ededf2",
+                        "surface-dim": "#d9dade",
+                        "surface-variant": "#e2e2e7",
+                        "status-blue-low": "#1A73E8",
+                        "status-yellow-monitor": "#FBBC04",
+                        "on-error": "#ffffff",
+                        "text-secondary": "#636366",
+                        "surface": "#f9f9fe",
+                        "tertiary-fixed-dim": "#ffb691"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target": "44px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "12px",
+                        "margin-horizontal": "16px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "xs": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "display-large": ["Inter"],
+                        "footnote": ["Inter"],
+                        "title-2": ["Inter"],
+                        "body": ["Inter"],
+                        "headline": ["Inter"],
+                        "data-value-lg": ["Inter"],
+                        "caption-2": ["Inter"],
+                        "title-2-mobile": ["Inter"],
+                        "callout": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-large": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                        "footnote": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.08px", "fontWeight": "400" }],
+                        "title-2": ["22px", { "lineHeight": "28px", "letterSpacing": "0.35px", "fontWeight": "600" }],
+                        "body": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "400" }],
+                        "headline": ["17px", { "lineHeight": "22px", "letterSpacing": "-0.41px", "fontWeight": "600" }],
+                        "data-value-lg": ["34px", { "lineHeight": "41px", "letterSpacing": "0.37px", "fontWeight": "700" }],
+                        "caption-2": ["11px", { "lineHeight": "13px", "letterSpacing": "0.06px", "fontWeight": "500" }],
+                        "title-2-mobile": ["20px", { "lineHeight": "25px", "fontWeight": "600" }],
+                        "callout": ["16px", { "lineHeight": "21px", "letterSpacing": "-0.32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .chip-selected {
+            background-color: theme('colors.primary-container');
+            color: theme('colors.on-primary-container');
+            border-color: theme('colors.primary-container');
+        }
+        .goal-selected {
+            border-color: theme('colors.primary');
+            background-color: theme('colors.primary-fixed');
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-text-primary antialiased min-h-screen flex flex-col">
+<!-- TopAppBar (Transactional - Nav hidden, but Header kept for context) -->
+<header class="docked full-width top-0 z-40 bg-surface dark:bg-on-background text-primary dark:text-primary-fixed font-headline-mobile text-headline-mobile border-b border-clinical-band flex justify-between items-center w-full px-margin-horizontal h-touch-target">
+<button class="h-touch-target w-touch-target flex items-center justify-start hover:bg-surface-container-low transition-colors duration-200 text-primary">
+<span class="material-symbols-outlined" data-icon="arrow_back_ios">arrow_back_ios</span>
+</button>
+<span class="font-title-2-mobile text-title-2-mobile font-bold text-primary">Span Health</span>
+<div class="w-touch-target h-touch-target"></div> <!-- Spacer for alignment -->
+</header>
+<main class="flex-grow flex flex-col px-margin-horizontal pt-lg pb-xl max-w-md mx-auto w-full">
+<!-- Progress Indicator -->
+<div class="mb-lg">
+<div class="flex justify-between items-center mb-xs">
+<span class="font-footnote text-footnote text-text-secondary">Step 3 of 3</span>
+<span class="font-footnote text-footnote text-text-secondary">Almost done</span>
+</div>
+<div class="flex gap-2 h-1.5 w-full">
+<div class="flex-1 bg-primary rounded-full"></div>
+<div class="flex-1 bg-primary rounded-full"></div>
+<div class="flex-1 bg-primary rounded-full"></div>
+</div>
+</div>
+<h1 class="font-title-2-mobile text-title-2-mobile mb-xs text-text-primary">Medical Profile</h1>
+<p class="font-body text-body text-text-secondary mb-xl">Help us contextualize your data to provide more accurate insights.</p>
+<!-- Form Content -->
+<div class="space-y-xl flex-grow">
+<!-- Chronic Conditions (Chips) -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md">
+<h2 class="font-headline text-headline text-text-primary mb-xs">Chronic Conditions</h2>
+<p class="font-footnote text-footnote text-text-secondary mb-md">Select any diagnosed conditions.</p>
+<div class="flex flex-wrap gap-xs">
+<button class="px-sm py-2 rounded-full border border-outline-variant font-callout text-callout text-text-primary hover:bg-surface-container-low transition-colors" onclick="this.classList.toggle('chip-selected')">Diabetes Type 2</button>
+<button class="px-sm py-2 rounded-full border border-outline-variant font-callout text-callout text-text-primary hover:bg-surface-container-low transition-colors" onclick="this.classList.toggle('chip-selected')">Hypertension</button>
+<button class="px-sm py-2 rounded-full border border-outline-variant font-callout text-callout text-text-primary hover:bg-surface-container-low transition-colors" onclick="this.classList.toggle('chip-selected')">PCOS</button>
+<button class="px-sm py-2 rounded-full border border-outline-variant font-callout text-callout text-text-primary hover:bg-surface-container-low transition-colors chip-selected" onclick="this.classList.toggle('chip-selected')">Hypothyroidism</button>
+<button class="px-sm py-2 rounded-full border border-outline-variant font-callout text-callout text-text-primary hover:bg-surface-container-low transition-colors" onclick="this.classList.toggle('chip-selected')">Insulin Resistance</button>
+<button class="px-sm py-2 rounded-full border border-outline-variant font-callout text-callout text-text-primary hover:bg-surface-container-low transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Other
+                    </button>
+</div>
+</section>
+<!-- Medications & Supplements (Free text) -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md">
+<h2 class="font-headline text-headline text-text-primary mb-xs">Medications &amp; Supplements</h2>
+<p class="font-footnote text-footnote text-text-secondary mb-md">List current daily inputs (names only).</p>
+<div class="space-y-sm">
+<div class="relative">
+<input class="w-full bg-surface-bright border border-outline-variant rounded-lg px-md py-3 font-callout text-callout text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="e.g. Metformin, Vitamin D" type="text" value="Levothyroxine"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary p-1">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-bright border border-outline-variant rounded-lg px-md py-3 font-callout text-callout text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Add medication/supplement" type="text"/>
+</div>
+</div>
+</section>
+<!-- Primary Health Goal (Single Choice) -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md">
+<h2 class="font-headline text-headline text-text-primary mb-xs">Primary Goal</h2>
+<p class="font-footnote text-footnote text-text-secondary mb-md">What are you focusing on right now?</p>
+<div class="space-y-xs">
+<label class="flex items-center p-sm rounded-lg border border-outline-variant cursor-pointer transition-colors hover:bg-surface-container-low">
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary" name="health_goal" type="radio"/>
+<span class="ml-sm font-callout text-callout text-text-primary">Optimize Energy Levels</span>
+</label>
+<label class="flex items-center p-sm rounded-lg border border-primary bg-primary-fixed cursor-pointer transition-colors">
+<input checked="" class="w-5 h-5 text-primary border-outline-variant focus:ring-primary" name="health_goal" type="radio"/>
+<span class="ml-sm font-callout text-callout text-text-primary">Manage Metabolic Health</span>
+</label>
+<label class="flex items-center p-sm rounded-lg border border-outline-variant cursor-pointer transition-colors hover:bg-surface-container-low">
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary" name="health_goal" type="radio"/>
+<span class="ml-sm font-callout text-callout text-text-primary">Improve Sleep Quality</span>
+</label>
+<label class="flex items-center p-sm rounded-lg border border-outline-variant cursor-pointer transition-colors hover:bg-surface-container-low">
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary" name="health_goal" type="radio"/>
+<span class="ml-sm font-callout text-callout text-text-primary">General Longevity</span>
+</label>
+</div>
+</section>
+</div>
+<!-- Sticky Bottom Action -->
+<div class="mt-xl pt-md pb-md bg-background sticky bottom-0 z-10 border-t border-clinical-band">
+<button class="w-full h-touch-target bg-primary text-on-primary font-headline text-headline rounded-xl shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center">
+                Complete Profile
+            </button>
+<p class="text-center font-caption-2 text-caption-2 text-text-tertiary mt-sm">
+                Your data is stored securely and never shared.
+            </p>
+</div>
+</main>
+<script>
+        // Simple script to handle single choice styling
+        const radioLabels = document.querySelectorAll('input[type="radio"][name="health_goal"]');
+        radioLabels.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Reset all
+                document.querySelectorAll('input[name="health_goal"]').forEach(r => {
+                    const label = r.closest('label');
+                    label.classList.remove('border-primary', 'bg-primary-fixed');
+                    label.classList.add('border-outline-variant');
+                });
+                // Set active
+                if(this.checked) {
+                    const activeLabel = this.closest('label');
+                    activeLabel.classList.remove('border-outline-variant');
+                    activeLabel.classList.add('border-primary', 'bg-primary-fixed');
+                }
+            });
+        });
+    </script>
+</body></html>
