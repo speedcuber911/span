@@ -22,6 +22,7 @@
 		3CF4156E98449F29E4A9D200 /* CheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F5C92C8595BBC6014EFBCC /* CheckInView.swift */; };
 		45EA2F72BF59082AE0E43DB4 /* SignInWithAppleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9BDAD3E0239F73E8AE37BF /* SignInWithAppleView.swift */; };
 		521A4C8BC41D55BC2AEAF6C6 /* BundledSpanAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0631B797C319BBD8F342660 /* BundledSpanAPI.swift */; };
+		5772A19047EFD207F7B8BB82 /* CGMView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6747E8ADE508D4102AA7F2BA /* CGMView.swift */; };
 		5F9BA77A4F697EBA18CCE95F /* SharedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427EF1D0CB5E4382D52D9EE5 /* SharedViews.swift */; };
 		5F9BDF20B5447298508BF564 /* Glow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DC20EB63293A03E9EC993F /* Glow.swift */; };
 		657FBB0588FA9C568CE0E4F6 /* AttentionRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE108E8325673D8D1E0E462 /* AttentionRail.swift */; };
@@ -42,6 +43,8 @@
 		B583D034E9E9A2BB360AA4C4 /* SystemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A23FFED7D7CD1D0CD611C4 /* SystemDetailView.swift */; };
 		BE2670C6B70AB5E17C8590FD /* HealthContextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF84EE857B80FECEFD5485E7 /* HealthContextView.swift */; };
 		C159C92576BF67F75CF791B3 /* OnboardingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2396DED19BD4057260221D62 /* OnboardingFlowView.swift */; };
+		D4957F59BD131E46DD5683C8 /* GlucoseHealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E52BE48CCFBD728E3E09B3 /* GlucoseHealthKitManager.swift */; };
+		D931AE4A6AE7C66C4CE212C2 /* BluetoothScanManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD78E18085AA8DE31134323D /* BluetoothScanManager.swift */; };
 		DA1BE47B80943DBF062D869C /* CitationChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E34D50235BA544DCE11B6F /* CitationChip.swift */; };
 		E5C08C5A29E30FE80B1C37C7 /* Color+Span.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0160D052A4FC94E39EC4ACD1 /* Color+Span.swift */; };
 		E5ED46B604C955867B447427 /* OrganSystemTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9097F716A27F40E790EC3 /* OrganSystemTile.swift */; };
@@ -54,6 +57,7 @@
 
 /* Begin PBXFileReference section */
 		0160D052A4FC94E39EC4ACD1 /* Color+Span.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Span.swift"; sourceTree = "<group>"; };
+		01E52BE48CCFBD728E3E09B3 /* GlucoseHealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseHealthKitManager.swift; sourceTree = "<group>"; };
 		03A23FFED7D7CD1D0CD611C4 /* SystemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemDetailView.swift; sourceTree = "<group>"; };
 		04C7F3F7E826D7924A63CF38 /* CitationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationSheet.swift; sourceTree = "<group>"; };
 		07FE800D2814DFDB773AB206 /* AboutYouView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutYouView.swift; sourceTree = "<group>"; };
@@ -76,6 +80,7 @@
 		5B9BDAD3E0239F73E8AE37BF /* SignInWithAppleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleView.swift; sourceTree = "<group>"; };
 		5C93620F1EEF645E161A9082 /* AddReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReportsView.swift; sourceTree = "<group>"; };
 		6336F2F37A568A5D58A2E6C8 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		6747E8ADE508D4102AA7F2BA /* CGMView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGMView.swift; sourceTree = "<group>"; };
 		69EAB0BA990547E07743A4CE /* SystemsOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemsOverviewView.swift; sourceTree = "<group>"; };
 		6D8D09508DFA6E743D0983C4 /* Typography+Span.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography+Span.swift"; sourceTree = "<group>"; };
 		7EC5F79104920DE8BAA0628D /* AskSpanPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskSpanPill.swift; sourceTree = "<group>"; };
@@ -98,9 +103,20 @@
 		EF84EE857B80FECEFD5485E7 /* HealthContextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthContextView.swift; sourceTree = "<group>"; };
 		F23063D1FA522C1A05A5E35A /* TrafficLightDot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficLightDot.swift; sourceTree = "<group>"; };
 		F7F5C92C8595BBC6014EFBCC /* CheckInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInView.swift; sourceTree = "<group>"; };
+		FD78E18085AA8DE31134323D /* BluetoothScanManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothScanManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		0002BBD29F2FCAD83E1169A1 /* CGM */ = {
+			isa = PBXGroup;
+			children = (
+				FD78E18085AA8DE31134323D /* BluetoothScanManager.swift */,
+				6747E8ADE508D4102AA7F2BA /* CGMView.swift */,
+				01E52BE48CCFBD728E3E09B3 /* GlucoseHealthKitManager.swift */,
+			);
+			path = CGM;
+			sourceTree = "<group>";
+		};
 		0E45AD9645645DDE169FBC0E /* Screens */ = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +131,7 @@
 				03A23FFED7D7CD1D0CD611C4 /* SystemDetailView.swift */,
 				69EAB0BA990547E07743A4CE /* SystemsOverviewView.swift */,
 				4ACED1C8E65CE6B9D067BE32 /* TodayView.swift */,
+				0002BBD29F2FCAD83E1169A1 /* CGM */,
 				C498CE1B841D05E8A2DFE086 /* Onboarding */,
 			);
 			path = Screens;
@@ -303,7 +320,9 @@
 				B008033764B381B25C65895D /* AskSpanView.swift in Sources */,
 				657FBB0588FA9C568CE0E4F6 /* AttentionRail.swift in Sources */,
 				F0EEEE2C632A9191C90C3580 /* BiologicalAgeView.swift in Sources */,
+				D931AE4A6AE7C66C4CE212C2 /* BluetoothScanManager.swift in Sources */,
 				521A4C8BC41D55BC2AEAF6C6 /* BundledSpanAPI.swift in Sources */,
+				5772A19047EFD207F7B8BB82 /* CGMView.swift in Sources */,
 				3CF4156E98449F29E4A9D200 /* CheckInView.swift in Sources */,
 				DA1BE47B80943DBF062D869C /* CitationChip.swift in Sources */,
 				8F793C759C2ADB24C1A547F0 /* CitationSheet.swift in Sources */,
@@ -313,6 +332,7 @@
 				24F91E81676CA6EF92C22B40 /* DataConsentView.swift in Sources */,
 				A290AC2725FA0853E9B5547F /* DoctorVisitPrepView.swift in Sources */,
 				5F9BDF20B5447298508BF564 /* Glow.swift in Sources */,
+				D4957F59BD131E46DD5683C8 /* GlucoseHealthKitManager.swift in Sources */,
 				BE2670C6B70AB5E17C8590FD /* HealthContextView.swift in Sources */,
 				37B17CF642B55CE6FDFD325C /* LiveSpanAPI.swift in Sources */,
 				7CCA3FA76E5BB6FEE8C56112 /* MockSpanAPI.swift in Sources */,

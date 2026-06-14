@@ -18,8 +18,8 @@ enum Route: Hashable {
     case prepSheet
 }
 
-/// The four persistent tabs (Today · Systems · Check-in · Prep). "Ask Span" is a
-/// floating button, not a tab.
+/// The persistent tabs (Today · Systems · Check-in · Prep · CGM). "Ask Span" is a
+/// floating button, not a tab. `cgm` is an isolated diagnostic probe.
 enum AppTab: Hashable {
-    case today, systems, checkin, prep
+    case today, systems, checkin, prep, cgm
 }

@@ -51,10 +51,13 @@ targets:
           - UIInterfaceOrientationPortrait
         ITSAppUsesNonExemptEncryption: false
         NSCameraUsageDescription: "Span uses the camera to scan paper lab reports."
-        NSHealthShareUsageDescription: "Span reads steps, sleep, HRV and resting heart rate to show whole-person trends."
+        NSHealthShareUsageDescription: "Span reads steps, sleep, HRV, resting heart rate and blood glucose to show whole-person trends and CGM readings."
+        NSBluetoothAlwaysUsageDescription: "Span scans for nearby Bluetooth devices to detect a continuous glucose monitor. It only reads advertised data and never connects or pairs."
         NSMicrophoneUsageDescription: "Span uses the microphone for the Ask Span voice consultant. Audio is never stored."
     entitlements:
       path: Span/App/Span.entitlements
       properties:
         com.apple.developer.applesignin:
           - Default
+        com.apple.developer.healthkit: true
+        com.apple.developer.healthkit.access: []

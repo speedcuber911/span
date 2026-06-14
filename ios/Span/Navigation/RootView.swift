@@ -17,6 +17,7 @@ struct RootView: View {
     @State private var systemsPath: [Route] = []
     @State private var checkinPath: [Route] = []
     @State private var prepPath: [Route] = []
+    @State private var cgmPath: [Route] = []
     @State private var showingVoice = false
 
     init() {
@@ -69,6 +70,17 @@ struct RootView: View {
                 }
                 .tabItem { Label("Prep", systemImage: "stethoscope") }
                 .tag(AppTab.prep)
+
+                // Isolated CGM diagnostic probe — its own NavigationStack even
+                // though it has no drill-downs yet (matches the other tabs).
+                NavigationStack(path: $cgmPath) {
+                    CGMView()
+                        .navigationDestination(for: Route.self) { route in
+                            RouteDestination(route: route, path: $cgmPath)
+                        }
+                }
+                .tabItem { Label("CGM", systemImage: "drop.fill") }
+                .tag(AppTab.cgm)
             }
             .tint(SpanColor.accent)
 

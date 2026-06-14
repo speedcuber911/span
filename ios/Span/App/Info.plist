@@ -25,7 +25,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Span uses the camera to scan paper lab reports.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Span reads steps, sleep, HRV and resting heart rate to show whole-person trends.</string>
+	<string>Span reads steps, sleep, HRV, resting heart rate and blood glucose to show whole-person trends and CGM readings.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Span scans for nearby Bluetooth devices to detect a continuous glucose monitor. It only reads advertised data and never connects or pairs.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Span uses the microphone for the Ask Span voice consultant. Audio is never stored.</string>
 	<key>UILaunchScreen</key>
