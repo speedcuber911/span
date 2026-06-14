@@ -201,6 +201,7 @@ private struct ReadingRow: View {
 
 private struct BluetoothProbeView: View {
     @Bindable var manager: BluetoothScanManager
+    @State private var calibrating: DiscoveredPeripheral?
 
     var body: some View {
         ScrollView {
@@ -232,6 +233,11 @@ private struct BluetoothProbeView: View {
                     VStack(spacing: SpanSpacing.xs) {
                         ForEach(manager.peripherals) { p in
                             PeripheralRow(peripheral: p)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    // Tap a sensor row to open the calibration tool.
+                                    if p.manufacturerHex != nil { calibrating = p }
+                                }
                         }
                     }
                 }
@@ -242,6 +248,10 @@ private struct BluetoothProbeView: View {
         }
         .scrollContentBackground(.hidden)
         .onDisappear { manager.stop() }
+        .sheet(item: $calibrating) { p in
+            // Re-fetch live so the sheet sees the latest payload/history as it updates.
+            CalibrationView(manager: manager, peripheralID: p.id)
+        }
     }
 
     private var instructionBanner: some View {
@@ -339,6 +349,121 @@ private struct PeripheralRow: View {
         .spanGlow(peripheral.isLikelySensor ? SpanColor.statusGreen : .clear,
                   radius: 8,
                   opacity: peripheral.isLikelySensor ? 0.45 : 0)
+    }
+}
+
+// MARK: - Calibration (find the glucose byte offset for this firmware)
+
+/// Tap a sensor → enter the value the Vixxa app shows → this finds which byte /
+/// interpretation in the FULL (untruncated) advertisement payload matches, across
+/// every distinct payload we've captured. Removes all offset guesswork.
+private struct CalibrationView: View {
+    @Bindable var manager: BluetoothScanManager
+    let peripheralID: UUID
+    @Environment(\.dismiss) private var dismiss
+    @State private var reference = ""
+
+    private var peripheral: DiscoveredPeripheral? { manager.peripheral(id: peripheralID) }
+    private var refMgdl: Double? { Double(reference) }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: SpanSpacing.md) {
+                    Text("Enter the glucose the Vixxa app shows right now. We'll find which byte in the broadcast matches — across every distinct payload captured.")
+                        .font(SpanFont.footnote)
+                        .foregroundStyle(SpanColor.textSecondary)
+
+                    HStack {
+                        Text("Vixxa reading (mg/dL)")
+                            .font(SpanFont.callout).foregroundStyle(SpanColor.textPrimary)
+                        Spacer()
+                        TextField("97", text: $reference)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .font(SpanFont.monoValue)
+                            .foregroundStyle(SpanColor.statusGreen)
+                            .frame(width: 90)
+                    }
+                    .padding(SpanSpacing.gutter)
+                    .spanCard()
+
+                    if let p = peripheral {
+                        // Run calibration over the latest payload + the distinct history.
+                        let payloads = ([p.manufacturerHex].compactMap { $0 } + p.mfgHistory)
+                        let distinct = Array(Set(payloads))
+
+                        if let ref = refMgdl {
+                            let matches = distinct.flatMap { hex in
+                                AiDEXDecoder.calibrate(manufacturerHex: hex, referenceMgdl: ref)
+                            }
+                            SpanSectionLabel("Matching offsets (\(matches.count))")
+                            if matches.isEmpty {
+                                Text("No byte matched \(Int(ref)) mg/dL yet. Keep this open a minute so more payloads accumulate, or re-check the Vixxa value.")
+                                    .font(SpanFont.footnote)
+                                    .foregroundStyle(SpanColor.statusYellow)
+                                    .spanCard()
+                            } else {
+                                VStack(spacing: SpanSpacing.xs) {
+                                    ForEach(matches) { m in
+                                        HStack {
+                                            Text(m.interpretation)
+                                                .font(SpanFont.mono(13, weight: .semibold))
+                                                .foregroundStyle(SpanColor.statusGreen)
+                                            Spacer()
+                                            Text("\(m.decodedMgdl.formatted(.number.precision(.fractionLength(0)))) mg/dL")
+                                                .font(SpanFont.monoBody)
+                                                .foregroundStyle(SpanColor.textSecondary)
+                                        }
+                                        .padding(SpanSpacing.gutter)
+                                        .spanCard(fill: SpanColor.statusGreenBg, border: SpanColor.statusGreenBorder)
+                                    }
+                                }
+                            }
+                        }
+
+                        SpanSectionLabel("Latest payload (\(distinct.count) distinct seen)")
+                        let idx = AiDEXDecoder.indexedPayload(manufacturerHex: p.manufacturerHex ?? "")
+                        // byte grid: offset + hex + decimal, highlight ones matching the ref
+                        let target = refMgdl
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 6), spacing: 4) {
+                            ForEach(idx, id: \.offset) { cell in
+                                let asMmol = Double(cell.value)/10*AiDEXReading.mmolToMgdl
+                                let hit = target.map { abs(asMmol - $0) <= 6 || abs(Double(cell.value) - $0) <= 6 } ?? false
+                                VStack(spacing: 1) {
+                                    Text("\(cell.offset)").font(SpanFont.caption2).foregroundStyle(SpanColor.textTertiary)
+                                    Text(cell.hex).font(SpanFont.mono(12, weight: .bold))
+                                        .foregroundStyle(hit ? SpanColor.statusGreen : SpanColor.textPrimary)
+                                    Text("\(cell.value)").font(SpanFont.caption2).foregroundStyle(SpanColor.textSecondary)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 6)
+                                .background(hit ? SpanColor.statusGreenBg : SpanColor.surfaceCard)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                            }
+                        }
+
+                        Text("Full mfg: \(p.manufacturerHex ?? "—")")
+                            .font(SpanFont.mono(9, weight: .regular))
+                            .foregroundStyle(SpanColor.textTertiary)
+                            .textSelection(.enabled)
+                    } else {
+                        Text("Sensor went quiet — keep the scanner running.")
+                            .font(SpanFont.footnote).foregroundStyle(SpanColor.textTertiary)
+                    }
+                }
+                .padding(SpanSpacing.screenH)
+            }
+            .scrollContentBackground(.hidden)
+            .background(SpanColor.background.ignoresSafeArea())
+            .navigationTitle("Calibrate")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }.foregroundStyle(SpanColor.accent)
+                }
+            }
+        }
     }
 }
 

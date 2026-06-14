@@ -136,6 +136,10 @@ final class BluetoothScanManager: NSObject {
         }
     }
 
+    /// Live lookup of a discovered peripheral by id (for the calibration sheet,
+    /// which wants the freshest payload + mfg history as it updates).
+    func peripheral(id: UUID) -> DiscoveredPeripheral? { store[id] }
+
     /// Rebuild the published array only if something changed, in STABLE order
     /// (by first-seen, not live RSSI) so rows never jump around.
     private func flush() {
