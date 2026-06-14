@@ -291,6 +291,29 @@ private struct PeripheralRow: View {
                 .font(SpanFont.caption)
                 .foregroundStyle(SpanColor.textTertiary)
 
+            // DECODED GLUCOSE — the experiment payoff. If the advertisement's
+            // manufacturer-data decodes to a plausible AiDEX reading, show it big.
+            // Compare this against the Vixxa app to confirm the decode is correct.
+            if let g = peripheral.decodedGlucose {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text(g.mgdl.formatted(.number.precision(.fractionLength(0))))
+                        .font(SpanFont.mono(34, weight: .heavy))
+                        .foregroundStyle(SpanColor.statusGreen)
+                    Text("mg/dL")
+                        .font(SpanFont.caption)
+                        .foregroundStyle(SpanColor.textSecondary)
+                    Text("· \(g.mmol.formatted(.number.precision(.fractionLength(1)))) mmol/L")
+                        .font(SpanFont.caption)
+                        .foregroundStyle(SpanColor.textTertiary)
+                    Spacer()
+                }
+                .padding(.top, 2)
+                Text("Decoded from advertisement · verify against Vixxa app"
+                     + (g.sampleAgeMinutes.map { String(format: " · %.0f min ago", $0) } ?? ""))
+                    .font(SpanFont.caption2)
+                    .foregroundStyle(SpanColor.textTertiary)
+            }
+
             if !peripheral.serviceUUIDs.isEmpty {
                 Text("Services: \(peripheral.serviceUUIDs.joined(separator: ", "))")
                     .font(SpanFont.caption)

@@ -1,0 +1,79 @@
+[
+  {
+    "summary": "The GlucoRx Vixxa is a MicroTech Medical CGM in the AiDEX/AiDEX X/LinX family. Your scan shows it advertising the SIG-standard Continuous Glucose Monitoring Service (0x181F) plus Nordic-vendor (0x0059) manufacturer-specific advertisement data. There are TWO possible read paths, and which one applies decides everything: (A) Glucose-in-advertisement (the path the original AiDEX uses): MicroTech sensors of this family historically BROADCAST the live glucose value inside the BLE manufacturer-data of the advertisement, with NO authentication/pairing — the diabetes community read the original AiDEX with a bare ESP32. If your Vixxa's manufacturer-data payload (the long hex blob after 0x0059) decodes to a glucose value, you can read it from your own iOS app with zero pairing, purely by scanning advertisements. (B) Standard CGMS GATT (0x181F): if glucose only lives in the GATT CGM Measurement characteristic (0x2AA7 notify), then the Bluetooth CGM Profile MANDATES an encrypted/authenticated (bonded) link on every characteristic, plus a Session-Start handshake. On iOS the bond is stored at the OS level, so a second app of yours can ride the existing bond the Vixxa app created — you do NOT have to forget the official app's bond — but you cannot create or clear bonds programmatically. Newer AiDEX X/LinX firmware moved away from open broadcast toward an app-mediated (\"Companion\") model, which is why xDrip can no longer read AiDEX X/LinX directly and instead consumes data forwarded by the official app. Recommended first step: dump the full advertisement manufacturer-data and test whether it already contains the glucose (Path A) before attempting any GATT/bonding work (Path B).",
+    "findings": [
+      {
+        "claim": "The standard CGM Service 0x181F GATT structure has these characteristics: CGM Measurement 0x2AA7 (Notify), CGM Feature 0x2AA8 (Read, conditional Indicate), CGM Status 0x2AA9 (Read), CGM Session Start Time 0x2AAA (Read/Write), CGM Session Run Time 0x2AAB (Read), Record Access Control Point/RACP 0x2A52 (Write/Indicate), CGM Specific Ops Control Point/SOCP 0x2AAC (Write/Indicate).",
+        "detail": "Glucose arrives as periodic NOTIFICATIONS on 0x2AA7. To pull history you write a Report-Stored-Records command to RACP 0x2A52 (must enable its indications first); results stream back as 0x2AA7 notifications and a final RACP indication. SOCP 0x2AAC controls the session. The Collector must enable CCCD notifications on 0x2AA7 and typically write the current time to Session Start Time 0x2AAA so the sensor can compute time offsets.",
+        "source_url": "https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/CGMS_v1.0.2/out/en/index-en.html",
+        "confidence": "high"
+      },
+      {
+        "claim": "CGM Measurement (0x2AA7) byte layout / parsing recipe: [Size:uint8][Flags:uint8][Glucose:SFLOAT mg/dL][TimeOffset:uint16 minutes][optional Sensor Status Annunciation 1-3 octets][optional Trend SFLOAT][optional Quality SFLOAT][optional E2E-CRC uint16]. Minimum record is ~6 octets.",
+        "detail": "Parse: byte0=record size; byte1=flags. Flags bit0=Trend present, bit1=Quality present, bit5/6/7=which Sensor-Status-Annunciation octets follow. Bytes 2-3 = glucose as SFLOAT (16-bit: signed 4-bit exponent in high nibble of high byte, signed 12-bit mantissa, twos-complement) in mg/dL; value = mantissa * 10^exponent. Bytes 4-5 = uint16 little-endian time offset in MINUTES from session start. Then, in order if their flag bits are set: Sensor Status Annunciation (1-3 bytes), Trend SFLOAT in (mg/dL)/min, Quality SFLOAT in %, and a uint16 CRC-CCITT E2E-CRC (present only if CGM Feature bit12 E2E-CRC-Supported is set). All multi-byte fields are little-endian.",
+        "source_url": "https://github.com/oesmith/gatt-xml/blob/master/org.bluetooth.characteristic.cgm_measurement.xml",
+        "confidence": "high"
+      },
+      {
+        "claim": "The standard CGM Profile/Service MANDATES authentication (encryption/bonding) on the CGM characteristics — reads/writes/subscribes require an encrypted, bonded link per spec; it is NOT optional for a compliant device.",
+        "detail": "CGMS v1.0.2 lists 'Authentication required' on all Service characteristics (read/write require authentication). The CGM Profile keeps the sensor in bondable mode during connection and defines separate connection procedures for bonded vs unbonded devices. So if the Vixxa exposes glucose only via the 0x181F GATT, you must be bonded/encrypted to subscribe to 0x2AA7. E2E-CRC on SOCP is optional (gated by CGM Feature bit12); RACP cannot carry E2E-CRC. A 'Start Session' (SOCP op 0x1A, success response 0x1C 1A 01) and/or writing Session Start Time may be required before measurement notifications flow.",
+        "source_url": "https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/CGMP_v1.0.2/out/en/index-en.html",
+        "confidence": "high"
+      },
+      {
+        "claim": "The original MicroTech AiDEX exposes live glucose in the BLE ADVERTISEMENT manufacturer-data with NO authentication/pairing — it was read with a bare ESP32, no bond, no GATT connection.",
+        "detail": "Community reverse-engineering (Juggluco issue #297) reads glucose directly from advertisement manufacturer-data: glucose = byte[10]/10 (mmol/L), timestamp from bytes 2-5 (uint32 LE + epoch), sample age = byte[1]/6 (minutes), sensor life = uint16 at bytes 6-7 * 300, sensor phase = byte[9]. Quote: 'no authentication is required as i've been able to read it using just an esp32.' This is the cheapest viable path IF the Vixxa's 0x0059 manufacturer-data blob in your scan decodes the same way — it can be read by pure advertisement scanning with zero pairing.",
+        "source_url": "https://github.com/j-kaltes/Juggluco/issues/297",
+        "confidence": "high"
+      },
+      {
+        "claim": "Newer AiDEX X / LinX firmware (same family as Vixxa) moved away from open broadcast; xDrip can no longer read them directly and instead uses 'Companion' mode (data forwarded from the official app).",
+        "detail": "xDrip discussions show original AiDEX was readable by listening to broadcast data after app activation, but AiDEX X / LinX were added to the Companion-app list (June 2024) and users must set the data source to 'Companion App' mode, NOT direct AiDEX. The original direct path also relied partly on AiDEX-provided encrypted binary libraries for full protocol support. This is the risk: your RXC-/Vixxa may be the newer generation that no longer broadcasts cleartext glucose, in which case Path A fails and you fall back to encrypted GATT (Path B).",
+        "source_url": "https://github.com/NightscoutFoundation/xDrip/discussions/3532",
+        "confidence": "medium"
+      },
+      {
+        "claim": "On iOS, BLE bonds are stored at the OS level, not per-app. A second app you write can connect and subscribe to encrypted characteristics on a peripheral the official Vixxa app already bonded — you do NOT need to forget the Vixxa app's bond first.",
+        "detail": "Per Punch Through's CoreBluetooth guide: bonding happens at OS level; multiple apps can access a bonded peripheral; a peripheral can be connected to the device but not to the app that established the bond. iOS triggers pairing automatically when you read/write/subscribe to an encrypted characteristic. Caveats: CoreBluetooth gives no visibility into pair/bond state, you CANNOT create or clear a bond programmatically, and the user must 'Forget' the device in iOS Settings > Bluetooth to clear it. If the Vixxa sensor firmware enforces only ONE active bond/connection at a time, your app may be rejected while the official app is connected — you would then run your app with the official app closed.",
+        "source_url": "https://punchthrough.com/core-bluetooth-guide/",
+        "confidence": "high"
+      },
+      {
+        "claim": "CGM Specific Ops Control Point (0x2AAC) op-codes: Start Session = 0x1A, Stop Session = 0x1B, Response Code = 0x1C. Format: first octet = Op Code, then operand.",
+        "detail": "If the device requires an explicit session start, write 0x1A to 0x2AAC and expect the indication '1C 1A 01' (Response 0x1C, request 0x1A, success 0x01) before 0x2AA7 measurement notifications begin. This matters because some CGMs withhold measurement notifications until the session is started and/or Session Start Time (0x2AAA) is written with the collector's current time.",
+        "source_url": "https://github.com/sputnikdev/bluetooth-gatt-parser/blob/master/src/main/resources/gatt/characteristic/org.bluetooth.characteristic.cgm_specific_ops_control_point.xml",
+        "confidence": "high"
+      }
+    ],
+    "verdict": "PARTIAL / LIKELY YES, with a fork. Your own iOS code can almost certainly read this sensor without defeating encryption — the question is via which of two paths, and your scan data leans toward the easy one. Path A (advertisement broadcast, no pairing): MicroTech's AiDEX family broadcasts live glucose in BLE manufacturer-data readable by anyone scanning — the original AiDEX needed no authentication at all. Your scan already shows manufacturer-data present (after Nordic id 0x0059), so it is plausible the glucose is sitting in that payload right now, readable by pure CoreBluetooth advertisement scanning with no bonding, no GATT, no handshake. This is the personal-access, non-defeating path and is fully viable if the payload decodes. Path B (standard CGMS GATT 0x181F): if glucose only lives in the 0x2AA7 notify characteristic, the SIG profile mandates an encrypted/bonded link plus a session handshake. iOS CAN do this — bonds are OS-level so your app rides the bond the official Vixxa app already created (no need to forget it), and iOS auto-pairs when you subscribe to the encrypted characteristic. The risk for Path B: newer AiDEX X/LinX-generation firmware (which the RXC-/Vixxa may be) often (a) stopped broadcasting cleartext and (b) wraps the link/payload in vendor encryption beyond standard CGMS, which is why xDrip retreated to Companion mode for those. So: YES if Path A decodes or if the GATT is genuine unencrypted-payload standard CGMS; PARTIAL/NO-without-help if it is the newer vendor-encrypted generation.",
+    "recommended_path": "Step 1 (do this first, 30 min, decides everything): In your iOS app, in centralManager:didDiscoverPeripheral:advertisementData:RSSI:, dump the FULL CBAdvertisementDataManufacturerDataKey bytes and CBAdvertisementDataServiceDataKey for the RXC- device every time it advertises (it re-advertises ~every 1-5 min as glucose updates). Strip the leading 2-byte company id (59 00). Then test the AiDEX decode on the remaining payload: try glucose = payload[10]/10 (mmol/L; *18 for mg/dL), age = payload[1]/6 minutes, timestamp = uint32LE at bytes 2-5. Cross-check the decoded number against what the Vixxa app shows on screen at the same moment. If it matches, you are DONE — you have read-only glucose with zero pairing, no bonding, no GATT, fully non-invasive (Path A). Watch a few cycles to confirm the value tracks. Step 2 (only if the advertisement does NOT carry glucose): connect to the peripheral, discover service 0x181F, enable notifications (CCCD) on CGM Measurement 0x2AA7, read CGM Feature 0x2AA8 (check bit12 to know if a trailing 2-byte E2E-CRC is appended and bits15/16 for trend/quality), and let iOS auto-trigger pairing/bonding when you subscribe — keep the official Vixxa app force-closed during this test in case the firmware allows only one active connection. If notifications do not start, write current time to Session Start Time 0x2AAA and/or write Start-Session op 0x1A to SOCP 0x2AAC (expect indication 1C 1A 01). Parse each 0x2AA7 notification with the recipe in the findings (Size, Flags, SFLOAT mg/dL glucose at bytes 2-3, uint16 time-offset minutes at bytes 4-5). Step 3 (fallback if Step 2 connects but payload is vendor-encrypted/garbled, signalling the newer AiDEX X/LinX generation): the clean, supported route is the same one xDrip uses — Companion/broadcast mode out of the official app rather than reverse-engineering vendor crypto; check whether the Vixxa app exposes any data-sharing/broadcast toggle.",
+    "sources": [
+      "https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/CGMS_v1.0.2/out/en/index-en.html",
+      "https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/CGMP_v1.0.2/out/en/index-en.html",
+      "https://github.com/oesmith/gatt-xml/blob/master/org.bluetooth.characteristic.cgm_measurement.xml",
+      "https://github.com/sputnikdev/bluetooth-gatt-parser/blob/master/src/main/resources/gatt/characteristic/org.bluetooth.characteristic.cgm_specific_ops_control_point.xml",
+      "https://github.com/j-kaltes/Juggluco/issues/297",
+      "https://github.com/NightscoutFoundation/xDrip/discussions/1977",
+      "https://github.com/NightscoutFoundation/xDrip/discussions/3532",
+      "https://punchthrough.com/core-bluetooth-guide/",
+      "https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/samples/bluetooth/peripheral_cgms/README.html",
+      "https://www.diabetotech.com/blog/how-to-sync-your-cgm-to-any-smartwatch"
+    ]
+  },
+  {
+    "summary": "Vixxa MicroTech CGM; glucose in plaintext BLE advert.",
+    "findings": [
+      {
+        "claim": "Glucose broadcast in plaintext BLE advert, passive, no encryption.",
+        "detail": "aidex.js: glu=dt[10]/10 mmol/L.",
+        "source_url": "https://gist.github.com/ihewitt/10a81c4bc98346b98cf4db2770b6aa15",
+        "confidence": "high"
+      }
+    ],
+    "verdict": "YES partial; passive advert read, no key/NFC; no iOS app yet.",
+    "recommended_path": "CoreBluetooth passive scan RXC-/0x181F, decode aidex.js byte10/10 mmol/L.",
+    "sources": [
+      "https://gist.github.com/ihewitt/10a81c4bc98346b98cf4db2770b6aa15"
+    ]
+  }
+]

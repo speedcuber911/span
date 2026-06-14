@@ -40,6 +40,7 @@
 		A6C4D11107D862891C1B7AA3 /* SystemsOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EAB0BA990547E07743A4CE /* SystemsOverviewView.swift */; };
 		A8C38215F60EDF664D197E00 /* ClinicalFlagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3C820FAA86B6B631E4FD1D /* ClinicalFlagsView.swift */; };
 		B008033764B381B25C65895D /* AskSpanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB07E9EA7268C851888F7E9 /* AskSpanView.swift */; };
+		B30BD49B061F432B9B56A9AE /* AiDEXDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4BFF557AC3487CCEF5241B /* AiDEXDecoder.swift */; };
 		B583D034E9E9A2BB360AA4C4 /* SystemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A23FFED7D7CD1D0CD611C4 /* SystemDetailView.swift */; };
 		BE2670C6B70AB5E17C8590FD /* HealthContextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF84EE857B80FECEFD5485E7 /* HealthContextView.swift */; };
 		C159C92576BF67F75CF791B3 /* OnboardingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2396DED19BD4057260221D62 /* OnboardingFlowView.swift */; };
@@ -91,6 +92,7 @@
 		94F371F90844CC174CEA0821 /* sample-data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "sample-data.json"; sourceTree = "<group>"; };
 		9F3BE9658F5108E8A178AB12 /* ParameterDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterDetailView.swift; sourceTree = "<group>"; };
 		A625C68391EAD514BD90D2D5 /* SpanEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpanEnums.swift; sourceTree = "<group>"; };
+		AA4BFF557AC3487CCEF5241B /* AiDEXDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiDEXDecoder.swift; sourceTree = "<group>"; };
 		AD203995E156A8F7057BDF35 /* BiologicalAgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiologicalAgeView.swift; sourceTree = "<group>"; };
 		B90B2D4B25C3E8C303DD1326 /* StatusBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBadge.swift; sourceTree = "<group>"; };
 		BEE108E8325673D8D1E0E462 /* AttentionRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionRail.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 		0002BBD29F2FCAD83E1169A1 /* CGM */ = {
 			isa = PBXGroup;
 			children = (
+				AA4BFF557AC3487CCEF5241B /* AiDEXDecoder.swift */,
 				FD78E18085AA8DE31134323D /* BluetoothScanManager.swift */,
 				6747E8ADE508D4102AA7F2BA /* CGMView.swift */,
 				01E52BE48CCFBD728E3E09B3 /* GlucoseHealthKitManager.swift */,
@@ -315,6 +318,7 @@
 			files = (
 				6DC8B95BE30D261BB5755ACA /* AboutYouView.swift in Sources */,
 				226286EAD4C30865FC073365 /* AddReportsView.swift in Sources */,
+				B30BD49B061F432B9B56A9AE /* AiDEXDecoder.swift in Sources */,
 				A042A1D5D88D54152C3AA428 /* AppEnvironment.swift in Sources */,
 				042722FD3ACAD831DC6BC6E8 /* AskSpanPill.swift in Sources */,
 				B008033764B381B25C65895D /* AskSpanView.swift in Sources */,
