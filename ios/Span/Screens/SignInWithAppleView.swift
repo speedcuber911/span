@@ -19,26 +19,33 @@ struct SignInWithAppleView: View {
     var body: some View {
         VStack {
             Spacer()
-            // Wordmark
-            HStack(spacing: 8) {
-                Image(systemName: "cross.case.fill")
-                    .font(.system(size: 28))
+            // Wordmark — pulse-into-uptrend mark echoing the app icon
+            HStack(spacing: 10) {
+                Image(systemName: "waveform.path.ecg.rectangle.fill")
+                    .font(.system(size: 30, weight: .semibold))
                     .foregroundStyle(SpanColor.primary)
                 Text("Span")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.system(size: 34, weight: .bold))
                     .foregroundStyle(SpanColor.primary)
             }
-            Text("Your health data, clearly.")
+            Text("Longevity, decoded from your bloodwork.")
                 .font(SpanFont.title2)
                 .foregroundStyle(SpanColor.textPrimary)
+                .multilineTextAlignment(.center)
                 .padding(.top, SpanSpacing.md)
-            Text("Understand trends. Prepare for your next visit.")
+                .padding(.horizontal, SpanSpacing.lg)
+            Text("AI turns years of lab reports into clear organ-system trends, a biological-age read, and an evidence-backed prep sheet for your next doctor visit.")
                 .font(SpanFont.callout)
                 .foregroundStyle(SpanColor.textSecondary)
                 .multilineTextAlignment(.center)
+                .padding(.top, SpanSpacing.xs)
                 .padding(.horizontal, SpanSpacing.xl)
 
             Spacer()
+
+            // Made in India badge
+            IndianFlagBadge()
+                .padding(.bottom, SpanSpacing.md)
 
             if isWorking {
                 ProgressView().padding(.bottom, SpanSpacing.md)
@@ -100,6 +107,73 @@ struct SignInWithAppleView: View {
             // Apple cancel is silent; surface real transport errors only.
             if (error as? ASAuthorizationError)?.code != .canceled {
                 errorMessage = "Something went wrong. Please try again."
+            }
+        }
+    }
+}
+
+// MARK: - Made in India badge
+
+/// A small "Made in India" pill with a drawn tricolour flag (no image asset).
+struct IndianFlagBadge: View {
+    var body: some View {
+        HStack(spacing: 6) {
+            TricolourFlag()
+                .frame(width: 22, height: 15)
+                .clipShape(RoundedRectangle(cornerRadius: 2))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 2)
+                        .stroke(SpanColor.outlineVariant.opacity(0.5), lineWidth: 0.5)
+                )
+            Text("Made in India")
+                .font(SpanFont.caption2)
+                .foregroundStyle(SpanColor.textSecondary)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(
+            Capsule().fill(SpanColor.surface)
+        )
+        .overlay(
+            Capsule().stroke(SpanColor.outlineVariant.opacity(0.6), lineWidth: 0.5)
+        )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Made in India")
+    }
+}
+
+/// The Indian national flag drawn with shapes: saffron, white, green stripes
+/// and the navy Ashoka Chakra (24-spoke wheel) centred on the white band.
+private struct TricolourFlag: View {
+    private let saffron = Color(spanHex: "#FF9933")
+    private let green = Color(spanHex: "#138808")
+    private let chakra = Color(spanHex: "#0A3A8A")
+
+    var body: some View {
+        GeometryReader { geo in
+            let h = geo.size.height
+            let w = geo.size.width
+            VStack(spacing: 0) {
+                saffron
+                Color.white
+                green
+            }
+            .overlay(alignment: .center) {
+                // Ashoka Chakra: ring + 24 spokes, sized to the white band.
+                let d = h / 3 * 0.86
+                ZStack {
+                    Circle()
+                        .stroke(chakra, lineWidth: max(0.6, d * 0.07))
+                        .frame(width: d, height: d)
+                    ForEach(0..<24, id: \.self) { i in
+                        Rectangle()
+                            .fill(chakra)
+                            .frame(width: max(0.4, d * 0.035), height: d / 2)
+                            .offset(y: -d / 4)
+                            .rotationEffect(.degrees(Double(i) * 15))
+                    }
+                }
+                .frame(width: w, height: h)
             }
         }
     }
