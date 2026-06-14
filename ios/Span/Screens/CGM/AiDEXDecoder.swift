@@ -10,12 +10,18 @@
 //
 //    payload = manufacturerData with the leading 2-byte company id (59 00 =
 //              Nordic Semiconductor, 0x0059 little-endian) stripped.
-//    glucose(mmol/L) = payload[7] / 10         →  ×18.0182 for mg/dL
+//    glucose(mg/dL) = payload[5]   (DIRECT mg/dL — not mmol, not /10)
 //
-//  CALIBRATED against the GlucoRx Vixxa (RXC-22222A58G4) on 2026-06-15:
-//  payload[7] = 0x36 (54) → 5.4 mmol/L → 97 mg/dL, matching the Vixxa app
-//  exactly. NOTE the community aidex.js used payload[10] for the ORIGINAL
-//  AiDEX; the Vixxa 2/3 firmware moved the glucose byte to offset 7.
+//  CALIBRATED against the GlucoRx Vixxa (RXC-22222A58G4), 2026-06-15, from the
+//  full untruncated advertisement:
+//    payload = 2B 08 00 00 03 [6A] 80 63 6B 80 64 6A 80 63 00 00 7C AE 6C 71
+//    payload[5] = 0x6A = 106 = the Vixxa app's exact reading (106 mg/dL).
+//  The bytes after it form a 3-byte history buffer ([mg/dL][0x80][prev]):
+//    106, 107, 106 … — recent readings, usable for a short trend later.
+//  NOTE: the community aidex.js used payload[10]/10 (mmol) for the ORIGINAL
+//  AiDEX; the Vixxa firmware uses payload[5] in mg/dL directly — a different
+//  format entirely. Earlier truncated screenshots hid byte 5 and misled the
+//  mmol assumption; the full clipboard capture settled it.
 //
 //  This decoder is intentionally defensive: if the payload is too short or the
 //  decoded value is implausible, it returns nil rather than a wrong number.
@@ -47,8 +53,8 @@ enum AiDEXDecoder {
     static let nordicCompanyIdLE = "5900"
 
     /// Byte offset of the glucose value within the payload (after the 2-byte
-    /// company id). Calibrated to 7 for GlucoRx Vixxa; aidex.js used 10.
-    static let glucoseOffset = 7
+    /// company id). Calibrated to 5 for GlucoRx Vixxa, read as DIRECT mg/dL.
+    static let glucoseOffset = 5
 
     /// Decode an AiDEX advertisement. `manufacturerHex` is the full hex string
     /// of CBAdvertisementDataManufacturerDataKey (company id included).
@@ -69,22 +75,20 @@ enum AiDEXDecoder {
         let payload = Array(bytes.dropFirst(2))
         guard payload.count > Self.glucoseOffset else { return nil }
 
-        // Core field: glucose in mmol/L = payload[glucoseOffset] / 10.
-        // Calibrated to offset 7 for the Vixxa firmware (see header note).
-        let rawGlucose = Int(payload[Self.glucoseOffset])
-        let mmol = Double(rawGlucose) / 10.0
-        let mgdl = mmol * AiDEXReading.mmolToMgdl
+        // Core field: glucose in mg/dL DIRECTLY = payload[glucoseOffset].
+        // Calibrated to offset 5 for the Vixxa firmware (see header note).
+        let mgdl = Double(payload[Self.glucoseOffset])
+        let mmol = mgdl / AiDEXReading.mmolToMgdl
 
-        // Plausibility guard — physiologic glucose ~2.2–27.8 mmol/L (40–500 mg/dL).
-        // A byte that isn't glucose will usually fall outside this; reject it so
-        // we never show a fabricated number.
-        guard mmol >= 2.0 && mmol <= 30.0 else { return nil }
+        // Plausibility guard — physiologic glucose ~40–500 mg/dL. A byte that
+        // isn't glucose usually falls outside; reject so we never fabricate.
+        guard mgdl >= 40 && mgdl <= 500 else { return nil }
 
-        let sampleAge = Double(payload[1]) / 6.0
-        let sensorLife = payload.count >= 8
-            ? Int(payload[6]) | (Int(payload[7]) << 8)
-            : nil
-        let phase = payload.count >= 10 ? Int(payload[9]) : nil
+        // Recent-history buffer after the current value: 3-byte groups
+        // [mg/dL][0x80][prev]. Not parsed into a field yet (future trend use).
+        let sampleAge: Double? = nil
+        let sensorLife: Int? = nil
+        let phase: Int? = nil
 
         return AiDEXReading(
             mgdl: (mgdl * 10).rounded() / 10,
