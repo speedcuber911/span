@@ -1,32 +1,68 @@
 //
 //  Typography+Span.swift
-//  Span — type scale from DESIGN_SYSTEM.md.
+//  Span — type scale for the "Health Intelligence" dark theme.
 //
-//  Inter is the web stand-in; on iOS we use SF Pro (the system font) and let
-//  Dynamic Type scale everything. Sizes mirror the iOS type ramp the comps were
-//  built against (Apple HIG point sizes), exposed as named Span styles so screens
-//  never hardcode point sizes.
+//  Inter is the web stand-in; on iOS we use SF Pro (the system font). The comp leans
+//  on heavy weights (800 for big numbers / wordmark, 700 headings, 600 semibold),
+//  tight negative tracking on large text, and SF Mono / tabular digits for numeric
+//  values. These are exposed as named Span styles so screens never hardcode sizes.
+//
+//  Tracking note: kerning is applied per-style where the comp uses negative letter
+//  spacing — call `.kerning()` on the Text in addition to `.font(...)` if you need
+//  the exact comp tracking, or use the `.spanTracking(for:)` helper below.
 //
 
 import SwiftUI
 
 enum SpanFont {
-    /// Hero lab values / scores — 34 / bold.
-    static let displayLarge = Font.system(size: 34, weight: .bold, design: .default)
-    /// Alias used at data-value call-sites (same ramp as displayLarge).
-    static let dataValueLg = Font.system(size: 34, weight: .bold, design: .default)
-    /// Screen headers — 22 / semibold.
-    static let title2 = Font.system(.title2, design: .default).weight(.semibold)
-    /// Card titles / section groups — 17 / semibold.
-    static let headline = Font.system(.headline, design: .default)
-    /// Body copy — 17 / regular.
-    static let body = Font.system(.body, design: .default)
-    /// Secondary body — 16 / regular.
-    static let callout = Font.system(.callout, design: .default)
-    /// Persistent disclaimer + hints — 13 / regular.
-    static let footnote = Font.system(.footnote, design: .default)
-    /// Citation chips / source labels — 11 / medium.
-    static let caption2 = Font.system(.caption2, design: .default).weight(.medium)
+
+    // MARK: - Display (big bold numbers / wordmark)
+
+    /// The "Span" wordmark / hero number — 44 / weight 800, very tight.
+    static let wordmark = Font.system(size: 44, weight: .heavy, design: .default)
+    /// Hero lab value (e.g. the 72px "6.9" on Parameter Detail, scaled for iOS) — 56 / 800.
+    static let displayHero = Font.system(size: 56, weight: .heavy, design: .rounded)
+    /// Large data value / score — 34 / 800.
+    static let displayLarge = Font.system(size: 34, weight: .heavy, design: .default)
+    /// Alias used at numeric data-value call-sites.
+    static let dataValueLg = displayLarge
+
+    // MARK: - Titles & headings
+
+    /// Screen / greeting headers — 26 / bold, tight.
+    static let title1 = Font.system(size: 26, weight: .bold, design: .default)
+    /// Section / card headers — 22 / bold.
+    static let title2 = Font.system(size: 22, weight: .bold, design: .default)
+    /// Nav bar title — 17 / bold.
+    static let title3 = Font.system(size: 17, weight: .bold, design: .default)
+    /// Card titles / row headlines — 14–17 / semibold (600).
+    static let headline = Font.system(size: 15, weight: .semibold, design: .default)
+
+    // MARK: - Body
+
+    /// Body copy — 15 / regular.
+    static let body = Font.system(size: 15, weight: .regular, design: .default)
+    /// Secondary body / row subtitle — 13 / regular.
+    static let callout = Font.system(size: 13, weight: .regular, design: .default)
+    /// Hints / persistent disclaimer — 12 / regular.
+    static let footnote = Font.system(size: 12, weight: .regular, design: .default)
+    /// Citation chips / source labels — 10 / medium.
+    static let caption = Font.system(size: 10, weight: .medium, design: .default)
+    /// Alias.
+    static let caption2 = caption
+    /// Uppercase tracked section label — 9 / bold (used with .textCase(.uppercase) + kerning).
+    static let label = Font.system(size: 9, weight: .bold, design: .default)
+
+    // MARK: - Monospace (tabular numeric values)
+
+    /// Monospaced numeric value, sized to taste.
+    static func mono(_ size: CGFloat, weight: Font.Weight = .bold) -> Font {
+        Font.system(size: size, weight: weight, design: .monospaced)
+    }
+    /// Default mono body for tabular figures — 13 / bold.
+    static let monoBody = mono(13, weight: .bold)
+    /// Big mono number (row values) — 16 / bold.
+    static let monoValue = mono(16, weight: .bold)
 }
 
 extension Font {
@@ -36,21 +72,29 @@ extension Font {
 
 // MARK: - Reusable text styling modifiers
 
+extension Text {
+    /// Apply the comp's tracking for a big number / wordmark (negative letter spacing).
+    func spanTight() -> Text { self.kerning(-0.6) }
+    /// Apply the comp's uppercase-label tracking (positive, ~1.2px).
+    func spanTracked() -> Text { self.kerning(1.2) }
+}
+
 extension View {
     /// The persistent footer copy. Appended in code on every content screen —
-    /// never generated by any AI model (SCREENS.md §"Persistent Footer").
+    /// never generated by any AI model (medical stance).
     func spanDisclaimerStyle() -> some View {
         self.font(SpanFont.footnote)
-            .foregroundStyle(SpanColor.textSecondary)
+            .foregroundStyle(SpanColor.textTertiary)
             .multilineTextAlignment(.center)
+            .lineSpacing(2)
             .frame(maxWidth: .infinity)
     }
 
-    /// Uppercase section header (".SYSTEM OVERVIEW", "READINGS", etc.).
+    /// Uppercase tracked section label (".SYSTEMS", "WELLBEING", "READINGS").
     func spanSectionHeaderStyle() -> some View {
-        self.font(SpanFont.footnote.weight(.semibold))
-            .foregroundStyle(SpanColor.textSecondary)
+        self.font(SpanFont.label)
+            .foregroundStyle(SpanColor.textTertiary)
             .textCase(.uppercase)
-            .kerning(0.5)
+            .kerning(1.2)
     }
 }

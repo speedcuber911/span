@@ -2,9 +2,10 @@
 //  HealthContextView.swift
 //  Span — Screen 5. Onboarding profile step 3 (Conditions / Meds / Goals).
 //
-//  Faithful to health-context.png: "Medical Profile", Step 3 of 3 ("Almost
-//  done"), Chronic Conditions chip multi-select, Medications & Supplements
-//  (names only — no doses), and a single-select Primary Goal. Finishes onboarding.
+//  Dark revamp (HTML screen 5): progress dots (Step 3 of 3), "Almost done"
+//  heading, Chronic Conditions / Current Medications / Supplements chip groups
+//  (names only — no doses) with a purple "+ Add" chip, and a single-select
+//  Primary Focus radio group. Finishes onboarding.
 //
 
 import SwiftUI
@@ -15,83 +16,105 @@ struct HealthContextView: View {
 
     private let conditionOptions = ["Diabetes Type 2", "Hypertension", "PCOS",
                                     "Hypothyroidism", "Insulin Resistance"]
-    private let goals = ["Optimize Energy Levels", "Manage Metabolic Health",
-                         "Improve Sleep Quality", "General Longevity"]
+    private let goals = ["Understanding my lab trends", "Preparing for a doctor visit",
+                         "Tracking my metabolic health", "Longevity / healthy ageing"]
 
     var body: some View {
         VStack(spacing: 0) {
             ProgressHeader(step: 3, total: 3)
+
             ScrollView {
-                VStack(alignment: .leading, spacing: SpanSpacing.md) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Medical Profile").font(SpanFont.title2).foregroundStyle(SpanColor.textPrimary)
-                        Text("Help us contextualize your data to provide more accurate insights.")
-                            .font(SpanFont.callout).foregroundStyle(SpanColor.textSecondary)
-                    }
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Almost done")
+                        .font(.system(size: 22, weight: .bold))
+                        .kerning(-0.5)
+                        .foregroundStyle(SpanColor.textPrimary)
+                        .padding(.bottom, 5)
+                    Text("Name only — no doses needed.")
+                        .font(.system(size: 13))
+                        .foregroundStyle(SpanColor.textSecondary)
+                        .padding(.bottom, SpanSpacing.md)
 
                     // Chronic conditions
-                    VStack(alignment: .leading, spacing: SpanSpacing.xs) {
-                        Text("Chronic Conditions").font(SpanFont.headline).foregroundStyle(SpanColor.textPrimary)
-                        Text("Select any diagnosed conditions.").font(SpanFont.footnote).foregroundStyle(SpanColor.textSecondary)
-                        FlowTags {
-                            ForEach(conditionOptions, id: \.self) { condition in
-                                ConditionChip(text: condition, selected: draft.conditions.contains(condition)) {
-                                    if draft.conditions.contains(condition) { draft.conditions.remove(condition) }
-                                    else { draft.conditions.insert(condition) }
-                                }
+                    SpanSectionLabel("Chronic conditions")
+                        .padding(.bottom, SpanSpacing.xs)
+                    FlowLayout(spacing: 6) {
+                        ForEach(conditionOptions, id: \.self) { condition in
+                            let selected = draft.conditions.contains(condition)
+                            TagChip(text: condition, removable: selected, accent: false) {
+                                if selected { draft.conditions.remove(condition) }
+                                else { draft.conditions.insert(condition) }
                             }
-                            ConditionChip(text: "+ Other", selected: false) {}
                         }
+                        TagChip(text: "+ Add condition", removable: false, accent: true) {}
                     }
-                    .spanCard()
+                    .padding(.bottom, SpanSpacing.md)
 
-                    // Medications & supplements (names only)
-                    VStack(alignment: .leading, spacing: SpanSpacing.xs) {
-                        Text("Medications & Supplements").font(SpanFont.headline).foregroundStyle(SpanColor.textPrimary)
-                        Text("List current meds (names only).").font(SpanFont.footnote).foregroundStyle(SpanColor.textSecondary)
+                    // Current medications (names only)
+                    SpanSectionLabel("Current medications")
+                        .padding(.bottom, SpanSpacing.xs)
+                    FlowLayout(spacing: 6) {
                         ForEach(draft.medications, id: \.self) { med in
-                            HStack {
-                                Text(med).font(SpanFont.body).foregroundStyle(SpanColor.textPrimary)
-                                Spacer()
-                                Image(systemName: "xmark").font(.system(size: 11)).foregroundStyle(SpanColor.textTertiary)
+                            TagChip(text: med, removable: true, accent: false) {
+                                draft.medications.removeAll { $0 == med }
                             }
-                            .padding(SpanSpacing.gutter)
-                            .background(SpanColor.surfaceLow, in: RoundedRectangle(cornerRadius: SpanRadius.small))
                         }
-                        Text("Add medication/supplement")
-                            .font(SpanFont.callout).foregroundStyle(SpanColor.textTertiary)
-                            .padding(SpanSpacing.gutter)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(SpanColor.surfaceLow, in: RoundedRectangle(cornerRadius: SpanRadius.small))
+                        TagChip(text: "+ Add medication", removable: false, accent: true) {}
                     }
-                    .spanCard()
+                    .padding(.bottom, SpanSpacing.md)
 
-                    // Primary goal
-                    SelectCard(title: "Primary Goal", options: goals, selection: $draft.primaryGoal)
+                    // Supplements (names only)
+                    SpanSectionLabel("Supplements")
+                        .padding(.bottom, SpanSpacing.xs)
+                    FlowLayout(spacing: 6) {
+                        ForEach(draft.supplements, id: \.self) { supp in
+                            TagChip(text: supp, removable: true, accent: false) {
+                                draft.supplements.removeAll { $0 == supp }
+                            }
+                        }
+                        TagChip(text: "+ Add supplement", removable: false, accent: true) {}
+                    }
+                    .padding(.bottom, SpanSpacing.md)
+
+                    // Primary focus
+                    SelectCard(title: "Primary focus", options: goals, selection: $draft.primaryGoal)
                 }
-                .padding(SpanSpacing.md)
+                .padding(.horizontal, SpanSpacing.screenH)
+                .padding(.top, SpanSpacing.md)
             }
-            Button("Complete Profile", action: onComplete).spanPrimaryButton().padding(SpanSpacing.md)
+
+            Button("Complete profile", action: onComplete)
+                .spanPrimaryButton()
+                .padding(.horizontal, SpanSpacing.screenH)
+                .padding(.vertical, SpanSpacing.gutter)
         }
-        .background(SpanColor.background)
-        .navigationTitle("Span Health")
-        .navigationBarTitleDisplayMode(.inline)
+        .background(SpanColor.background.ignoresSafeArea())
+        .navigationBarHidden(true)
     }
 }
 
-private struct ConditionChip: View {
+/// A pill chip (the comp's `chip()`): purple bg/border for the "+ Add" action,
+/// dark surface for selected/listed items with a trailing ✕ when removable.
+private struct TagChip: View {
     let text: String
-    let selected: Bool
+    let removable: Bool
+    let accent: Bool
     var action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            Text(text)
-                .font(SpanFont.footnote)
-                .foregroundStyle(selected ? SpanColor.onPrimary : SpanColor.textPrimary)
-                .padding(.horizontal, 14).padding(.vertical, 8)
-                .background(selected ? SpanColor.primary : SpanColor.surfaceLow, in: Capsule())
-                .overlay(Capsule().stroke(SpanColor.outlineVariant.opacity(0.6), lineWidth: selected ? 0 : 1))
+            HStack(spacing: 4) {
+                Text(text)
+                    .font(.system(size: 12, weight: .medium))
+                if removable {
+                    Image(systemName: "xmark").font(.system(size: 8, weight: .bold))
+                }
+            }
+            .foregroundStyle(accent ? SpanColor.accent : SpanColor.textPrimary)
+            .padding(.horizontal, 12).padding(.vertical, 6)
+            .background((accent ? SpanColor.accentBg : SpanColor.surfaceCard), in: Capsule())
+            .overlay(Capsule().strokeBorder(accent ? SpanColor.accentBorder : SpanColor.borderStrong,
+                                            lineWidth: SpanSpacing.hairline))
         }
         .buttonStyle(.plain)
     }
@@ -99,4 +122,5 @@ private struct ConditionChip: View {
 
 #Preview {
     NavigationStack { HealthContextView(draft: OnboardingDraft()) {} }
+        .preferredColorScheme(.dark)
 }

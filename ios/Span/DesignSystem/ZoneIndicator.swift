@@ -1,21 +1,21 @@
 //
 //  ZoneIndicator.swift
-//  Span — a labelled zone pill (dot + text), used on detail headers and rows
-//  where a bare dot needs an explicit word ("🔴 attention · 1 red, 2 yellow…").
+//  Span — a labelled zone pill (glowing dot + word), used on detail headers and
+//  rows where a bare dot needs an explicit word ("🔴 Attention · 1 red, 2 amber…").
 //
 
 import SwiftUI
 
 struct ZoneIndicator: View {
     let status: ZoneStatus
-    /// Optional basis string, e.g. "1 red · 2 yellow of 8 measured".
+    /// Optional basis string, e.g. "1 red · 2 amber of 8 measured".
     var basis: String?
 
     var body: some View {
         HStack(spacing: SpanSpacing.xs) {
-            TrafficLightDot(status: status, diameter: 10)
-            Text(status.label.lowercased())
-                .font(SpanFont.callout.weight(.medium))
+            TrafficLightDot(status: status, diameter: 8)
+            Text(status.label)
+                .font(SpanFont.headline.weight(.bold))
                 .foregroundStyle(status.color)
             if let basis {
                 Text("· \(basis)")
@@ -28,39 +28,30 @@ struct ZoneIndicator: View {
 }
 
 /// Inline status badge as seen on parameter rows (a tinted capsule with the word).
+/// Thin wrapper over `StatusBadge` so existing call-sites keep working.
 struct ZoneBadge: View {
     let flag: MeasurementFlag
 
     var body: some View {
-        HStack(spacing: 4) {
-            Image(systemName: badgeSymbol)
-                .font(.system(size: 10, weight: .semibold))
-            Text(flag.label)
-                .font(SpanFont.caption2)
-        }
-        .foregroundStyle(flag.color)
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(flag.color.opacity(0.12), in: Capsule())
-        .accessibilityLabel("Flagged \(flag.label)")
+        StatusBadge(flag: flag, systemImage: badgeSymbol)
     }
 
-    private var badgeSymbol: String {
+    private var badgeSymbol: String? {
         switch flag {
         case .high: return "arrow.up"
         case .low:  return "arrow.down"
         case .normal: return "checkmark"
-        case .none: return "minus"
+        case .none: return nil
         }
     }
 }
 
 #Preview {
     VStack(alignment: .leading, spacing: 16) {
-        ZoneIndicator(status: .attention, basis: "1 red · 2 yellow of 8 measured")
+        ZoneIndicator(status: .attention, basis: "1 red · 2 amber of 8 measured")
         ZoneIndicator(status: .onTrack, basis: nil)
         HStack { ZoneBadge(flag: .high); ZoneBadge(flag: .normal); ZoneBadge(flag: .low) }
     }
-    .padding()
+    .padding(40)
     .background(SpanColor.background)
 }

@@ -2,10 +2,17 @@
 //  TodayView.swift
 //  Span — Screen 7. Whole-person overview (home tab).
 //
-//  Faithful to today.png: a top "Span Health" bar, the "How you're feeling"
-//  PROMIS Physical/Mental cards (value / 100 + progress bar + band label), the
-//  light-red attention rail, the 8 organ-system tiles, a collapsed biological-age
-//  link, and the persistent disclaimer footer. NO single composite score.
+//  Dark "Health Intelligence" revamp, faithful to v2-today.jpeg:
+//   • date label + "Good morning, Anoop." two-line greeting + bell.
+//   • WELLBEING: two arc rings (Physical / Mental) tinted by T-score band — shown
+//     only when a PROMIS check-in exists.
+//   • the red "Discuss with your clinician" attention rail (AttentionRail).
+//   • SYSTEMS section rendered as ROWS (glowing dot · UPPERCASE name · inline
+//     status-colored sparkline · big mono lead value · tiny unit/marker label).
+//   • a collapsed biological-age link row (only if available).
+//
+//  NO single composite score. The floating purple "Ask Span" pill and the bottom
+//  tab bar are owned by RootView, not this screen.
 //
 
 import SwiftUI
@@ -16,35 +23,25 @@ struct TodayView: View {
     @State private var model: OverviewModel?
     @State private var citation: Source?
 
-    private let columns = [GridItem(.flexible(), spacing: SpanSpacing.gutter),
-                           GridItem(.flexible(), spacing: SpanSpacing.gutter)]
-
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: SpanSpacing.lg) {
+            VStack(alignment: .leading, spacing: 0) {
                 switch model?.state ?? .idle {
                 case .idle, .loading:
                     loadingSkeleton
                 case .failed(let message):
                     LoadFailureView(message: message) { Task { await model?.load() } }
+                        .padding(.horizontal, SpanSpacing.screenH)
                 case .loaded(let overview):
                     content(overview)
                 }
 
                 DisclaimerFooter()
-            }
-            .padding(.horizontal, SpanSpacing.md)
-            .padding(.top, SpanSpacing.xs)
-        }
-        .background(SpanColor.background)
-        .navigationTitle("Span Health")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Image(systemName: "person.crop.circle")
-                    .foregroundStyle(SpanColor.textSecondary)
+                    .padding(.top, SpanSpacing.xs)
             }
         }
+        .background(SpanColor.background.ignoresSafeArea())
+        .toolbar(.hidden, for: .navigationBar)
         .citationSheet($citation)
         .task {
             if model == nil { model = OverviewModel(api: env.api) }
@@ -56,165 +53,262 @@ struct TodayView: View {
 
     @ViewBuilder
     private func content(_ overview: OverviewDTO) -> some View {
-        // Greeting
-        HStack {
-            Text(greeting(overview.greetingName))
-                .font(SpanFont.title2)
-                .foregroundStyle(SpanColor.textPrimary)
-            Spacer()
-            Text(overview.asOf, format: .dateTime.day().month().year())
-                .font(SpanFont.footnote)
-                .foregroundStyle(SpanColor.textSecondary)
-        }
+        greeting(overview)
 
-        // PROMIS bands — only when a check-in exists.
         if let promis = overview.promis {
-            promisSection(promis)
-        } else {
-            startCheckinCard
+            wellbeingSection(promis)
         }
 
         // Attention rail — omitted entirely when there is nothing out of range.
-        AttentionRail(items: overview.attention) { item in
-            path.append(.parameterDetail(parameterID: item.canonicalParamId))
-        }
-
-        // Organ-system tiles
-        VStack(alignment: .leading, spacing: SpanSpacing.gutter) {
-            SectionHeader("System Overview")
-            LazyVGrid(columns: columns, spacing: SpanSpacing.gutter) {
-                ForEach(overview.systems) { rollup in
-                    Button {
-                        path.append(.systemDetail(rollup.key))
-                    } label: {
-                        OrganSystemTile(rollup: rollup)
-                    }
-                    .buttonStyle(.plain)
-                }
+        if !overview.attention.isEmpty {
+            AttentionRail(items: overview.attention) { item in
+                path.append(.parameterDetail(parameterID: item.canonicalParamId))
             }
+            .padding(.horizontal, SpanSpacing.screenH)
+            .padding(.vertical, SpanSpacing.gutter)
+            .spanBottomHairline()
         }
 
-        // Collapsed biological-age link (only if available, never above the fold).
+        systemsSection(overview)
+
         if overview.bioageAvailable {
-            Button {
-                path.append(.bioAge)
-            } label: {
-                HStack {
-                    Image(systemName: "hourglass")
-                        .foregroundStyle(SpanColor.textSecondary)
-                    Text("Your biological age trend (optional)")
-                        .font(SpanFont.callout)
-                        .foregroundStyle(SpanColor.textPrimary)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(SpanColor.textTertiary)
-                }
-                .spanCard()
-            }
-            .buttonStyle(.plain)
+            bioAgeRow
         }
     }
 
-    private func promisSection(_ promis: PromisDTO) -> some View {
-        VStack(alignment: .leading, spacing: SpanSpacing.gutter) {
-            Text("How you're feeling")
-                .font(SpanFont.headline)
-                .foregroundStyle(SpanColor.textPrimary)
-            HStack(spacing: SpanSpacing.gutter) {
-                PromisGauge(title: "Physical", score: promis.gphTScore, band: promis.gphBand)
-                PromisGauge(title: "Mental", score: promis.gmhTScore, band: promis.gmhBand)
+    // MARK: Greeting
+
+    private func greeting(_ overview: OverviewDTO) -> some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(overview.asOf, format: .dateTime.day().month(.abbreviated).year())
+                    .font(.system(size: 12, weight: .semibold))
+                    .textCase(.uppercase)
+                    .kerning(0.5)
+                    .foregroundStyle(SpanColor.textTertiary)
+                Text(greetingText(overview.greetingName))
+                    .font(.system(size: 26, weight: .bold))
+                    .kerning(-0.7)
+                    .lineSpacing(1)
+                    .foregroundStyle(SpanColor.textPrimary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            HStack {
-                PlainTagChip(text: "PROMIS Global-10")
-                Spacer()
-                Button("Update") { path.append(.checkin) }
-                    .font(SpanFont.footnote.weight(.medium))
-                    .foregroundStyle(SpanColor.primary)
-            }
-            Text("Compared with the general population (50 = average). Based on your check-in on \(promis.basedOnDate.formatted(.dateTime.day().month().year())).")
-                .font(SpanFont.caption2)
+            Spacer()
+            Image(systemName: "bell")
+                .font(.system(size: 21))
                 .foregroundStyle(SpanColor.textTertiary)
+                .padding(.top, 4)
+                .accessibilityLabel("Notifications")
         }
+        .padding(.horizontal, SpanSpacing.screenH)
+        .padding(.top, 18)
+        .padding(.bottom, 14)
     }
 
-    private var startCheckinCard: some View {
-        VStack(alignment: .leading, spacing: SpanSpacing.xs) {
-            Text("How are you feeling overall?")
-                .font(SpanFont.headline)
-                .foregroundStyle(SpanColor.textPrimary)
-            Text("A 2-minute check-in gives you a whole-person health picture.")
-                .font(SpanFont.footnote)
-                .foregroundStyle(SpanColor.textSecondary)
-            Button("Start check-in") { path.append(.checkin) }
-                .spanPrimaryButton()
-                .padding(.top, SpanSpacing.xs)
+    // MARK: Wellbeing arcs
+
+    private func wellbeingSection(_ promis: PromisDTO) -> some View {
+        VStack(alignment: .leading, spacing: 9) {
+            Text("Wellbeing")
+                .font(.system(size: 10, weight: .bold))
+                .textCase(.uppercase)
+                .kerning(1)
+                .foregroundStyle(SpanColor.textTertiary)
+
+            HStack(spacing: SpanSpacing.xs) {
+                WellbeingArc(label: "Physical health", tScore: promis.gphTScore)
+                WellbeingArc(label: "Mental health", tScore: promis.gmhTScore)
+            }
+
+            HStack(spacing: 4) {
+                Text("Check-in \(promis.basedOnDate.formatted(.dateTime.day().month(.abbreviated)))")
+                    .font(.system(size: 10))
+                    .foregroundStyle(SpanColor.textTertiary)
+                Button {
+                    path.append(.checkin)
+                } label: {
+                    Text("· Update →")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(SpanColor.accent)
+                }
+                .buttonStyle(.plain)
+            }
         }
-        .spanCard()
+        .padding(.horizontal, SpanSpacing.screenH)
+        .padding(.bottom, 14)
+        .spanBottomHairline()
     }
+
+    // MARK: Systems
+
+    private func systemsSection(_ overview: OverviewDTO) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Systems")
+                .font(.system(size: 10, weight: .bold))
+                .textCase(.uppercase)
+                .kerning(1)
+                .foregroundStyle(SpanColor.textTertiary)
+                .padding(.top, 14)
+                .padding(.bottom, 2)
+
+            ForEach(overview.systems) { rollup in
+                Button {
+                    path.append(.systemDetail(rollup.key))
+                } label: {
+                    SystemRow(rollup: rollup,
+                              value: leadValue(rollup),
+                              unit: rollup.leadParameter)
+                    .spanBottomHairline()
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, SpanSpacing.screenH)
+    }
+
+    /// The big lead value = the most recent sparkline reading, formatted compactly.
+    private func leadValue(_ rollup: SystemRollup) -> String {
+        guard let v = rollup.sparklinePoints.last else { return "—" }
+        return v.formatted(.number.precision(.fractionLength(0...1)))
+    }
+
+    // MARK: Biological-age link row
+
+    private var bioAgeRow: some View {
+        Button {
+            path.append(.bioAge)
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Biological age")
+                        .font(.system(size: 10, weight: .bold))
+                        .textCase(.uppercase)
+                        .kerning(0.5)
+                        .foregroundStyle(SpanColor.textTertiary)
+                    Text("View your biological-age trend (optional)")
+                        .font(.system(size: 11))
+                        .foregroundStyle(SpanColor.textSecondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(SpanColor.textTertiary)
+            }
+            .padding(.vertical, 14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, SpanSpacing.screenH)
+    }
+
+    // MARK: Loading
 
     private var loadingSkeleton: some View {
-        VStack(spacing: SpanSpacing.gutter) {
-            SkeletonBlock(height: 90)
-            SkeletonBlock(height: 70)
-            LazyVGrid(columns: columns, spacing: SpanSpacing.gutter) {
-                ForEach(0..<6, id: \.self) { _ in SkeletonBlock(height: 120) }
+        VStack(alignment: .leading, spacing: SpanSpacing.gutter) {
+            SkeletonBlock(height: 64)
+            HStack(spacing: SpanSpacing.xs) {
+                SkeletonBlock(height: 92)
+                SkeletonBlock(height: 92)
             }
+            SkeletonBlock(height: 58)
+            ForEach(0..<6, id: \.self) { _ in SkeletonBlock(height: 44) }
         }
+        .padding(.horizontal, SpanSpacing.screenH)
+        .padding(.top, 18)
     }
 
-    private func greeting(_ name: String) -> String {
+    private func greetingText(_ name: String) -> String {
         let hour = Calendar.current.component(.hour, from: Date())
         let part = hour < 12 ? "Good morning" : (hour < 17 ? "Good afternoon" : "Good evening")
-        return "\(part), \(name)"
+        return "\(part),\n\(name)."
     }
 }
 
-/// A PROMIS band gauge: value / 100 + progress bar tinted by band + label.
-struct PromisGauge: View {
-    let title: String
-    let score: Double
-    let band: String
+// MARK: - Wellbeing arc ring (a PROMIS T-score gauge)
+
+/// A half-circle arc gauge tinted by the PROMIS T-score band (matches the comp's
+/// `arc()` helper: a 6px arc over a faint track, the band word, and the T-value).
+/// Population mean is 50; the ring fills proportionally from T 30…70.
+struct WellbeingArc: View {
+    let label: String
+    let tScore: Double
+
+    /// Fraction of the half-arc that is filled (T 30 = empty, T 70 = full).
+    private var progress: Double {
+        min(0.99, max(0.01, (tScore - 30) / 40))
+    }
 
     private var tint: Color {
-        switch score {
-        case ..<40: return SpanColor.statusRed
-        case 40..<45: return SpanColor.statusYellow
-        case 45..<55: return SpanColor.statusYellow
-        default: return SpanColor.statusGreen
+        switch tScore {
+        case 55...:    return SpanColor.statusGreen
+        case 45..<55:  return SpanColor.textSecondary
+        case 40..<45:  return SpanColor.statusYellow
+        default:       return SpanColor.statusRed
+        }
+    }
+
+    private var band: String {
+        switch tScore {
+        case 55...:    return "Above avg"
+        case 45..<55:  return "Average"
+        case 40..<45:  return "Mild"
+        default:       return "Low"
         }
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: SpanSpacing.xs) {
-            Text(title.uppercased())
-                .font(SpanFont.footnote)
+        VStack(alignment: .leading, spacing: 3) {
+            Text(label)
+                .font(.system(size: 9))
                 .foregroundStyle(SpanColor.textSecondary)
-                .kerning(0.5)
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(score.formatted(.number.precision(.fractionLength(0))))
-                    .font(SpanFont.displayLarge)
-                    .foregroundStyle(SpanColor.textPrimary)
-                Text("/ 100")
-                    .font(SpanFont.footnote)
-                    .foregroundStyle(SpanColor.textTertiary)
+
+            ZStack {
+                // Faint full-arc track.
+                ArcShape(progress: 1)
+                    .stroke(Color.white.opacity(0.06),
+                            style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                // Tinted fill.
+                ArcShape(progress: progress)
+                    .stroke(tint, style: StrokeStyle(lineWidth: 6, lineCap: .round))
             }
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule().fill(SpanColor.surfaceHigh)
-                    Capsule().fill(tint)
-                        .frame(width: geo.size.width * CGFloat(min(max(score, 0), 100) / 100))
-                }
-            }
-            .frame(height: 6)
+            .frame(height: 38)
+            .padding(.vertical, 1)
+
             Text(band)
-                .font(SpanFont.caption2)
-                .foregroundStyle(SpanColor.textSecondary)
+                .font(.system(size: 11, weight: .bold))
+                .foregroundStyle(tint)
+            Text("T \(Int(tScore))")
+                .font(.system(size: 9, design: .monospaced))
+                .foregroundStyle(SpanColor.textTertiary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .spanCard()
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(SpanColor.surfaceCard, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(SpanColor.border, lineWidth: SpanSpacing.hairline)
+        )
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(title) health \(Int(score)) of 100, \(band)")
+        .accessibilityLabel("\(label): \(band), T-score \(Int(tScore)) of 100, where 50 is the population average.")
+    }
+}
+
+/// A bottom half-circle arc, swept left→right by `progress` (0…1). Matches the
+/// comp's 180° arc from the lower-left to the lower-right.
+private struct ArcShape: Shape {
+    var progress: Double
+
+    func path(in rect: CGRect) -> Path {
+        let radius = min(rect.width, rect.height * 2) / 2 - 3
+        let center = CGPoint(x: rect.midX, y: rect.maxY)
+        var path = Path()
+        // 180° (left) → 0° (right). Sweep the filled fraction starting from the left.
+        let start = Angle.degrees(180)
+        let end = Angle.degrees(180 - 180 * progress)
+        path.addArc(center: center, radius: radius,
+                    startAngle: start, endAngle: end, clockwise: true)
+        return path
     }
 }
 

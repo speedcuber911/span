@@ -1,7 +1,10 @@
 //
 //  CitationChip.swift
-//  Span — small caption-2 chip under any claim ("Tier 1 · ADA 2024 ↗").
-//  Tapping presents the Citation Detail sheet (Screen 18).
+//  Span — the `.cc` citation chip ("Tier 1 · ADA 2024 ↗").
+//
+//  Muted surface chip (surfaceCard fill, b2 hairline, t2 text) with a leading
+//  external-link icon. Tier 3 / contested sources carry a warning glyph and amber
+//  text. Tapping presents the Citation Detail sheet (Screen 18).
 //
 
 import SwiftUI
@@ -17,50 +20,52 @@ struct CitationChip: View {
         Button {
             onTap(source)
         } label: {
-            HStack(spacing: 6) {
-                if isContested {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.system(size: 9))
-                }
-                Text(chipText)
-                    .font(SpanFont.caption2)
-                    .lineLimit(1)
-                Image(systemName: "arrow.up.forward")
+            HStack(spacing: 3) {
+                Image(systemName: isContested ? "exclamationmark.triangle.fill" : "arrow.up.right")
                     .font(.system(size: 9, weight: .semibold))
+                Text(chipText)
+                    .font(SpanFont.caption)
+                    .lineLimit(1)
             }
-            .foregroundStyle(isContested ? SpanColor.statusYellow.opacity(0.95) : SpanColor.textSecondary)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(SpanColor.surfaceLow, in: Capsule())
-            .overlay(Capsule().stroke(SpanColor.outlineVariant.opacity(0.6), lineWidth: 1))
+            .foregroundStyle(isContested ? SpanColor.statusYellow : SpanColor.textSecondary)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(SpanColor.surfaceCard, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .strokeBorder(SpanColor.borderStrong, lineWidth: SpanSpacing.hairline)
+            )
         }
         .buttonStyle(.plain)
         .accessibilityLabel("\(source.tier.label) source: \(source.title). Opens source details.")
     }
 
     private var chipText: String {
-        let qualifier = isContested ? " · expert opinion" : ""
+        let qualifier = isContested ? " · contested" : ""
         return "\(source.tier.label)\(qualifier) · \(source.title)"
     }
 }
 
-/// Chip with custom inline label text (e.g. "Peter Attia · Four Horsemen").
+/// Chip with custom inline label text (e.g. a free-text source tag).
 struct PlainTagChip: View {
     let text: String
-    var systemImage: String?
+    var systemImage: String? = "arrow.up.right"
 
     var body: some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 3) {
             if let systemImage {
-                Image(systemName: systemImage).font(.system(size: 10))
+                Image(systemName: systemImage).font(.system(size: 9, weight: .semibold))
             }
-            Text(text).font(SpanFont.caption2)
+            Text(text).font(SpanFont.caption).lineLimit(1)
         }
         .foregroundStyle(SpanColor.textSecondary)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-        .background(SpanColor.surfaceLow, in: Capsule())
-        .overlay(Capsule().stroke(SpanColor.outlineVariant.opacity(0.6), lineWidth: 1))
+        .padding(.horizontal, 8)
+        .padding(.vertical, 3)
+        .background(SpanColor.surfaceCard, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                .strokeBorder(SpanColor.borderStrong, lineWidth: SpanSpacing.hairline)
+        )
     }
 }
 
@@ -68,8 +73,8 @@ struct PlainTagChip: View {
     VStack(alignment: .leading, spacing: 12) {
         CitationChip(source: MockSpanAPI.adaSource)
         CitationChip(source: MockSpanAPI.attiaSource)
-        PlainTagChip(text: "Peter Attia · Four Horsemen", systemImage: "books.vertical")
+        PlainTagChip(text: "Tier 2 · Optimal")
     }
-    .padding()
+    .padding(40)
     .background(SpanColor.background)
 }

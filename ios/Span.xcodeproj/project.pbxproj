@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		042722FD3ACAD831DC6BC6E8 /* AskSpanPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC5F79104920DE8BAA0628D /* AskSpanPill.swift */; };
 		08FA8808D055C4299FB54590 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3688F7AE606459F450F60C8B /* RootView.swift */; };
+		0A0CABE4DBC9ACD1A7C00ACB /* StatusBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90B2D4B25C3E8C303DD1326 /* StatusBadge.swift */; };
 		0B16015A2409FD153F136233 /* ParameterDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3BE9658F5108E8A178AB12 /* ParameterDetailView.swift */; };
 		1CFFC1C59B752B2A554887D5 /* SpanApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865AFEBB506E06AF846EC971 /* SpanApp.swift */; };
 		226286EAD4C30865FC073365 /* AddReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C93620F1EEF645E161A9082 /* AddReportsView.swift */; };
@@ -22,12 +23,14 @@
 		45EA2F72BF59082AE0E43DB4 /* SignInWithAppleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9BDAD3E0239F73E8AE37BF /* SignInWithAppleView.swift */; };
 		521A4C8BC41D55BC2AEAF6C6 /* BundledSpanAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0631B797C319BBD8F342660 /* BundledSpanAPI.swift */; };
 		5F9BA77A4F697EBA18CCE95F /* SharedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427EF1D0CB5E4382D52D9EE5 /* SharedViews.swift */; };
+		5F9BDF20B5447298508BF564 /* Glow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DC20EB63293A03E9EC993F /* Glow.swift */; };
 		657FBB0588FA9C568CE0E4F6 /* AttentionRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE108E8325673D8D1E0E462 /* AttentionRail.swift */; };
 		6DC8B95BE30D261BB5755ACA /* AboutYouView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FE800D2814DFDB773AB206 /* AboutYouView.swift */; };
 		70ACC7E07A2BDEA7EA8D5E2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9335FD5DC81DC03019E7A6A7 /* Assets.xcassets */; };
 		733A99151FE08DE2BF7C784E /* Sparkline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813012D56F9803601D460709 /* Sparkline.swift */; };
 		78C17984D46696B7F6DC5716 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACED1C8E65CE6B9D067BE32 /* TodayView.swift */; };
 		7CCA3FA76E5BB6FEE8C56112 /* MockSpanAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19431407D93B55FBF64F7ABC /* MockSpanAPI.swift */; };
+		7F335627F0D5631809445A36 /* NaturalFrequencyGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298D7EBA7E957ACAF3786007 /* NaturalFrequencyGrid.swift */; };
 		8F793C759C2ADB24C1A547F0 /* CitationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C7F3F7E826D7924A63CF38 /* CitationSheet.swift */; };
 		9603CDF41037273F73E6EA18 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5EC306D7FD293906B93FB0 /* DTOs.swift */; };
 		989974B89E44EF6495718FBE /* ViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B725A94BD048A8E30BC6A33 /* ViewModels.swift */; };
@@ -58,6 +61,7 @@
 		1F690925538C2CA82DF61DDE /* DataConsentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataConsentView.swift; sourceTree = "<group>"; };
 		2203E0D9071A46811486C6AD /* Span.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Span.entitlements; sourceTree = "<group>"; };
 		2396DED19BD4057260221D62 /* OnboardingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowView.swift; sourceTree = "<group>"; };
+		298D7EBA7E957ACAF3786007 /* NaturalFrequencyGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaturalFrequencyGrid.swift; sourceTree = "<group>"; };
 		2BB07E9EA7268C851888F7E9 /* AskSpanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskSpanView.swift; sourceTree = "<group>"; };
 		2DAA9B94ABEC3A5CB8B3BA03 /* SpanAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpanAPI.swift; sourceTree = "<group>"; };
 		3688F7AE606459F450F60C8B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -65,6 +69,7 @@
 		427EF1D0CB5E4382D52D9EE5 /* SharedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViews.swift; sourceTree = "<group>"; };
 		4ACED1C8E65CE6B9D067BE32 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		4E5EC306D7FD293906B93FB0 /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		53DC20EB63293A03E9EC993F /* Glow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Glow.swift; sourceTree = "<group>"; };
 		53E34D50235BA544DCE11B6F /* CitationChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationChip.swift; sourceTree = "<group>"; };
 		54D1C101B42F63595B03BE07 /* ZoneIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneIndicator.swift; sourceTree = "<group>"; };
 		5B725A94BD048A8E30BC6A33 /* ViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels.swift; sourceTree = "<group>"; };
@@ -82,6 +87,7 @@
 		9F3BE9658F5108E8A178AB12 /* ParameterDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterDetailView.swift; sourceTree = "<group>"; };
 		A625C68391EAD514BD90D2D5 /* SpanEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpanEnums.swift; sourceTree = "<group>"; };
 		AD203995E156A8F7057BDF35 /* BiologicalAgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiologicalAgeView.swift; sourceTree = "<group>"; };
+		B90B2D4B25C3E8C303DD1326 /* StatusBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBadge.swift; sourceTree = "<group>"; };
 		BEE108E8325673D8D1E0E462 /* AttentionRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionRail.swift; sourceTree = "<group>"; };
 		BFC51822684ACCAAF9AA1462 /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		C0631B797C319BBD8F342660 /* BundledSpanAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledSpanAPI.swift; sourceTree = "<group>"; };
@@ -144,10 +150,13 @@
 				BEE108E8325673D8D1E0E462 /* AttentionRail.swift */,
 				53E34D50235BA544DCE11B6F /* CitationChip.swift */,
 				0160D052A4FC94E39EC4ACD1 /* Color+Span.swift */,
+				53DC20EB63293A03E9EC993F /* Glow.swift */,
+				298D7EBA7E957ACAF3786007 /* NaturalFrequencyGrid.swift */,
 				DFB9097F716A27F40E790EC3 /* OrganSystemTile.swift */,
 				427EF1D0CB5E4382D52D9EE5 /* SharedViews.swift */,
 				BFC51822684ACCAAF9AA1462 /* Spacing.swift */,
 				813012D56F9803601D460709 /* Sparkline.swift */,
+				B90B2D4B25C3E8C303DD1326 /* StatusBadge.swift */,
 				F23063D1FA522C1A05A5E35A /* TrafficLightDot.swift */,
 				6D8D09508DFA6E743D0983C4 /* Typography+Span.swift */,
 				54D1C101B42F63595B03BE07 /* ZoneIndicator.swift */,
@@ -303,9 +312,11 @@
 				9603CDF41037273F73E6EA18 /* DTOs.swift in Sources */,
 				24F91E81676CA6EF92C22B40 /* DataConsentView.swift in Sources */,
 				A290AC2725FA0853E9B5547F /* DoctorVisitPrepView.swift in Sources */,
+				5F9BDF20B5447298508BF564 /* Glow.swift in Sources */,
 				BE2670C6B70AB5E17C8590FD /* HealthContextView.swift in Sources */,
 				37B17CF642B55CE6FDFD325C /* LiveSpanAPI.swift in Sources */,
 				7CCA3FA76E5BB6FEE8C56112 /* MockSpanAPI.swift in Sources */,
+				7F335627F0D5631809445A36 /* NaturalFrequencyGrid.swift in Sources */,
 				C159C92576BF67F75CF791B3 /* OnboardingFlowView.swift in Sources */,
 				E5ED46B604C955867B447427 /* OrganSystemTile.swift in Sources */,
 				0B16015A2409FD153F136233 /* ParameterDetailView.swift in Sources */,
@@ -318,6 +329,7 @@
 				1CFFC1C59B752B2A554887D5 /* SpanApp.swift in Sources */,
 				EF4F3AB3C7848FCAA8091B8D /* SpanEnums.swift in Sources */,
 				733A99151FE08DE2BF7C784E /* Sparkline.swift in Sources */,
+				0A0CABE4DBC9ACD1A7C00ACB /* StatusBadge.swift in Sources */,
 				B583D034E9E9A2BB360AA4C4 /* SystemDetailView.swift in Sources */,
 				A6C4D11107D862891C1B7AA3 /* SystemsOverviewView.swift in Sources */,
 				78C17984D46696B7F6DC5716 /* TodayView.swift in Sources */,

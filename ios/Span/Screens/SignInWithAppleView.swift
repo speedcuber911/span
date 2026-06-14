@@ -2,8 +2,12 @@
 //  SignInWithAppleView.swift
 //  Span — Screen 1. Sign in with Apple (sole entry point).
 //
-//  Faithful to sign-in-with-apple.png: centered Span wordmark, one-line value
-//  prop, the native Sign in with Apple button, and the legal / India-only footer.
+//  Dark "Health Intelligence" revamp (v2-overview.jpeg / HTML screen 1):
+//  "HEALTH INTELLIGENCE" eyebrow, a huge bold "Span" wordmark with a purple
+//  underline accent, "Your lab reports, finally legible." headline, the value
+//  subtext, a white "Sign in with Apple" button, and the Terms · Privacy /
+//  India-only footer. The Made-in-India badge is kept, restyled for dark.
+//
 //  No username/password. The Apple identity token is exchanged server-side and
 //  never persisted (see LiveSpanAPI.exchangeApple).
 //
@@ -17,48 +21,69 @@ struct SignInWithAppleView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        VStack {
-            Spacer()
-            // Wordmark — pulse-into-uptrend mark echoing the app icon
-            HStack(spacing: 10) {
-                Image(systemName: "waveform.path.ecg.rectangle.fill")
-                    .font(.system(size: 30, weight: .semibold))
-                    .foregroundStyle(SpanColor.primary)
-                Text("Span")
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(SpanColor.primary)
-            }
-            Text("Longevity, decoded from your bloodwork.")
-                .font(SpanFont.title2)
+        VStack(spacing: 0) {
+            Spacer(minLength: SpanSpacing.xl)
+
+            // Eyebrow
+            Text("Health Intelligence")
+                .font(.system(size: 11, weight: .semibold))
+                .kerning(6)
+                .textCase(.uppercase)
+                .foregroundStyle(SpanColor.textTertiary)
+                .padding(.bottom, SpanSpacing.md)
+
+            // Wordmark — huge bold, very tight tracking
+            Text("Span")
+                .font(.system(size: 80, weight: .heavy))
+                .kerning(-4)
+                .foregroundStyle(SpanColor.textPrimary)
+
+            // Purple underline accent
+            RoundedRectangle(cornerRadius: 1, style: .continuous)
+                .fill(SpanColor.accent.opacity(0.7))
+                .frame(width: 40, height: 1.5)
+                .padding(.top, 22)
+                .padding(.bottom, 26)
+
+            // Headline
+            Text("Your lab reports,\nfinally legible.")
+                .font(.system(size: 22, weight: .semibold))
+                .kerning(-0.5)
+                .lineSpacing(4)
                 .foregroundStyle(SpanColor.textPrimary)
                 .multilineTextAlignment(.center)
-                .padding(.top, SpanSpacing.md)
-                .padding(.horizontal, SpanSpacing.lg)
-            Text("AI turns years of lab reports into clear organ-system trends, a biological-age read, and an evidence-backed prep sheet for your next doctor visit.")
-                .font(SpanFont.callout)
+                .padding(.bottom, 10)
+
+            // Subtext
+            Text("8 organ systems. Trend lines across every result. Prep for every doctor visit.")
+                .font(.system(size: 14))
+                .lineSpacing(7)
                 .foregroundStyle(SpanColor.textSecondary)
                 .multilineTextAlignment(.center)
-                .padding(.top, SpanSpacing.xs)
-                .padding(.horizontal, SpanSpacing.xl)
+                .frame(maxWidth: 240)
 
             Spacer()
 
-            // Made in India badge
+            // Made in India badge — restyled for dark
             IndianFlagBadge()
                 .padding(.bottom, SpanSpacing.md)
 
+            // Sign in with Apple — white button
             if isWorking {
-                ProgressView().padding(.bottom, SpanSpacing.md)
+                ProgressView()
+                    .tint(SpanColor.textPrimary)
+                    .frame(height: 50)
+                    .padding(.horizontal, SpanSpacing.lg)
             } else {
                 SignInWithAppleButton(.signIn) { request in
                     request.requestedScopes = [.fullName, .email]
                 } onCompletion: { result in
                     handle(result)
                 }
-                .signInWithAppleButtonStyle(.black)
-                .frame(height: 50)
-                .clipShape(RoundedRectangle(cornerRadius: SpanRadius.small))
-                .padding(.horizontal, SpanSpacing.md)
+                .signInWithAppleButtonStyle(.white)
+                .frame(height: 52)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .padding(.horizontal, SpanSpacing.lg)
             }
 
             if let errorMessage {
@@ -68,28 +93,25 @@ struct SignInWithAppleView: View {
                     .padding(.top, SpanSpacing.xs)
             }
 
-            // Legal footer
-            VStack(spacing: SpanSpacing.xs) {
-                (Text("By signing in you agree to our ")
-                 + Text("Terms of Service").foregroundColor(SpanColor.primary)
-                 + Text(" and ")
-                 + Text("Privacy Policy").foregroundColor(SpanColor.primary)
-                 + Text("."))
-                    .font(SpanFont.footnote)
-                    .foregroundStyle(SpanColor.textTertiary)
-                    .multilineTextAlignment(.center)
-                Text("INDIA ONLY · DATA STORED IN INDIA")
-                    .font(SpanFont.caption2)
-                    .foregroundStyle(SpanColor.textTertiary)
-                Text("© 2026 Span Health · Clinical data powered by evidence-based research.")
-                    .font(SpanFont.caption2)
-                    .foregroundStyle(SpanColor.textTertiary)
-                    .multilineTextAlignment(.center)
+            // Legal / India-only footer
+            VStack(spacing: 0) {
+                (Text("Agree to our ")
+                 + Text("Terms").foregroundColor(SpanColor.accent)
+                 + Text(" · ")
+                 + Text("Privacy Policy").foregroundColor(SpanColor.accent))
+                    .font(.system(size: 10))
+                Text("India only · Data stored ap-south-1")
+                    .font(.system(size: 10))
             }
-            .padding(SpanSpacing.md)
-            .frame(maxWidth: .infinity)
-            .background(SpanColor.surfaceLow)
+            .foregroundStyle(SpanColor.textTertiary)
+            .multilineTextAlignment(.center)
+            .lineSpacing(7)
+            .padding(.top, 14)
+
+            Spacer(minLength: SpanSpacing.xl)
         }
+        .padding(.horizontal, 28)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(SpanColor.background.ignoresSafeArea())
     }
 
@@ -115,6 +137,7 @@ struct SignInWithAppleView: View {
 // MARK: - Made in India badge
 
 /// A small "Made in India" pill with a drawn tricolour flag (no image asset).
+/// Restyled for the dark theme (surface fill + hairline border).
 struct IndianFlagBadge: View {
     var body: some View {
         HStack(spacing: 6) {
@@ -123,7 +146,7 @@ struct IndianFlagBadge: View {
                 .clipShape(RoundedRectangle(cornerRadius: 2))
                 .overlay(
                     RoundedRectangle(cornerRadius: 2)
-                        .stroke(SpanColor.outlineVariant.opacity(0.5), lineWidth: 0.5)
+                        .stroke(SpanColor.borderStrong.opacity(0.6), lineWidth: 0.5)
                 )
             Text("Made in India")
                 .font(SpanFont.caption2)
@@ -131,12 +154,8 @@ struct IndianFlagBadge: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
-        .background(
-            Capsule().fill(SpanColor.surface)
-        )
-        .overlay(
-            Capsule().stroke(SpanColor.outlineVariant.opacity(0.6), lineWidth: 0.5)
-        )
+        .background(Capsule().fill(SpanColor.surfaceCard))
+        .overlay(Capsule().stroke(SpanColor.border, lineWidth: SpanSpacing.hairline))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Made in India")
     }
@@ -181,4 +200,5 @@ private struct TricolourFlag: View {
 
 #Preview {
     SignInWithAppleView(session: SessionState())
+        .preferredColorScheme(.dark)
 }

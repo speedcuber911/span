@@ -19,6 +19,14 @@ struct RootView: View {
     @State private var prepPath: [Route] = []
     @State private var showingVoice = false
 
+    init() {
+        // Dark "Health Intelligence" chrome: blurred dark tab bar with a purple
+        // active tab, and the matching dark nav-bar appearance. Styling only —
+        // navigation logic is unchanged.
+        SpanTabBarStyle.apply()
+        SpanNavBarStyle.apply()
+    }
+
     private var showAskSpan: Bool {
         selectedTab == .today || selectedTab == .systems
     }
@@ -32,7 +40,7 @@ struct RootView: View {
                             RouteDestination(route: route, path: $todayPath)
                         }
                 }
-                .tabItem { Label("Today", systemImage: "house") }
+                .tabItem { Label("Today", systemImage: "house.fill") }
                 .tag(AppTab.today)
 
                 NavigationStack(path: $systemsPath) {
@@ -41,7 +49,7 @@ struct RootView: View {
                             RouteDestination(route: route, path: $systemsPath)
                         }
                 }
-                .tabItem { Label("Systems", systemImage: "square.grid.2x2") }
+                .tabItem { Label("Systems", systemImage: "square.grid.2x2.fill") }
                 .tag(AppTab.systems)
 
                 NavigationStack(path: $checkinPath) {
@@ -50,7 +58,7 @@ struct RootView: View {
                             RouteDestination(route: route, path: $checkinPath)
                         }
                 }
-                .tabItem { Label("Check-in", systemImage: "checkmark.circle") }
+                .tabItem { Label("Check-in", systemImage: "checklist") }
                 .tag(AppTab.checkin)
 
                 NavigationStack(path: $prepPath) {
@@ -59,10 +67,10 @@ struct RootView: View {
                             RouteDestination(route: route, path: $prepPath)
                         }
                 }
-                .tabItem { Label("Prep", systemImage: "list.clipboard") }
+                .tabItem { Label("Prep", systemImage: "stethoscope") }
                 .tag(AppTab.prep)
             }
-            .tint(SpanColor.primary)
+            .tint(SpanColor.accent)
 
             if showAskSpan {
                 AskSpanPill { showingVoice = true }
@@ -71,9 +79,11 @@ struct RootView: View {
                     .transition(.scale.combined(with: .opacity))
             }
         }
+        .background(SpanColor.background.ignoresSafeArea())
         .fullScreenCover(isPresented: $showingVoice) {
             AskSpanView()
         }
+        .preferredColorScheme(.dark)
     }
 }
 

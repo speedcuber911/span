@@ -1,129 +1,117 @@
 //
 //  OrganSystemTile.swift
-//  Span — the signature organ-system tile.
+//  Span — the organ-system row (see v2-today.jpeg).
 //
-//  White rounded card · SF Symbol with zone tint · system name · status dot ·
-//  trend arrow · count-basis subtitle (NEVER a percentage, NEVER a composite
-//  score) · mini sparkline. Two-column grid on Today, taller row on Systems.
+//  The dark "Health Intelligence" Today screen lists each system as a single ROW:
+//  a glowing status dot · the uppercase system label · an inline status-colored
+//  sparkline · the big mono lead value with a small unit suffix. NEVER a percentage,
+//  NEVER a composite score. A richer variant (`SystemDetailRow`) is used on the
+//  Systems tab with a status-basis subtitle and a chevron.
+//
+//  `SystemRow` is the canonical name; `OrganSystemTile` / `OrganSystemRow` are kept
+//  as aliases so older call-sites keep resolving.
 //
 
 import SwiftUI
 
-/// Grid tile used on the Today screen (2-column fluid grid).
-struct OrganSystemTile: View {
+/// Compact Today-screen row: dot · LABEL · sparkline · value+unit.
+struct SystemRow: View {
     let rollup: SystemRollup
+    /// The big value to show (lead marker's latest). The DTO doesn't carry it
+    /// numerically, so the screen passes the formatted value + unit it already has.
+    var value: String? = nil
+    var unit: String? = nil
 
     var body: some View {
-        VStack(alignment: .leading, spacing: SpanSpacing.gutter) {
-            HStack {
-                HStack(spacing: SpanSpacing.xs) {
-                    Image(systemName: rollup.key.symbolName)
-                        .font(.system(size: 18))
-                        .foregroundStyle(rollup.status.color)
-                        .frame(width: 24)
-                    Text(rollup.key.displayName)
-                        .font(SpanFont.body.weight(.medium))
-                        .foregroundStyle(SpanColor.textPrimary)
-                }
-                Spacer()
-                Image(systemName: rollup.leadDirection.symbolName)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(rollup.leadDirection.color)
-            }
+        HStack(spacing: SpanSpacing.gutter) {
+            TrafficLightDot(status: rollup.status, diameter: 8)
 
-            // Lead marker + count basis (count, never percent).
-            VStack(alignment: .leading, spacing: 2) {
-                Text(rollup.leadParameter)
-                    .font(SpanFont.footnote)
-                    .foregroundStyle(SpanColor.textSecondary)
-                Text(rollup.statusBasis)
-                    .font(SpanFont.caption2)
-                    .foregroundStyle(SpanColor.textTertiary)
-                    .lineLimit(2)
-            }
+            Text(rollup.key.displayName)
+                .font(.system(size: 10, weight: .bold))
+                .textCase(.uppercase)
+                .kerning(0.5)
+                .foregroundStyle(SpanColor.textTertiary)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             Sparkline(points: rollup.sparklinePoints, tint: rollup.status.color)
-                .frame(height: 28)
+                .frame(width: 52, height: 16)
+
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text(value ?? "—")
+                    .font(SpanFont.mono(16, weight: .bold))
+                    .kerning(-0.3)
+                    .foregroundStyle(rollup.status.color)
+                if let unit {
+                    Text(unit)
+                        .font(.system(size: 9.5, weight: .regular))
+                        .foregroundStyle(SpanColor.textTertiary)
+                }
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .spanCard()
-        .overlay(alignment: .top) {
-            // Colored zone indicator on the top edge.
-            RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous)
-                .trim(from: 0.0, to: 0.0001) // keep shape, draw only a top accent below
-                .hidden()
-        }
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(rollup.key.displayName), \(rollup.status.label). Lead marker \(rollup.leadParameter), \(rollup.leadDirection.label). \(rollup.statusBasis).")
+        .accessibilityLabel("\(rollup.key.displayName), \(rollup.status.label). Lead marker \(rollup.leadParameter). \(rollup.statusBasis).")
     }
 }
 
-/// Taller row used on the dedicated Systems tab.
-struct OrganSystemRow: View {
+/// Back-compat alias — the old grid "tile" is now the Today row.
+typealias OrganSystemTile = SystemRow
+
+/// Taller row used on the dedicated Systems tab: dot · name + lead + basis ·
+/// sparkline · chevron.
+struct SystemDetailRow: View {
     let rollup: SystemRollup
 
     var body: some View {
-        HStack(spacing: SpanSpacing.md) {
-            ZStack {
-                Circle()
-                    .fill(rollup.status.color.opacity(0.12))
-                    .frame(width: 40, height: 40)
-                Image(systemName: rollup.key.symbolName)
-                    .font(.system(size: 18))
-                    .foregroundStyle(rollup.status.color)
-            }
-            .overlay(alignment: .topTrailing) {
-                TrafficLightDot(status: rollup.status, diameter: 9)
-                    .overlay(Circle().stroke(SpanColor.surface, lineWidth: 1.5))
-                    .offset(x: 2, y: -2)
-            }
+        HStack(spacing: SpanSpacing.gutter) {
+            TrafficLightDot(status: rollup.status, diameter: 8)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(rollup.key.displayName)
-                    .font(SpanFont.headline)
+                    .font(.system(size: 14, weight: .bold))
+                    .kerning(-0.2)
                     .foregroundStyle(SpanColor.textPrimary)
-                HStack(spacing: 6) {
-                    Text(rollup.leadParameter)
-                        .font(SpanFont.footnote)
-                        .foregroundStyle(SpanColor.textSecondary)
-                    Image(systemName: rollup.leadDirection.symbolName)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(rollup.leadDirection.color)
-                }
-                Text(rollup.statusBasis)
-                    .font(SpanFont.caption2)
-                    .foregroundStyle(SpanColor.textTertiary)
+                Text("\(rollup.leadParameter) · \(rollup.statusBasis)")
+                    .font(.system(size: 10.5))
+                    .foregroundStyle(SpanColor.textSecondary)
+                    .lineLimit(1)
             }
-
-            Spacer()
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             Sparkline(points: rollup.sparklinePoints, tint: rollup.status.color)
-                .frame(width: 48, height: 28)
+                .frame(width: 64, height: 18)
 
             Image(systemName: "chevron.right")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(SpanColor.textTertiary)
         }
-        .spanCard()
+        .padding(.vertical, 14)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(rollup.key.displayName), \(rollup.status.label). \(rollup.leadParameter) \(rollup.leadDirection.label). \(rollup.statusBasis).")
+        .accessibilityLabel("\(rollup.key.displayName), \(rollup.status.label). \(rollup.leadParameter). \(rollup.statusBasis).")
     }
 }
 
-#Preview("Tile") {
-    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-        OrganSystemTile(rollup: MockSpanAPI.sampleOverview.systems[0])
-        OrganSystemTile(rollup: MockSpanAPI.sampleOverview.systems[2])
+/// Back-compat alias.
+typealias OrganSystemRow = SystemDetailRow
+
+#Preview("Today rows") {
+    VStack(spacing: 0) {
+        SystemRow(rollup: MockSpanAPI.sampleOverview.systems[0], value: "6.9", unit: "% HbA1c")
+            .spanBottomHairline()
+        SystemRow(rollup: MockSpanAPI.sampleOverview.systems[2], value: "82", unit: "eGFR")
+            .spanBottomHairline()
     }
-    .padding()
+    .padding(.horizontal, 20)
     .background(SpanColor.background)
 }
 
-#Preview("Row") {
-    VStack(spacing: 12) {
-        OrganSystemRow(rollup: MockSpanAPI.sampleOverview.systems[0])
-        OrganSystemRow(rollup: MockSpanAPI.sampleOverview.systems[2])
+#Preview("Systems rows") {
+    VStack(spacing: 0) {
+        SystemDetailRow(rollup: MockSpanAPI.sampleOverview.systems[0]).spanBottomHairline()
+        SystemDetailRow(rollup: MockSpanAPI.sampleOverview.systems[2]).spanBottomHairline()
     }
-    .padding()
+    .padding(.horizontal, 20)
     .background(SpanColor.background)
 }

@@ -6,6 +6,9 @@
 //  Clinical Flags → Health Context → finish into the app. A shared @Observable
 //  draft holds the in-progress profile; each step is its own view.
 //
+//  Dark "Health Intelligence" theme: the stack is forced into dark color scheme
+//  and tinted with the purple accent. Navigation logic is unchanged.
+//
 
 import SwiftUI
 
@@ -26,6 +29,7 @@ final class OnboardingDraft {
     // Health context
     var conditions: Set<String> = []
     var medications: [String] = ["Levothyroxine"]
+    var supplements: [String] = ["Vitamin D", "Omega-3"]
     var primaryGoal: String?
 
     var bmi: Double? {
@@ -56,7 +60,8 @@ struct OnboardingFlowView: View {
                     }
                 }
         }
-        .tint(SpanColor.primary)
+        .tint(SpanColor.accent)
+        .preferredColorScheme(.dark)
     }
 }
 

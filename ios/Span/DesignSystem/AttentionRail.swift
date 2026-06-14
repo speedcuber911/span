@@ -1,11 +1,11 @@
 //
 //  AttentionRail.swift
-//  Span — the calm "markers to discuss" rail.
+//  Span — the "Discuss with your clinician" rail (see v2-today.jpeg).
 //
-//  Full-width light-red component with a leading alert icon and a header count.
-//  Each chip = parameter name + flag dot (Red=High / Blue=Low). Scrolls
-//  horizontally when chips overflow. Omitted entirely when there are no
-//  out-of-range markers — absence of red is NOT an occasion for praise.
+//  A red-tinted card with a 2.5px red left accent bar, a glowing red dot, the
+//  "Discuss with your clinician" header in red, and a wrap of inline marker chips
+//  (each = trend arrow + parameter + value, colored by flag). Omitted entirely when
+//  there are no out-of-range markers — absence of red is NOT an occasion for praise.
 //
 
 import SwiftUI
@@ -18,17 +18,16 @@ struct AttentionRail: View {
         if items.isEmpty {
             EmptyView()
         } else {
-            VStack(alignment: .leading, spacing: SpanSpacing.gutter) {
-                HStack(spacing: SpanSpacing.xs) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(SpanColor.statusRed)
-                    Text("\(items.count) markers to discuss")
-                        .font(SpanFont.headline)
-                        .foregroundStyle(SpanColor.onErrorContainer)
-                }
+            HStack(alignment: .top, spacing: SpanSpacing.xs) {
+                TrafficLightDot(status: .attention, diameter: 8)
+                    .padding(.top, 3)
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: SpanSpacing.xs) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Discuss with your clinician")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(SpanColor.statusRed)
+
+                    FlowLayout(spacing: 5) {
                         ForEach(items) { item in
                             Button { onTapItem(item) } label: {
                                 AttentionChip(item: item)
@@ -38,11 +37,17 @@ struct AttentionRail: View {
                     }
                 }
             }
-            .padding(SpanSpacing.md)
-            .background(SpanColor.errorContainer, in: RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(SpanColor.statusRedBg, in: RoundedRectangle(cornerRadius: SpanRadius.small, style: .continuous))
+            .overlay(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 1.5)
+                    .fill(SpanColor.statusRed)
+                    .frame(width: 2.5)
+            }
             .overlay(
-                RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous)
-                    .stroke(SpanColor.statusRed.opacity(0.25), lineWidth: 1)
+                RoundedRectangle(cornerRadius: SpanRadius.small, style: .continuous)
+                    .strokeBorder(SpanColor.statusRedBorder, lineWidth: SpanSpacing.hairline)
             )
             .accessibilityElement(children: .contain)
             .accessibilityLabel("\(items.count) markers to discuss with your clinician")
@@ -53,21 +58,67 @@ struct AttentionRail: View {
 private struct AttentionChip: View {
     let item: AttentionItem
 
-    var body: some View {
-        HStack(spacing: 6) {
-            FlagDot(flag: item.flag, diameter: 8)
-            Text(item.parameter)
-                .font(SpanFont.footnote)
-                .foregroundStyle(SpanColor.textPrimary)
-            Image(systemName: item.flag == .low ? "arrow.down" : "arrow.up")
-                .font(.system(size: 10, weight: .bold))
-                .foregroundStyle(item.flag.color)
+    private var style: StatusBadgeStyle { StatusBadgeStyle(flag: item.flag) }
+    private var arrow: String { item.flag == .low ? "arrow.down" : "arrow.up" }
+
+    private var label: String {
+        var s = item.parameter
+        if let v = item.latestValue {
+            s += " \(v.formatted(.number.precision(.fractionLength(0...1))))"
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(SpanColor.surface, in: Capsule())
-        .overlay(Capsule().stroke(SpanColor.clinicalBand, lineWidth: 1))
-        .accessibilityLabel("\(item.parameter), flagged \(item.flag.label)")
+        return s
+    }
+
+    var body: some View {
+        StatusBadge(text: label, style: style, systemImage: arrow)
+            .accessibilityLabel("\(item.parameter), flagged \(item.flag.label)")
+    }
+}
+
+// MARK: - Minimal wrap layout (chips flow to the next line)
+
+/// A lightweight flow layout so attention chips wrap (iOS 16+ Layout).
+struct FlowLayout: Layout {
+    var spacing: CGFloat = 6
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let maxWidth = proposal.width ?? .infinity
+        var rows: [[CGSize]] = [[]]
+        var x: CGFloat = 0
+        var rowHeight: CGFloat = 0
+        var totalHeight: CGFloat = 0
+
+        for sub in subviews {
+            let size = sub.sizeThatFits(.unspecified)
+            if x + size.width > maxWidth, !rows[rows.count - 1].isEmpty {
+                totalHeight += rowHeight + spacing
+                rows.append([])
+                x = 0
+                rowHeight = 0
+            }
+            rows[rows.count - 1].append(size)
+            x += size.width + spacing
+            rowHeight = max(rowHeight, size.height)
+        }
+        totalHeight += rowHeight
+        return CGSize(width: maxWidth == .infinity ? x : maxWidth, height: totalHeight)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var x = bounds.minX
+        var y = bounds.minY
+        var rowHeight: CGFloat = 0
+        for sub in subviews {
+            let size = sub.sizeThatFits(.unspecified)
+            if x + size.width > bounds.maxX, x > bounds.minX {
+                x = bounds.minX
+                y += rowHeight + spacing
+                rowHeight = 0
+            }
+            sub.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(size))
+            x += size.width + spacing
+            rowHeight = max(rowHeight, size.height)
+        }
     }
 }
 

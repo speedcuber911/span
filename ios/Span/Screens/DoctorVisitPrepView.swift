@@ -2,12 +2,19 @@
 //  DoctorVisitPrepView.swift
 //  Span — Screen 14. Doctor-Visit Prep Sheet.
 //
-//  Faithful to doctor-visit-prep.png. Three phases:
-//   • entry      — "Generate prep sheet" CTA
-//   • generating — progress bar + "Reviewing your lab trends…" copy
-//   • ready       — Raise This First / Key Markers at a Glance / Questions to Ask
-//                   (tickable) / Lifestyle & Supplements / Gaps clinician missed
-//   The closing disclaimer is the fixed, code-appended prep-sheet disclaimer.
+//  Dark "Health Intelligence" revamp, faithful to span_screens_v2.html screen 14.
+//  Three phases (PrepModel): entry → generating (progress) → ready.
+//
+//  The ready sheet is a dark, structured prep document:
+//   • "Raise first" — a red-bordered most-urgent card with an inline citation chip.
+//   • "Key markers" — a glance table (Marker / Value / Ref / Status badge), with
+//     "Not tested" rows shown as neutral badges (ApoB, Lp(a)).
+//   • "Questions to ask" — amber per-system group headers + `.qcb` checkbox rows.
+//   • "Supplements to discuss" — Why / Caution / Verdict (NO doses) + citation chips.
+//   • "Gaps your clinician likely missed" — bulleted.
+//   • The fixed, code-appended educational footer (never AI-generated).
+//
+//  Consumes the same PrepModel / PrepReport DTOs unchanged.
 //
 
 import SwiftUI
@@ -31,12 +38,23 @@ struct DoctorVisitPrepView: View {
                     LoadFailureView(message: message) { Task { await model?.generate() } }
                 }
             }
-            .padding(.horizontal, SpanSpacing.md)
-            .padding(.top, SpanSpacing.xs)
+            .padding(.horizontal, SpanSpacing.screenH)
+            .padding(.top, SpanSpacing.md)
+            .padding(.bottom, SpanSpacing.lg)
         }
         .background(SpanColor.background)
-        .navigationTitle("Prep")
-        .navigationBarTitleDisplayMode(.large)
+        .scrollContentBackground(.hidden)
+        .navigationTitle("Doctor-visit prep")
+        .navigationBarTitleDisplayMode(.inline)
+        .preferredColorScheme(.dark)
+        .toolbar {
+            if case .ready = model?.phase {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { } label: { Image(systemName: "square.and.arrow.up") }
+                        .tint(SpanColor.accent)
+                }
+            }
+        }
         .citationSheet($citation)
         .task { if model == nil { model = PrepModel(api: env.api) } }
     }
@@ -45,15 +63,16 @@ struct DoctorVisitPrepView: View {
 
     private var entryState: some View {
         VStack(alignment: .leading, spacing: SpanSpacing.md) {
-            Text("Your next doctor's appointment is a chance to discuss what your data shows.")
+            Text("Your next appointment is a chance to discuss what your data shows.")
                 .font(SpanFont.title2)
                 .foregroundStyle(SpanColor.textPrimary)
+                .fixedSize(horizontal: false, vertical: true)
             Button("Generate prep sheet") { Task { await model?.generate() } }
                 .spanPrimaryButton()
             Text("Takes about 30–60 seconds. Based on your most recent lab results.")
                 .font(SpanFont.footnote)
                 .foregroundStyle(SpanColor.textSecondary)
-            Divider()
+            Rectangle().fill(SpanColor.border).frame(height: SpanSpacing.hairline)
             Text("Last generated: 14 Mar 2026")
                 .font(SpanFont.footnote)
                 .foregroundStyle(SpanColor.textTertiary)
@@ -68,16 +87,18 @@ struct DoctorVisitPrepView: View {
             Text("Generating your prep sheet…")
                 .font(SpanFont.title2)
                 .foregroundStyle(SpanColor.textPrimary)
-            ProgressView(value: progress).tint(SpanColor.primary)
+            CheckinProgressBarP(fraction: progress)
             Text("\(Int(progress * 100))%")
-                .font(SpanFont.footnote).foregroundStyle(SpanColor.textSecondary)
-            VStack(alignment: .leading, spacing: 4) {
+                .font(SpanFont.mono(12))
+                .foregroundStyle(SpanColor.textSecondary)
+            VStack(alignment: .leading, spacing: SpanSpacing.xs) {
                 Label("Reviewing your lab trends.", systemImage: "chart.line.uptrend.xyaxis")
                 Label("Identifying questions to ask.", systemImage: "questionmark.circle")
                 Label("Adding citations.", systemImage: "text.book.closed")
             }
             .font(SpanFont.footnote)
             .foregroundStyle(SpanColor.textSecondary)
+            .tint(SpanColor.accent)
         }
         .spanCard()
     }
@@ -86,133 +107,302 @@ struct DoctorVisitPrepView: View {
 
     @ViewBuilder
     private func readyState(_ report: PrepReport) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Doctor-Visit Prep")
-                    .font(SpanFont.title2)
-                    .foregroundStyle(SpanColor.textPrimary)
-                Text("Generated \(report.generatedAt.formatted(.dateTime.day().month().year()))")
-                    .font(SpanFont.footnote)
-                    .foregroundStyle(SpanColor.textSecondary)
-            }
-            Spacer()
-            Image(systemName: "square.and.arrow.up").foregroundStyle(SpanColor.primary)
-        }
-
-        // Raise this first
-        VStack(alignment: .leading, spacing: SpanSpacing.xs) {
-            Label("RAISE THIS FIRST", systemImage: "exclamationmark.circle.fill")
-                .font(SpanFont.footnote.weight(.semibold))
-                .foregroundStyle(SpanColor.statusRed)
-            Text(report.raiseFirst.body)
-                .font(SpanFont.body)
+        // Header
+        VStack(alignment: .leading, spacing: 2) {
+            Text("Doctor-Visit Prep")
+                .font(SpanFont.title2)
                 .foregroundStyle(SpanColor.textPrimary)
-            ForEach(report.raiseFirst.citations) { CitationChip(source: $0) { citation = $0 } }
+            Text("Generated \(report.generatedAt.formatted(.dateTime.day().month().year()))")
+                .font(SpanFont.footnote)
+                .foregroundStyle(SpanColor.textSecondary)
         }
-        .spanCard()
 
-        // Glance table
-        VStack(alignment: .leading, spacing: SpanSpacing.xs) {
-            Text("Key Markers at a Glance").spanSectionHeaderStyle()
-            ForEach(report.glanceTable) { row in
-                HStack {
-                    Text(row.marker).font(SpanFont.callout).foregroundStyle(SpanColor.textPrimary)
-                    Spacer()
-                    Text(row.value).font(SpanFont.footnote).foregroundStyle(SpanColor.textSecondary)
-                        .frame(width: 80, alignment: .trailing)
-                    Text(row.reference).font(SpanFont.caption2).foregroundStyle(SpanColor.textTertiary)
-                        .frame(width: 56, alignment: .trailing)
-                    if row.flag == .none {
-                        Text("—").font(SpanFont.caption2).foregroundStyle(SpanColor.textTertiary).frame(width: 24)
-                    } else {
-                        FlagDot(flag: row.flag).frame(width: 24)
-                    }
-                }
-                .padding(.vertical, 4)
-                Divider()
-            }
-        }
-        .spanCard()
-
-        // Questions to ask (tickable)
-        VStack(alignment: .leading, spacing: SpanSpacing.gutter) {
-            Text("Questions to Ask").spanSectionHeaderStyle()
-            ForEach(report.questions) { group in
-                VStack(alignment: .leading, spacing: SpanSpacing.xs) {
-                    Text(group.system)
-                        .font(SpanFont.headline)
-                        .foregroundStyle(SpanColor.textPrimary)
-                    ForEach(group.questions, id: \.self) { q in
-                        let key = "\(group.system)|\(q)"
-                        Button {
-                            toggle(key)
-                        } label: {
-                            HStack(alignment: .top, spacing: SpanSpacing.xs) {
-                                Image(systemName: (model?.checkedQuestions.contains(key) ?? false) ? "checkmark.square.fill" : "square")
-                                    .foregroundStyle((model?.checkedQuestions.contains(key) ?? false) ? SpanColor.primary : SpanColor.textTertiary)
-                                Text(q)
-                                    .font(SpanFont.callout)
-                                    .foregroundStyle(SpanColor.textPrimary)
-                                    .multilineTextAlignment(.leading)
-                            }
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
-            Text("Tick the questions that matter most to you before your visit. It is normal to feel a bit anxious writing these down.")
-                .font(SpanFont.caption2)
-                .foregroundStyle(SpanColor.textTertiary)
-        }
-        .spanCard()
-
-        // Lifestyle & supplements
-        VStack(alignment: .leading, spacing: SpanSpacing.gutter) {
-            Text("Lifestyle & Supplements to Discuss").spanSectionHeaderStyle()
-            ForEach(report.lifestyleSupplements) { row in
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(row.item).font(SpanFont.headline).foregroundStyle(SpanColor.textPrimary)
-                    Text(row.why).font(SpanFont.footnote).foregroundStyle(SpanColor.textSecondary)
-                    if let caution = row.caution {
-                        Text("Caution: \(caution)").font(SpanFont.footnote).foregroundStyle(SpanColor.statusYellow.opacity(0.9))
-                    }
-                    Text("Verdict: \(row.verdict)").font(SpanFont.footnote.weight(.medium)).foregroundStyle(SpanColor.textPrimary)
-                    ForEach(row.citations) { CitationChip(source: $0) { citation = $0 } }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.vertical, 4)
-                Divider()
-            }
-        }
-        .spanCard()
-
-        // Gaps
-        VStack(alignment: .leading, spacing: SpanSpacing.xs) {
-            Text("Gaps Your Clinician Likely Missed").spanSectionHeaderStyle()
-            ForEach(report.gapsClinicianMissed, id: \.self) { gap in
-                HStack(alignment: .top, spacing: 6) {
-                    Text("·").foregroundStyle(SpanColor.textTertiary)
-                    Text(gap).font(SpanFont.callout).foregroundStyle(SpanColor.textPrimary)
-                }
-            }
-        }
-        .spanCard()
-
+        raiseFirstSection(report.raiseFirst)
+        glanceSection(report.glanceTable)
+        questionsSection(report.questions)
+        supplementsSection(report.lifestyleSupplements)
+        gapsSection(report.gapsClinicianMissed)
         prepDisclaimer
     }
 
+    // Raise first — red urgent card.
+    private func raiseFirstSection(_ raise: RaiseFirst) -> some View {
+        VStack(alignment: .leading, spacing: SpanSpacing.xs) {
+            SpanSectionLabel("Raise first")
+            VStack(alignment: .leading, spacing: SpanSpacing.xs) {
+                Text("Most urgent")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(SpanColor.statusRed)
+                    .textCase(.uppercase)
+                    .kerning(0.9)
+                Text(raise.body)
+                    .font(SpanFont.callout)
+                    .foregroundStyle(SpanColor.statusRed.opacity(0.92))
+                    .lineSpacing(3)
+                    .fixedSize(horizontal: false, vertical: true)
+                FlowChips(raise.citations) { citation = $0 }
+            }
+            .padding(SpanSpacing.md)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(SpanColor.statusRedBg, in: RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous))
+            .overlay(alignment: .leading) {
+                Rectangle().fill(SpanColor.statusRed).frame(width: 3)
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous)
+                    .strokeBorder(SpanColor.statusRedBorder, lineWidth: SpanSpacing.hairline)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous))
+        }
+    }
+
+    // Key markers glance table.
+    private func glanceSection(_ rows: [GlanceRow]) -> some View {
+        VStack(alignment: .leading, spacing: SpanSpacing.xs) {
+            SpanSectionLabel("Key markers")
+            VStack(spacing: 0) {
+                // Header row.
+                HStack(spacing: 0) {
+                    tableHeader("Marker", alignment: .leading)
+                    tableHeader("Value", alignment: .leading).frame(width: 92)
+                    tableHeader("Ref", alignment: .leading).frame(width: 64)
+                    tableHeader("Status", alignment: .trailing).frame(width: 78)
+                }
+                .padding(.bottom, 6)
+                .spanBottomHairline()
+
+                ForEach(rows) { row in
+                    HStack(spacing: 0) {
+                        Text(row.marker)
+                            .font(SpanFont.callout)
+                            .foregroundStyle(SpanColor.textSecondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(row.value)
+                            .font(SpanFont.mono(13, weight: .bold))
+                            .foregroundStyle(SpanColor.textPrimary)
+                            .frame(width: 92, alignment: .leading)
+                        Text(row.reference)
+                            .font(.system(size: 10.5))
+                            .foregroundStyle(SpanColor.textTertiary)
+                            .frame(width: 64, alignment: .leading)
+                        StatusBadge(text: glanceStatusLabel(row.flag),
+                                    style: StatusBadgeStyle(flag: row.flag))
+                            .frame(width: 78, alignment: .trailing)
+                    }
+                    .padding(.vertical, 9)
+                    if row.id != rows.last?.id {
+                        Rectangle().fill(SpanColor.border).frame(height: SpanSpacing.hairline)
+                    }
+                }
+            }
+        }
+    }
+
+    // Questions to ask — amber group headers + checkbox rows.
+    private func questionsSection(_ groups: [QuestionGroup]) -> some View {
+        VStack(alignment: .leading, spacing: SpanSpacing.gutter) {
+            SpanSectionLabel("Questions to ask")
+            ForEach(groups) { group in
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(group.system)
+                        .font(.system(size: 9.5, weight: .bold))
+                        .foregroundStyle(SpanColor.statusYellow)
+                        .textCase(.uppercase)
+                        .kerning(0.4)
+                        .padding(.bottom, 4)
+                    ForEach(group.questions, id: \.self) { q in
+                        let key = "\(group.system)|\(q)"
+                        let checked = model?.checkedQuestions.contains(key) ?? false
+                        Button { toggle(key) } label: {
+                            HStack(alignment: .top, spacing: 9) {
+                                checkbox(checked)
+                                Text(q)
+                                    .font(SpanFont.callout)
+                                    .foregroundStyle(SpanColor.textPrimary)
+                                    .lineSpacing(3)
+                                    .multilineTextAlignment(.leading)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                Spacer(minLength: 0)
+                            }
+                            .padding(.vertical, 10)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .spanBottomHairline()
+                    }
+                }
+            }
+        }
+    }
+
+    // Supplements — Why / Caution / Verdict (no doses) + citation chips.
+    private func supplementsSection(_ rows: [SupplementRow]) -> some View {
+        VStack(alignment: .leading, spacing: SpanSpacing.xs) {
+            SpanSectionLabel("Supplements to discuss")
+            ForEach(rows) { row in
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack {
+                        Text(row.item)
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(SpanColor.textPrimary)
+                        Spacer()
+                        StatusBadge(text: verdictBadge(row.verdict), style: verdictStyle(row.verdict))
+                    }
+                    Text(row.why)
+                        .font(SpanFont.footnote)
+                        .foregroundStyle(SpanColor.textSecondary)
+                        .lineSpacing(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if let caution = row.caution {
+                        Text("Caution: \(caution)")
+                            .font(SpanFont.footnote)
+                            .foregroundStyle(SpanColor.statusYellow.opacity(0.9))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    FlowChips(row.citations) { citation = $0 }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 10)
+                if row.id != rows.last?.id {
+                    Rectangle().fill(SpanColor.border).frame(height: SpanSpacing.hairline)
+                }
+            }
+        }
+    }
+
+    // Gaps to flag — bulleted.
+    private func gapsSection(_ gaps: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            SpanSectionLabel("Gaps to flag")
+                .padding(.bottom, SpanSpacing.xs)
+            ForEach(gaps, id: \.self) { gap in
+                HStack(alignment: .top, spacing: 9) {
+                    Circle().fill(SpanColor.textTertiary)
+                        .frame(width: 5, height: 5)
+                        .padding(.top, 6)
+                    Text(gap)
+                        .font(SpanFont.callout)
+                        .foregroundStyle(SpanColor.textPrimary)
+                        .lineSpacing(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 0)
+                }
+                .padding(.vertical, 9)
+                .spanBottomHairline()
+            }
+        }
+    }
+
     private var prepDisclaimer: some View {
-        Text("Span is not a medical device. This sheet is educational only. All information must be discussed with a qualified clinician. Do not start, stop, or adjust any medication or supplement based on this sheet alone.\nGenerated by AI · Not clinically validated · Educational only.")
-            .font(SpanFont.footnote)
-            .foregroundStyle(SpanColor.textSecondary)
-            .multilineTextAlignment(.center)
-            .padding(.vertical, SpanSpacing.md)
+        Text("Not a medical device. Educational only. Do not start, stop, or adjust any medication or supplement based on this sheet. Generated by AI · not clinically validated.")
+            .spanDisclaimerStyle()
+            .padding(SpanSpacing.gutter)
+            .frame(maxWidth: .infinity)
+            .background(SpanColor.surfaceCard, in: RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous)
+                    .strokeBorder(SpanColor.border, lineWidth: SpanSpacing.hairline)
+            )
+            .padding(.top, SpanSpacing.xs)
+    }
+
+    // MARK: Helpers
+
+    private func tableHeader(_ text: String, alignment: Alignment) -> some View {
+        Text(text)
+            .font(.system(size: 8.5, weight: .semibold))
+            .foregroundStyle(SpanColor.textTertiary)
+            .textCase(.uppercase)
+            .kerning(0.9)
+            .frame(maxWidth: alignment == .leading ? .infinity : nil, alignment: alignment)
+    }
+
+    private func checkbox(_ checked: Bool) -> some View {
+        RoundedRectangle(cornerRadius: 5, style: .continuous)
+            .strokeBorder(checked ? SpanColor.accent : SpanColor.borderStrong, lineWidth: 1.5)
+            .background(
+                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                    .fill(checked ? SpanColor.accentBg : Color.clear)
+            )
+            .frame(width: 16, height: 16)
+            .overlay {
+                if checked {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundStyle(SpanColor.accent)
+                }
+            }
+            .padding(.top, 1)
+    }
+
+    private func glanceStatusLabel(_ flag: MeasurementFlag) -> String {
+        switch flag {
+        case .high:   return "High"
+        case .low:    return "Low"
+        case .normal: return "Normal"
+        case .none:   return "Not tested"
+        }
+    }
+
+    private func verdictBadge(_ verdict: String) -> String {
+        let v = verdict.lowercased()
+        if v.contains("unproven") || v.contains("contested") { return "Unproven" }
+        if v.contains("reasonable") { return "Reasonable" }
+        if v.contains("check") { return "Check first" }
+        return verdict
+    }
+
+    private func verdictStyle(_ verdict: String) -> StatusBadgeStyle {
+        let v = verdict.lowercased()
+        if v.contains("unproven") || v.contains("contested") { return .monitor }
+        if v.contains("reasonable") { return .optimal }
+        return .neutral
     }
 
     private func toggle(_ key: String) {
         guard let model else { return }
         if model.checkedQuestions.contains(key) { model.checkedQuestions.remove(key) }
         else { model.checkedQuestions.insert(key) }
+    }
+}
+
+// MARK: - Citation chip flow
+
+/// Wrapping row of citation chips (uses the shared FlowLayout).
+private struct FlowChips: View {
+    let sources: [Source]
+    var onTap: (Source) -> Void
+
+    init(_ sources: [Source], onTap: @escaping (Source) -> Void) {
+        self.sources = sources
+        self.onTap = onTap
+    }
+
+    var body: some View {
+        if !sources.isEmpty {
+            FlowLayout(spacing: 6) {
+                ForEach(sources) { source in
+                    CitationChip(source: source, onTap: onTap)
+                }
+            }
+            .padding(.top, 2)
+        }
+    }
+}
+
+/// A 3px purple progress bar for the generating phase.
+private struct CheckinProgressBarP: View {
+    let fraction: Double
+    var body: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(SpanColor.border)
+                Capsule().fill(SpanColor.accent)
+                    .frame(width: geo.size.width * CGFloat(min(max(fraction, 0), 1)))
+            }
+        }
+        .frame(height: 3)
+        .accessibilityHidden(true)
     }
 }
 

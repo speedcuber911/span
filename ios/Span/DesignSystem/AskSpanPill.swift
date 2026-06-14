@@ -1,28 +1,33 @@
 //
 //  AskSpanPill.swift
-//  Span — the floating "Ask Span" entry. A circular blurred FAB (Material) that
-//  sits above the tab bar on the Today and Systems tabs, on a plane above content.
-//  Tapping launches the voice consultant as a full-screen cover.
+//  Span — the floating "Ask Span" entry (#ask in the comp).
+//
+//  A purple, blurred, bordered pill that sits bottom-right above the tab bar on the
+//  Today and Systems tabs. Mic glyph + "Ask Span". Tapping launches the voice
+//  consultant. Matches the comp: accentBg fill, accentBorder hairline, blur(8px),
+//  height 36, purple text.
 //
 
 import SwiftUI
 
 struct AskSpanPill: View {
+    var title: String = "Ask Span"
     var action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: "mic.fill")
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(SpanColor.onPrimary)
-                .frame(width: 56, height: 56)
-                .background(
-                    Circle()
-                        .fill(SpanColor.primaryBright)
-                        .background(.ultraThinMaterial, in: Circle())
-                )
-                .overlay(Circle().stroke(SpanColor.onPrimary.opacity(0.15), lineWidth: 1))
-                .shadow(color: SpanColor.primary.opacity(0.35), radius: 10, y: 4)
+            HStack(spacing: 6) {
+                Image(systemName: "mic.fill")
+                    .font(.system(size: 13, weight: .semibold))
+                Text(title)
+                    .font(.system(size: 11, weight: .semibold))
+            }
+            .foregroundStyle(SpanColor.accent)
+            .padding(.horizontal, 14)
+            .frame(height: 36)
+            .background(.ultraThinMaterial, in: Capsule())
+            .background(SpanColor.accentBg, in: Capsule())
+            .overlay(Capsule().strokeBorder(SpanColor.accentBorder, lineWidth: SpanSpacing.hairline))
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Ask Span")
@@ -30,8 +35,7 @@ struct AskSpanPill: View {
     }
 }
 
-/// A wider labelled variant ("🎙 Ask Span about my Metabolic health") used inline
-/// on System Detail screens.
+/// A wider full-width labelled variant used inline on System Detail screens.
 struct AskSpanInlineButton: View {
     let title: String
     var action: () -> Void
@@ -41,15 +45,15 @@ struct AskSpanInlineButton: View {
             HStack(spacing: SpanSpacing.xs) {
                 Image(systemName: "mic.fill")
                 Text(title)
-                    .font(SpanFont.body.weight(.medium))
+                    .font(SpanFont.body.weight(.semibold))
             }
-            .foregroundStyle(SpanColor.primary)
+            .foregroundStyle(SpanColor.accent)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(SpanColor.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous))
+            .background(SpanColor.accentBg, in: RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: SpanRadius.card, style: .continuous)
-                    .stroke(SpanColor.primary.opacity(0.25), lineWidth: 1)
+                    .strokeBorder(SpanColor.accentBorder, lineWidth: SpanSpacing.hairline)
             )
         }
         .buttonStyle(.plain)
