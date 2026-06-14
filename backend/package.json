@@ -1,0 +1,15 @@
+{
+  "name": "span-backend",
+  "version": "0.1.0",
+  "description": "Span health app — TypeScript/Node API + async worker",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'TODO: tsx watch src/index.ts'",
+    "build": "echo 'TODO: tsc -p tsconfig.json'",
+    "test": "echo 'TODO: vitest run'",
+    "migrate": "echo 'TODO: node --import tsx/esm src/db/migrate.ts'"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

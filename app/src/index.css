@@ -1,0 +1,97 @@
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/Geist-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.65rem;
+
+    --high: 0 74% 52%;
+    --low: 213 74% 51%;
+    --normal: 162 63% 41%;
+  }
+
+  .dark {
+    --background: 222.2 47.4% 6.5%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 45% 8.5%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 45% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 15%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 15%;
+    --muted-foreground: 215 20.2% 60%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 45%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 18%;
+    --input: 217.2 32.6% 18%;
+    --ring: 212.7 26.8% 83.9%;
+
+    --high: 0 74% 60%;
+    --low: 213 80% 62%;
+    --normal: 162 60% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1, "cv01" 1;
+  }
+  ::selection {
+    @apply bg-foreground/15;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { @apply rounded-full bg-border; }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/40; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .grid-bg {
+    background-image: radial-gradient(hsl(var(--border)) 0.5px, transparent 0.5px);
+    background-size: 22px 22px;
+  }
+}

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Trends Explorer</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<style>
+  :root{
+    --high:#e23; --low:#37c; --normal:#2a8;
+    --bg:#f6f7f9; --panel:#fff; --line:#e3e6ea; --ink:#1c2330;
+    --muted:#677; --accent:#2a6ed4; --accent-soft:#eaf1fc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); font-size:14px; line-height:1.4;
+  }
+  header.app{
+    background:var(--panel); border-bottom:1px solid var(--line);
+    padding:14px 20px; position:sticky; top:0; z-index:30;
+  }
+  .hd-top{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+  .hd-top h1{font-size:18px; margin:0; font-weight:650}
+  .hd-stats{display:flex; gap:18px; flex-wrap:wrap; color:var(--muted); font-size:12.5px}
+  .hd-stats b{color:var(--ink); font-weight:600}
+  .searchwrap{position:relative; margin-top:12px; max-width:560px}
+  #search{
+    width:100%; padding:11px 14px; font-size:15px; border:1.5px solid var(--line);
+    border-radius:9px; outline:none; background:var(--bg);
+  }
+  #search:focus{border-color:var(--accent); background:#fff}
+  .results{
+    position:absolute; top:calc(100% + 4px); left:0; right:0; background:#fff;
+    border:1px solid var(--line); border-radius:9px; box-shadow:0 8px 28px rgba(0,0,0,.12);
+    max-height:340px; overflow:auto; z-index:40; display:none;
+  }
+  .results.open{display:block}
+  .res-item{
+    padding:9px 13px; cursor:pointer; display:flex; justify-content:space-between;
+    gap:10px; align-items:center; border-bottom:1px solid #f1f2f4;
+  }
+  .res-item:last-child{border-bottom:none}
+  .res-item:hover,.res-item.active{background:var(--accent-soft)}
+  .res-name{font-weight:550}
+  .res-meta{color:var(--muted); font-size:12px; white-space:nowrap}
+  .cat-pill{font-size:10.5px; padding:1px 7px; border-radius:20px; background:#eef0f3; color:#556; margin-left:6px}
+
+  .layout{display:flex; gap:0; align-items:flex-start}
+  aside{
+    width:248px; flex:none; background:var(--panel); border-right:1px solid var(--line);
+    height:calc(100vh - 132px); overflow:auto; position:sticky; top:132px; padding:8px 0;
+  }
+  .cat-h{padding:8px 16px 4px; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); font-weight:650}
+  .cat-row{
+    padding:7px 16px; cursor:pointer; display:flex; justify-content:space-between; gap:8px; align-items:center;
+  }
+  .cat-row:hover{background:var(--accent-soft)}
+  .cat-row.active{background:var(--accent-soft); border-left:3px solid var(--accent); padding-left:13px}
+  .cat-count{color:var(--muted); font-size:11.5px}
+  .param-row{
+    padding:6px 16px 6px 22px; cursor:pointer; display:flex; justify-content:space-between;
+    gap:8px; align-items:center; font-size:13px;
+  }
+  .param-row:hover{background:#f3f6fb}
+  .param-row.sel{background:var(--accent-soft); font-weight:600}
+  .pr-spark{flex:none}
+  .pr-name{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .pr-last{font-size:11.5px; color:var(--muted); white-space:nowrap}
+
+  main{flex:1; padding:18px 22px; min-width:0}
+
+  .chart-card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:18px}
+  .chart-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:10px}
+  .chart-head h2{margin:0; font-size:16px}
+  .sel-chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+  .chip{
+    display:inline-flex; align-items:center; gap:6px; padding:3px 8px 3px 10px; border-radius:20px;
+    font-size:12px; background:#eef1f5; border:1px solid var(--line);
+  }
+  .chip .dot{width:9px; height:9px; border-radius:50%}
+  .chip button{border:none; background:none; cursor:pointer; color:var(--muted); font-size:14px; line-height:1; padding:0 2px}
+  .chip button:hover{color:var(--high)}
+  .controls{display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin:4px 0 12px; font-size:12.5px; color:var(--muted)}
+  .controls label{display:flex; gap:5px; align-items:center}
+  .controls input[type=date]{padding:4px 6px; border:1px solid var(--line); border-radius:6px; font-size:12.5px}
+  .controls button.linkbtn{border:1px solid var(--line); background:#fff; border-radius:6px; padding:4px 9px; cursor:pointer; font-size:12px}
+  .controls button.linkbtn:hover{border-color:var(--accent); color:var(--accent)}
+  .chart-box{position:relative; height:380px}
+  .empty{color:var(--muted); text-align:center; padding:60px 20px}
+
+  /* dashboard */
+  .dash-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; flex-wrap:wrap; gap:8px}
+  .dash-head h2{font-size:16px; margin:0}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:12px 13px;
+    cursor:pointer; transition:.12s;
+  }
+  .card:hover{border-color:var(--accent); box-shadow:0 4px 14px rgba(0,0,0,.07); transform:translateY(-1px)}
+  .card-name{font-size:13px; font-weight:600; margin-bottom:2px; line-height:1.25}
+  .card-cat{font-size:10.5px; color:var(--muted)}
+  .card-val{display:flex; align-items:baseline; gap:6px; margin:7px 0 4px}
+  .card-num{font-size:21px; font-weight:680}
+  .card-unit{font-size:12px; color:var(--muted)}
+  .card-flag{font-size:11px; padding:1px 8px; border-radius:20px; color:#fff; font-weight:600}
+  .card-spark{margin-top:6px}
+  .card-foot{font-size:10.5px; color:var(--muted); margin-top:5px; display:flex; justify-content:space-between}
+
+  /* table */
+  .table-card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 16px}
+  .table-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px}
+  .table-head h3{margin:0; font-size:14px}
+  table{width:100%; border-collapse:collapse; font-size:12.5px}
+  th,td{text-align:left; padding:6px 8px; border-bottom:1px solid #eef0f2; white-space:nowrap}
+  th{cursor:pointer; user-select:none; color:var(--muted); font-weight:600; position:sticky; top:0; background:#fff}
+  th:hover{color:var(--accent)}
+  th .arr{font-size:9px; margin-left:2px}
+  td.numcol{text-align:right; font-variant-numeric:tabular-nums}
+  .tbl-scroll{max-height:420px; overflow:auto}
+  .flagdot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; vertical-align:middle}
+  .src{color:var(--muted); max-width:240px; overflow:hidden; text-overflow:ellipsis; display:inline-block; vertical-align:bottom}
+
+  .filepick{background:#fff3cd; border:1px solid #ffe69c; padding:16px 20px; border-radius:10px; margin:20px; max-width:520px}
+  .filepick h3{margin:0 0 6px}
+
+  @media(max-width:760px){
+    aside{display:none}
+    .chart-box{height:300px}
+  }
+</style>
+</head>
+<body>
+<header class="app">
+  <div class="hd-top">
+    <h1 id="pname">Health Trends Explorer</h1>
+    <div class="hd-stats" id="hdstats"></div>
+  </div>
+  <div class="searchwrap">
+    <input id="search" type="text" placeholder="Search a parameter — try d3, a1c, sugar, b12, tsh…" autocomplete="off">
+    <div class="results" id="results"></div>
+  </div>
+</header>
+
+<div id="filepick" class="filepick" style="display:none">
+  <h3>Couldn't auto-load health_data.json</h3>
+  <p>Pick the <code>health_data.json</code> file to continue (you're likely opening this via <code>file://</code>).</p>
+  <input type="file" id="fileinput" accept="application/json,.json">
+</div>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+  <main>
+    <div id="dashboard"></div>
+    <div id="chartview" style="display:none">
+      <div class="chart-card">
+        <div class="chart-head">
+          <div>
+            <h2 id="chartTitle">Trend</h2>
+            <div class="sel-chips" id="chips"></div>
+          </div>
+          <button class="linkbtn" id="clearSel" style="border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 11px;cursor:pointer">← Back to dashboard</button>
+        </div>
+        <div class="controls">
+          <label>From <input type="date" id="dFrom"></label>
+          <label>To <input type="date" id="dTo"></label>
+          <button class="linkbtn" id="dReset">Reset range</button>
+          <label style="margin-left:auto"><input type="checkbox" id="normChk"> Normalize to % of reference (for mixed units)</label>
+        </div>
+        <div class="chart-box"><canvas id="chart"></canvas></div>
+      </div>
+      <div class="table-card">
+        <div class="table-head">
+          <h3>Data table — <span id="tblCount"></span></h3>
+          <button class="linkbtn" id="csvBtn" style="border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 11px;cursor:pointer">Export CSV</button>
+        </div>
+        <div class="tbl-scroll"><table id="dtable"></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ---------- state ----------
+let DATA=null, PARAMS=[], MEAS=[], BYPARAM={}, CATALOG={};
+let SELECTED=[];          // array of canonical parameter names
+let ACTIVE_CAT=null;
+let dateFrom=null, dateTo=null, normalize=false;
+let chart=null;
+let tblSort={key:'date',dir:-1};
+
+const FLAG_COLORS={High:'#e23',Low:'#37c',Normal:'#2a8',null:'#888'};
+const SERIES_COLORS=['#2a6ed4','#e2660a','#1a9e54','#9b3fc4','#d4286e','#0a9bb5','#8a6d00','#444'];
+
+// alias map: alias -> array of substrings to match against canonical/raw
+const ALIASES={
+  'd3':['vitamin d','25-oh','25 oh'], 'vit d':['vitamin d'], 'vitd':['vitamin d'],
+  'a1c':['hba1c','glycosylated','glycated'], 'hba1c':['hba1c'],
+  'sugar':['glucose'], 'glucose':['glucose'], 'fbs':['glucose fasting','fasting'], 'ppbs':['glucose pp','post prandial','pp'],
+  'b12':['vitamin b12','b-12','cobalamin'], 'b 12':['vitamin b12'],
+  'chol':['cholesterol'], 'cholesterol':['cholesterol'], 'ldl':['ldl'], 'hdl':['hdl'], 'tg':['triglyceride'], 'trig':['triglyceride'],
+  'tsh':['tsh','thyroid stimulating'], 't3':['t3'], 't4':['t4'],
+  'hb':['hemoglobin','haemoglobin'], 'hgb':['hemoglobin','haemoglobin'],
+  'wbc':['wbc','leukocyte','white'], 'rbc':['rbc','red'], 'plt':['platelet'], 'platelet':['platelet'],
+  'creat':['creatinine'], 'urea':['urea'], 'bun':['urea nitrogen','bun'], 'uric':['uric acid'],
+  'sgpt':['sgpt','alt'], 'sgot':['sgot','ast'], 'alt':['alt','sgpt'], 'ast':['ast','sgot'], 'bili':['bilirubin'],
+  'na':['sodium'], 'k':['potassium'], 'cl':['chloride'], 'ca':['calcium'], 'mg':['magnesium'], 'phos':['phosphor'],
+  'crp':['c-reactive','crp'], 'esr':['esr','sedimentation'], 'ferritin':['ferritin'], 'iron':['iron'],
+  'folate':['folate','folic'], 'psa':['psa','prostate'],
+};
+
+// ---------- load ----------
+async function boot(){
+  try{
+    const r=await fetch('./health_data.json');
+    if(!r.ok) throw new Error('status '+r.status);
+    init(await r.json());
+  }catch(e){
+    document.getElementById('filepick').style.display='block';
+    document.getElementById('fileinput').addEventListener('change',ev=>{
+      const f=ev.target.files[0]; if(!f) return;
+      const rd=new FileReader();
+      rd.onload=()=>{ try{ init(JSON.parse(rd.result)); document.getElementById('filepick').style.display='none'; }
+        catch(err){ alert('Bad JSON: '+err.message); } };
+      rd.readAsText(f);
+    });
+  }
+}
+
+function init(d){
+  DATA=d; PARAMS=d.parameters||[]; MEAS=d.measurements||[];
+  // index measurements by canonical parameter
+  BYPARAM={};
+  for(const m of MEAS){ (BYPARAM[m.parameter] ||= []).push(m); }
+  for(const k in BYPARAM){ BYPARAM[k].sort((a,b)=> a.date<b.date?-1:a.date>b.date?1:0); }
+  CATALOG={}; for(const p of PARAMS){ CATALOG[p.parameter]=p; }
+  renderHeader(); renderSidebar(); renderDashboard(); wireSearch(); wireControls();
+}
+
+function renderHeader(){
+  const s=DATA.summary||{};
+  document.getElementById('pname').textContent=DATA.patient||'Health Trends';
+  const dr=s.date_range||['?','?'];
+  document.getElementById('hdstats').innerHTML=
+    `<span><b>${(s.total_measurements||MEAS.length).toLocaleString()}</b> measurements</span>`+
+    `<span><b>${s.unique_parameters||PARAMS.length}</b> parameters</span>`+
+    `<span><b>${dr[0]}</b> → <b>${dr[1]}</b></span>`;
+}
+
+// ---------- sidebar ----------
+function renderSidebar(){
+  const cats={};
+  for(const p of PARAMS){ (cats[p.category] ||= []).push(p); }
+  const order=(DATA.summary&&DATA.summary.categories)||Object.keys(cats).sort();
+  const side=document.getElementById('sidebar');
+  let html=`<div class="cat-row ${ACTIVE_CAT===null?'active':''}" data-cat="__all"><span>All parameters</span><span class="cat-count">${PARAMS.length}</span></div>`;
+  for(const c of order){
+    const list=(cats[c]||[]).slice().sort((a,b)=>(b.numeric_count||0)-(a.numeric_count||0));
+    if(!list.length) continue;
+    const open=ACTIVE_CAT===c;
+    html+=`<div class="cat-row ${open?'active':''}" data-cat="${esc(c)}"><span>${esc(c)}</span><span class="cat-count">${list.length}</span></div>`;
+    if(open){
+      for(const p of list){
+        const sel=SELECTED.includes(p.parameter)?'sel':'';
+        const last=p.latest_value_text!=null?p.latest_value_text:(p.latest_value!=null?p.latest_value:'–');
+        html+=`<div class="param-row ${sel}" data-param="${esc(p.parameter)}" title="${esc(p.parameter)}">`+
+          `<span class="pr-spark">${spark(BYPARAM[p.parameter]||[],46,16)}</span>`+
+          `<span class="pr-name">${esc(p.parameter)}</span>`+
+          `<span class="pr-last">${esc(String(last))}</span></div>`;
+      }
+    }
+  }
+  side.innerHTML=html;
+  side.querySelectorAll('.cat-row').forEach(el=>el.onclick=()=>{
+    const c=el.dataset.cat; ACTIVE_CAT=(c==='__all')?null:(ACTIVE_CAT===c?null:c); renderSidebar();
+  });
+  side.querySelectorAll('.param-row').forEach(el=>el.onclick=()=>{ toggleParam(el.dataset.param,true); });
+}
+
+// ---------- dashboard ----------
+function renderDashboard(){
+  const dash=document.getElementById('dashboard');
+  const trend=PARAMS.filter(p=>(p.numeric_count||0)>=3).sort((a,b)=>(b.numeric_count||0)-(a.numeric_count||0));
+  let html=`<div class="dash-head"><h2>Latest snapshot — ${trend.length} trendable parameters</h2>`+
+    `<span style="color:var(--muted);font-size:12.5px">Click a card to open its trend</span></div><div class="grid">`;
+  for(const p of trend){
+    const rows=BYPARAM[p.parameter]||[];
+    const lastNum=[...rows].reverse().find(m=>m.value!=null);
+    const flag=lastNum?flagFor(lastNum):null;
+    const col=FLAG_COLORS[flag]||'#888';
+    const val=p.latest_value!=null?fmt(p.latest_value):(p.latest_value_text??'–');
+    html+=`<div class="card" data-param="${esc(p.parameter)}">`+
+      `<div class="card-name">${esc(p.parameter)}</div>`+
+      `<div class="card-cat">${esc(p.category||'')}</div>`+
+      `<div class="card-val"><span class="card-num">${esc(String(val))}</span>`+
+      `<span class="card-unit">${esc(p.unit||'')}</span>`+
+      (flag?`<span class="card-flag" style="background:${col};margin-left:auto">${flag}</span>`:'')+`</div>`+
+      `<div class="card-spark">${spark(rows,160,30,true)}</div>`+
+      `<div class="card-foot"><span>${p.numeric_count} pts</span><span>${p.last_date||''}</span></div>`+
+      `</div>`;
+  }
+  html+=`</div>`;
+  dash.innerHTML=html;
+  dash.querySelectorAll('.card').forEach(el=>el.onclick=()=>{ SELECTED=[]; toggleParam(el.dataset.param,true); });
+}
+
+// ---------- search ----------
+function wireSearch(){
+  const inp=document.getElementById('search'), box=document.getElementById('results');
+  let active=-1, items=[];
+  function close(){ box.classList.remove('open'); active=-1; }
+  function run(){
+    const q=inp.value.trim().toLowerCase();
+    if(!q){ close(); return; }
+    items=searchParams(q);
+    if(!items.length){ box.innerHTML=`<div class="res-item" style="cursor:default;color:var(--muted)">No matches</div>`; box.classList.add('open'); return; }
+    box.innerHTML=items.slice(0,40).map((p,i)=>{
+      const last=p.latest_value_text!=null?p.latest_value_text:'–';
+      return `<div class="res-item" data-i="${i}"><span class="res-name">${esc(p.parameter)}<span class="cat-pill">${esc(p.category||'')}</span></span>`+
+        `<span class="res-meta">${p.numeric_count||0} pts · last ${esc(String(last))} ${esc(p.unit||'')}</span></div>`;
+    }).join('');
+    box.classList.add('open'); active=-1;
+    box.querySelectorAll('.res-item').forEach(el=>{ if(el.dataset.i!=null) el.onclick=()=>pick(items[+el.dataset.i]); });
+  }
+  function pick(p){ inp.value=''; close(); toggleParam(p.parameter,true); }
+  inp.addEventListener('input',run);
+  inp.addEventListener('focus',()=>{ if(inp.value.trim()) run(); });
+  inp.addEventListener('keydown',e=>{
+    const els=[...box.querySelectorAll('.res-item[data-i]')];
+    if(e.key==='ArrowDown'){ e.preventDefault(); active=Math.min(active+1,els.length-1); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); active=Math.max(active-1,0); }
+    else if(e.key==='Enter'){ if(active>=0&&items[active]) pick(items[active]); else if(items[0]) pick(items[0]); return; }
+    else if(e.key==='Escape'){ close(); return; } else return;
+    els.forEach((el,i)=>el.classList.toggle('active',i===active));
+    if(els[active]) els[active].scrollIntoView({block:'nearest'});
+  });
+  document.addEventListener('click',e=>{ if(!e.target.closest('.searchwrap')) close(); });
+}
+
+function searchParams(q){
+  const scored=[];
+  const aliasHits=ALIASES[q]||null;
+  for(const p of PARAMS){
+    const name=(p.parameter||'').toLowerCase();
+    const raws=(BYPARAM[p.parameter]||[]).map(m=>(m.parameter_raw||'').toLowerCase());
+    let score=-1;
+    if(name===q) score=100;
+    else if(name.startsWith(q)) score=80;
+    else if(name.includes(q)) score=60;
+    else if(raws.some(r=>r.includes(q))) score=40;
+    // alias map
+    if(aliasHits){
+      for(const sub of aliasHits){ if(name.includes(sub)||raws.some(r=>r.includes(sub))){ score=Math.max(score,55); break; } }
+    }
+    // partial-alias: if query is a known alias key prefix
+    for(const key in ALIASES){
+      if(key.startsWith(q) || q.startsWith(key)){
+        for(const sub of ALIASES[key]){ if(name.includes(sub)||raws.some(r=>r.includes(sub))){ score=Math.max(score,45); break; } }
+      }
+    }
+    if(score>=0) scored.push([score,(p.numeric_count||0),p]);
+  }
+  scored.sort((a,b)=> b[0]-a[0] || b[1]-a[1]);
+  return scored.map(s=>s[2]);
+}
+
+// ---------- selection / chart ----------
+function toggleParam(name,additive){
+  if(!CATALOG[name] && !BYPARAM[name]) return;
+  const idx=SELECTED.indexOf(name);
+  if(idx>=0){ SELECTED.splice(idx,1); }
+  else { if(!additive) SELECTED=[]; SELECTED.push(name); }
+  if(SELECTED.length===0){ showDashboard(); return; }
+  showChart();
+}
+function showDashboard(){
+  document.getElementById('dashboard').style.display='';
+  document.getElementById('chartview').style.display='none';
+  renderSidebar();
+}
+function showChart(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('chartview').style.display='';
+  renderSidebar(); renderChips(); drawChart(); renderTable();
+}
+
+function renderChips(){
+  const box=document.getElementById('chips');
+  box.innerHTML=SELECTED.map((n,i)=>{
+    const c=SERIES_COLORS[i%SERIES_COLORS.length];
+    return `<span class="chip"><span class="dot" style="background:${c}"></span>${esc(n)} <button data-n="${esc(n)}" title="remove">×</button></span>`;
+  }).join('');
+  box.querySelectorAll('button').forEach(b=>b.onclick=()=>toggleParam(b.dataset.n,true));
+  document.getElementById('chartTitle').textContent= SELECTED.length===1?SELECTED[0]:`${SELECTED.length} parameters compared`;
+}
+
+function flagFor(m){
+  if(m.flag) return m.flag;
+  if(m.value==null) return null;
+  const lo=m.ref_low, hi=m.ref_high;
+  if(hi!=null && m.value>hi) return 'High';
+  if(lo!=null && m.value<lo) return 'Low';
+  if(lo!=null||hi!=null) return 'Normal';
+  return null;
+}
+// most-common ref for a param (fallback when catalog lacks bounds)
+function refFor(name){
+  const c=CATALOG[name]||{};
+  let lo=c.ref_low, hi=c.ref_high;
+  if(lo==null||hi==null){
+    const counts={};
+    for(const m of (BYPARAM[name]||[])){
+      if(m.ref_low!=null||m.ref_high!=null){ const k=m.ref_low+'|'+m.ref_high; (counts[k] ||= {n:0,lo:m.ref_low,hi:m.ref_high}).n++; }
+    }
+    let best=null; for(const k in counts){ if(!best||counts[k].n>best.n) best=counts[k]; }
+    if(best){ if(lo==null) lo=best.lo; if(hi==null) hi=best.hi; }
+  }
+  return {lo,hi};
+}
+function inRange(name){
+  const rows=BYPARAM[name]||[];
+  return rows.filter(m=>{
+    if(dateFrom && m.date<dateFrom) return false;
+    if(dateTo && m.date>dateTo) return false;
+    return true;
+  });
+}
+
+function drawChart(){
+  const ctx=document.getElementById('chart');
+  if(chart){ chart.destroy(); chart=null; }
+  const single=SELECTED.length===1;
+  const datasets=[]; const annotations=[];
+  const unitsSet=new Set();
+  SELECTED.forEach(n=>{ const u=(CATALOG[n]||{}).unit||''; unitsSet.add(u); });
+  const mixedUnits=unitsSet.size>1;
+  const useNorm = normalize && mixedUnits;
+
+  SELECTED.forEach((name,i)=>{
+    const col=SERIES_COLORS[i%SERIES_COLORS.length];
+    const rows=inRange(name).filter(m=>m.value!=null);
+    const ref=refFor(name);
+    const pts=rows.map(m=>{
+      let y=m.value;
+      if(useNorm && ref.hi){ y=(m.value/ref.hi)*100; }
+      return {x:m.date, y, raw:m};
+    });
+    const ptColors=rows.map(m=>FLAG_COLORS[flagFor(m)]||col);
+    datasets.push({
+      label:name+(useNorm?' (% of ref hi)':((CATALOG[name]||{}).unit?` (${(CATALOG[name]||{}).unit})`:'')),
+      data:pts,
+      borderColor:col, backgroundColor:col,
+      pointBackgroundColor:ptColors, pointBorderColor:ptColors,
+      pointRadius: rows.length<2?6:4, pointHoverRadius:6,
+      borderWidth:2, tension:.18, spanGaps:true,
+      yAxisID: (mixedUnits&&!useNorm)? (i===0?'y':'y2') : 'y',
+      showLine: rows.length>=2,
+    });
+  });
+
+  // reference band — only when single param & not normalized
+  let bandPlugin=[];
+  if(single && !useNorm){
+    const ref=refFor(SELECTED[0]);
+    if(ref.lo!=null || ref.hi!=null){
+      bandPlugin=[{
+        id:'refband',
+        beforeDatasetsDraw(c){
+          const {ctx,chartArea,scales}=c; const ys=scales.y; if(!ys) return;
+          const top= ref.hi!=null? ys.getPixelForValue(ref.hi) : chartArea.top;
+          const bot= ref.lo!=null? ys.getPixelForValue(ref.lo) : chartArea.bottom;
+          ctx.save(); ctx.fillStyle='rgba(42,168,136,.10)';
+          ctx.fillRect(chartArea.left, Math.min(top,bot), chartArea.right-chartArea.left, Math.abs(bot-top));
+          ctx.strokeStyle='rgba(42,168,136,.35)'; ctx.setLineDash([4,4]); ctx.lineWidth=1;
+          if(ref.hi!=null){ ctx.beginPath(); ctx.moveTo(chartArea.left,top); ctx.lineTo(chartArea.right,top); ctx.stroke(); }
+          if(ref.lo!=null){ ctx.beginPath(); ctx.moveTo(chartArea.left,bot); ctx.lineTo(chartArea.right,bot); ctx.stroke(); }
+          ctx.restore();
+        }
+      }];
+    }
+  }
+
+  const scales={
+    x:{ type:'time', time:{unit:'year', tooltipFormat:'yyyy-MM-dd'}, grid:{color:'#f0f1f3'} },
+    y:{ title:{display:!!(single&&!useNorm),text:(CATALOG[SELECTED[0]]||{}).unit||''}, grid:{color:'#f0f1f3'} },
+  };
+  if(mixedUnits&&!useNorm){
+    scales.y2={ position:'right', grid:{drawOnChartArea:false}, title:{display:true,text:(CATALOG[SELECTED[1]]||{}).unit||''} };
+  }
+
+  chart=new Chart(ctx,{
+    type:'line',
+    data:{datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false, animation:false,
+      interaction:{mode:'nearest',intersect:false},
+      plugins:{
+        legend:{display:SELECTED.length>1, position:'top'},
+        tooltip:{ callbacks:{
+          title:(it)=> it[0].raw.raw.date,
+          label:(it)=>{ const m=it.raw.raw; const f=flagFor(m);
+            return `${m.parameter}: ${fmt(m.value)} ${m.unit||''}`+(f?`  [${f}]`:''); },
+          afterLabel:(it)=>{ const m=it.raw.raw;
+            return `lab: ${m.lab||'—'}\nsource: ${(m.sources||[]).join(', ')||'—'}`; }
+        }}
+      },
+      scales
+    },
+    plugins: bandPlugin
+  });
+}
+
+// ---------- table ----------
+function tableRows(){
+  let rows=[];
+  for(const n of SELECTED){ for(const m of inRange(n)) rows.push(m); }
+  const k=tblSort.key, dir=tblSort.dir;
+  rows.sort((a,b)=>{
+    let va=a[k], vb=b[k];
+    if(k==='value'){ va=va==null?-Infinity:va; vb=vb==null?-Infinity:vb; }
+    if(k==='sources'){ va=(a.sources||[]).join(','); vb=(b.sources||[]).join(','); }
+    if(va<vb) return -1*dir; if(va>vb) return 1*dir; return 0;
+  });
+  return rows;
+}
+function renderTable(){
+  const rows=tableRows();
+  document.getElementById('tblCount').textContent=`${rows.length} rows`;
+  const cols=[['date','Date'],['parameter','Parameter'],['value','Value'],['unit','Unit'],['ref_text','Ref range'],['flag','Flag'],['lab','Lab'],['sources','Source']];
+  let html='<thead><tr>'+cols.map(([k,l])=>{
+    const arr= tblSort.key===k? (tblSort.dir>0?'▲':'▼'):'';
+    return `<th data-k="${k}">${l}<span class="arr">${arr}</span></th>`;
+  }).join('')+'</tr></thead><tbody>';
+  for(const m of rows){
+    const f=flagFor(m); const col=FLAG_COLORS[f]||'transparent';
+    const val= m.value!=null? fmt(m.value) : (m.value_text??'');
+    html+=`<tr><td>${esc(m.date)}</td><td>${esc(m.parameter)}</td>`+
+      `<td class="numcol">${esc(String(val))}</td><td>${esc(m.unit||'')}</td>`+
+      `<td>${esc(m.ref_text||'')}</td>`+
+      `<td>${f?`<span class="flagdot" style="background:${col}"></span>${f}`:'—'}</td>`+
+      `<td>${esc(m.lab||'—')}</td>`+
+      `<td><span class="src" title="${esc((m.sources||[]).join(', '))}">${esc((m.sources||[]).join(', ')||'—')}</span></td></tr>`;
+  }
+  html+='</tbody>';
+  const t=document.getElementById('dtable'); t.innerHTML=html;
+  t.querySelectorAll('th').forEach(th=>th.onclick=()=>{
+    const k=th.dataset.k;
+    if(tblSort.key===k) tblSort.dir*=-1; else { tblSort.key=k; tblSort.dir= k==='date'? -1 : 1; }
+    renderTable();
+  });
+}
+
+function exportCSV(){
+  const rows=tableRows();
+  const cols=['date','parameter','value','value_text','unit','ref_low','ref_high','ref_text','flag','lab','sources'];
+  const lines=[cols.join(',')];
+  for(const m of rows){
+    lines.push(cols.map(c=>{
+      let v= c==='sources'? (m.sources||[]).join('; ') : m[c];
+      if(v==null) v='';
+      v=String(v);
+      if(/[",\n]/.test(v)) v='"'+v.replace(/"/g,'""')+'"';
+      return v;
+    }).join(','));
+  }
+  const blob=new Blob([lines.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=(SELECTED.join('_').replace(/[^\w]+/g,'-')||'health')+'.csv';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+// ---------- controls ----------
+function wireControls(){
+  document.getElementById('clearSel').onclick=()=>{ SELECTED=[]; showDashboard(); };
+  document.getElementById('csvBtn').onclick=exportCSV;
+  document.getElementById('dFrom').onchange=e=>{ dateFrom=e.target.value||null; drawChart(); renderTable(); };
+  document.getElementById('dTo').onchange=e=>{ dateTo=e.target.value||null; drawChart(); renderTable(); };
+  document.getElementById('dReset').onclick=()=>{ dateFrom=dateTo=null; document.getElementById('dFrom').value=''; document.getElementById('dTo').value=''; drawChart(); renderTable(); };
+  document.getElementById('normChk').onchange=e=>{ normalize=e.target.checked; drawChart(); };
+}
+
+// ---------- helpers ----------
+function fmt(v){ if(v==null) return ''; if(Number.isInteger(v)) return String(v); return (Math.round(v*1000)/1000).toString(); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// inline sparkline svg
+function spark(rows,w,h,colorByFlag){
+  const nums=rows.filter(m=>m.value!=null);
+  if(nums.length<2){
+    return `<svg width="${w}" height="${h}"></svg>`;
+  }
+  const xs=nums.map(m=>+new Date(m.date)); const ys=nums.map(m=>m.value);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const px=v=> x1===x0?w/2: 2+( (v-x0)/(x1-x0) )*(w-4);
+  const py=v=> y1===y0?h/2: h-2-( (v-y0)/(y1-y0) )*(h-4);
+  let d=''; nums.forEach((m,i)=>{ d+=(i?'L':'M')+px(xs[i]).toFixed(1)+' '+py(ys[i]).toFixed(1)+' '; });
+  const last=nums[nums.length-1];
+  const lc= colorByFlag? (FLAG_COLORS[flagFor(last)]||'#888') : '#9aa';
+  return `<svg width="${w}" height="${h}" style="vertical-align:middle">`+
+    `<path d="${d}" fill="none" stroke="#9bb" stroke-width="1.2"/>`+
+    `<circle cx="${px(xs[xs.length-1]).toFixed(1)}" cy="${py(ys[ys.length-1]).toFixed(1)}" r="2.4" fill="${lc}"/></svg>`;
+}
+
+boot();
+</script>
+</body>
+</html>

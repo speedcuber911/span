@@ -1,0 +1,275 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Project Span — MVP infrastructure (India-only, cheap, single-box).
+  One t3.small EC2 (Amazon Linux 2023) in ap-south-1 running the TypeScript/Node
+  API + worker + Postgres, plus an encrypted S3 bucket and an SQS FIFO queue + DLQ.
+  Pay-per-use serverless kept (S3, SQS, KMS); no always-on managed services
+  (no Aurora, no Fargate). Tear the whole thing down with: delete-stack.
+
+# ---------------------------------------------------------------------------
+# Parameters
+# ---------------------------------------------------------------------------
+Parameters:
+  ProjectName:
+    Type: String
+    Default: span
+    Description: Prefix for all resource names/tags.
+
+  InstanceType:
+    Type: String
+    Default: t3.small
+    AllowedValues: [t3.micro, t3.small, t3.medium]
+    Description: EC2 size. Resize later by updating the stack.
+
+  SSHLocationCidr:
+    Type: String
+    Default: 106.219.154.151/32
+    Description: CIDR allowed to SSH (port 22). Locked to the founder's current IP by default.
+    AllowedPattern: ^(\d{1,3}\.){3}\d{1,3}/\d{1,2}$
+
+  LatestAl2023Ami:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
+    Description: Resolves to the latest Amazon Linux 2023 x86_64 AMI (do not override).
+
+  RootVolumeGb:
+    Type: Number
+    Default: 20
+    MinValue: 8
+    MaxValue: 100
+    Description: Root EBS size in GB (gp3, encrypted).
+
+# ---------------------------------------------------------------------------
+# Resources
+# ---------------------------------------------------------------------------
+Resources:
+
+  # --- KMS key for encrypting S3 objects (PHI at rest) ---------------------
+  SpanKmsKey:
+    Type: AWS::KMS::Key
+    DeletionPolicy: Retain          # keys are retained on stack delete (safety); see infra/README
+    UpdateReplacePolicy: Retain
+    Properties:
+      Description: !Sub "${ProjectName} PHI encryption key (S3 SSE-KMS)"
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowAccountAdmin
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: "kms:*"
+            Resource: "*"
+
+  SpanKmsAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: !Sub "alias/${ProjectName}-phi"
+      TargetKeyId: !Ref SpanKmsKey
+
+  # --- Encrypted S3 bucket for raw reports/photos (PHI) --------------------
+  SpanPhiBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain          # never auto-delete PHI on stack teardown
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "${ProjectName}-phi-${AWS::AccountId}-ap-south-1"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !Ref SpanKmsKey
+            BucketKeyEnabled: true
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-derived-and-incomplete
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 90
+      CorsConfiguration:                 # presigned PUT direct from the iOS client
+        CorsRules:
+          - AllowedMethods: [PUT, GET, HEAD]
+            AllowedOrigins: ["*"]        # tighten to the app once a custom scheme/domain exists
+            AllowedHeaders: ["*"]
+            MaxAge: 3000
+
+  # --- SQS FIFO queue + DLQ (ingest -> parse -> analyze) -------------------
+  SpanJobsDlq:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${ProjectName}-jobs-dlq.fifo"
+      FifoQueue: true
+      MessageRetentionPeriod: 1209600    # 14 days
+      SqsManagedSseEnabled: true
+
+  SpanJobsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${ProjectName}-jobs.fifo"
+      FifoQueue: true
+      ContentBasedDeduplication: false   # we set MessageDeduplicationId = artifact_id explicitly
+      VisibilityTimeout: 300
+      MessageRetentionPeriod: 345600     # 4 days
+      SqsManagedSseEnabled: true
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt SpanJobsDlq.Arn
+        maxReceiveCount: 5
+
+  # --- IAM role for the EC2 (least-privilege to its own bucket/queue/key) --
+  SpanInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-ec2-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: ec2.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore   # Session Manager (no inbound SSH needed)
+      Policies:
+        - PolicyName: span-app-access
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: S3PhiBucket
+                Effect: Allow
+                Action: [s3:GetObject, s3:PutObject, s3:DeleteObject, s3:ListBucket]
+                Resource:
+                  - !GetAtt SpanPhiBucket.Arn
+                  - !Sub "${SpanPhiBucket.Arn}/*"
+              - Sid: SqsJobs
+                Effect: Allow
+                Action: [sqs:SendMessage, sqs:ReceiveMessage, sqs:DeleteMessage, sqs:GetQueueAttributes, sqs:GetQueueUrl]
+                Resource:
+                  - !GetAtt SpanJobsQueue.Arn
+                  - !GetAtt SpanJobsDlq.Arn
+              - Sid: KmsForS3
+                Effect: Allow
+                Action: [kms:Decrypt, kms:GenerateDataKey]
+                Resource: !GetAtt SpanKmsKey.Arn
+
+  SpanInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub "${ProjectName}-ec2-profile"
+      Roles: [!Ref SpanInstanceRole]
+
+  # --- Security group: SSH (locked to founder IP) + HTTP/HTTPS -------------
+  SpanSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub "${ProjectName} EC2 ingress"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLocationCidr
+          Description: SSH from founder IP only (Session Manager preferred; SSH is a fallback)
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP (redirect to HTTPS at the app)
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: HTTPS API
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+  # --- Project-scoped SSH key pair (private key returned by CFN) -----------
+  SpanKeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: !Sub "${ProjectName}-ap-south-1"
+
+  # --- The instance --------------------------------------------------------
+  SpanInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAl2023Ami
+      IamInstanceProfile: !Ref SpanInstanceProfile
+      KeyName: !Ref SpanKeyPair
+      SecurityGroupIds: [!GetAtt SpanSecurityGroup.GroupId]
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: !Ref RootVolumeGb
+            VolumeType: gp3
+            Encrypted: true
+            DeleteOnTermination: true
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -euxo pipefail
+          dnf update -y
+          # Node.js 20 LTS
+          dnf install -y nodejs20 npm git
+          # PostgreSQL 16 server + client (co-resident DB for the MVP)
+          dnf install -y postgresql16 postgresql16-server
+          /usr/bin/postgresql-setup --initdb
+          systemctl enable --now postgresql
+          # A scoped DB role + database for the app (password is a bootstrap placeholder;
+          # rotate via Secrets Manager before storing any real PHI).
+          sudo -u postgres psql -v ON_ERROR_STOP=1 <<'SQL'
+            CREATE ROLE span_app LOGIN PASSWORD 'CHANGE_ME_BOOTSTRAP';
+            CREATE DATABASE span OWNER span_app;
+          SQL
+          dnf install -y nginx
+          systemctl enable --now nginx
+          echo "span bootstrap complete" > /var/log/span-bootstrap.done
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-app"
+        - Key: Project
+          Value: !Ref ProjectName
+
+  # --- Elastic IP so the address survives stop/start ----------------------
+  SpanEip:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref SpanInstance
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+# ---------------------------------------------------------------------------
+# Outputs
+# ---------------------------------------------------------------------------
+Outputs:
+  InstanceId:
+    Description: EC2 instance id
+    Value: !Ref SpanInstance
+  PublicIp:
+    Description: Elastic IP (stable public address)
+    Value: !Ref SpanEip
+  S3Bucket:
+    Description: PHI bucket name
+    Value: !Ref SpanPhiBucket
+  SqsQueueUrl:
+    Description: Jobs FIFO queue URL
+    Value: !Ref SpanJobsQueue
+  KmsKeyArn:
+    Description: KMS key ARN for S3 SSE-KMS
+    Value: !GetAtt SpanKmsKey.Arn
+  KeyPairName:
+    Description: SSH key pair name (retrieve private key from SSM Parameter Store / EC2 console)
+    Value: !Ref SpanKeyPair
+  SsmPrivateKeyPath:
+    Description: SSM parameter holding the private key (created by AWS::EC2::KeyPair)
+    Value: !Sub "/ec2/keypair/${SpanKeyPair.KeyPairId}"

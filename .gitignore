@@ -1,0 +1,97 @@
+# ── Node / TypeScript ────────────────────────────────────────────────────────
+node_modules/
+dist/
+build/
+.cache/
+*.tsbuildinfo
+
+# ── Environment / Secrets ────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ── AWS credentials / config ─────────────────────────────────────────────────
+.aws/
+credentials
+aws-exports.js
+
+# ── CloudFormation / CDK / Terraform ─────────────────────────────────────────
+cdk.out/
+.cdk.staging/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+samconfig.toml
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ── Xcode / iOS ──────────────────────────────────────────────────────────────
+xcuserdata/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xccheckout
+*.resolved
+Pods/
+.build/
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Test / Coverage ──────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+*.lcov
+
+# ── Editor / IDE ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── GCP credentials ──────────────────────────────────────────────────────────
+service-account*.json
+gcp-key*.json
+application_default_credentials.json
+
+# ── Patient / PHI data ───────────────────────────────────────────────────────
+health_data.json
+*.docx
+recovered.json
+
+# ── Claude internal ───────────────────────────────────────────────────────────
+.claude/
+
+# ── Playwright MCP ───────────────────────────────────────────────────────────
+.playwright-mcp/
+
+# ── Misc ─────────────────────────────────────────────────────────────────────
+*.bak
+*.tmp
