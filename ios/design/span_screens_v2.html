@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Span</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#030306;
+  --s1:#09090F;
+  --s2:#0F0F1A;
+  --s3:#151522;
+  --b1:#1A1A28;
+  --b2:#242438;
+  --t1:#ECEAFF;
+  --t2:#6A6880;
+  --t3:#3A3852;
+  --r:#FF2D55;--rbg:rgba(255,45,85,.1);--rbd:rgba(255,45,85,.28);
+  --a:#FF9500;--abg:rgba(255,149,0,.1);--abd:rgba(255,149,0,.28);
+  --g:#30D158;--gbg:rgba(48,209,88,.08);--gbd:rgba(48,209,88,.28);
+  --p:#BF5AF2;--pbg:rgba(191,90,242,.1);--pbd:rgba(191,90,242,.3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);display:flex;height:100vh;overflow:hidden;color:var(--t1);-webkit-font-smoothing:antialiased}
+
+/* Sidebar */
+#sb{width:206px;background:#000;border-right:.5px solid #0F0F18;height:100vh;overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
+#sb::-webkit-scrollbar{display:none}
+.shdr{padding:20px 16px 16px;border-bottom:.5px solid #111120}
+.sbn{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.8px}
+.sbs{font-size:9px;color:var(--t3);margin-top:3px;letter-spacing:.1px}
+.ml{font-size:8px;font-weight:700;color:var(--t3);padding:12px 16px 4px;text-transform:uppercase;letter-spacing:1.3px}
+.si{display:flex;align-items:center;gap:7px;padding:6px 16px;cursor:pointer;border-left:2px solid transparent}
+.si:hover{background:rgba(255,255,255,.02)}
+.si.act{border-left-color:var(--t1)}
+.si.act .sil{color:var(--t1);font-weight:600}
+.sin{font-size:9px;color:var(--t3);min-width:14px;font-variant-numeric:tabular-nums}
+.sil{font-size:11px;color:var(--t2)}
+
+/* Stage */
+#stage{flex:1;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(191,90,242,.06) 0%,transparent 100%)}
+
+/* Phone */
+#ph{width:375px;max-height:812px;background:var(--s1);border-radius:52px;display:flex;flex-direction:column;overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.07),0 0 0 1.5px rgba(0,0,0,.8),0 48px 120px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,255,255,.1)}
+
+/* Status bar */
+.sbar{height:50px;display:flex;align-items:flex-start;padding:15px 22px 0;flex-shrink:0;position:relative}
+.sbar-time{font-size:15px;font-weight:600;color:var(--t1);letter-spacing:-.2px}
+.sbar-island{position:absolute;left:50%;transform:translateX(-50%);top:10px;width:120px;height:34px;background:#000;border-radius:20px;border:.5px solid #1A1A28}
+.sbar-right{margin-left:auto;display:flex;align-items:center;gap:6px;margin-top:1px}
+
+/* Content + tabs */
+#pc{flex:1;overflow-y:auto;overflow-x:hidden}
+#pc::-webkit-scrollbar{display:none}
+#ptabs{height:54px;border-top:.5px solid var(--b1);display:flex;align-items:center;background:rgba(9,9,15,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);flex-shrink:0}
+.tabi{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 0}
+.tabi i{font-size:22px;color:var(--t3)}
+.tabi.ta i{color:var(--p)}
+.tabl{font-size:9px;color:var(--t3);letter-spacing:.1px}
+.tabi.ta .tabl{color:var(--p)}
+#hi{height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+#hi div{width:130px;height:5px;background:var(--t1);border-radius:3px;opacity:.24}
+#ask{position:absolute;bottom:90px;right:14px;height:36px;background:var(--pbg);color:var(--p);border-radius:18px;display:flex;align-items:center;gap:6px;padding:0 14px;font-size:11px;font-weight:600;cursor:pointer;border:.5px solid var(--pbd);z-index:10;letter-spacing:.1px;backdrop-filter:blur(8px)}
+
+/* Nav bar */
+.nb{padding:0 20px;height:44px;display:flex;align-items:center;gap:9px;border-bottom:.5px solid var(--b1);background:rgba(9,9,15,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:sticky;top:0;z-index:5;flex-shrink:0}
+.nbk{font-size:13px;color:var(--p);cursor:pointer;display:flex;align-items:center;gap:2px;font-weight:500}
+.nbt{font-size:17px;font-weight:700;flex:1;color:var(--t1);letter-spacing:-.35px}
+.nba{font-size:13px;color:var(--p);cursor:pointer;font-weight:500}
+
+/* Common components */
+.sc{padding:16px 20px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.dr{background:var(--r);box-shadow:0 0 7px rgba(255,45,85,.6)}
+.dy{background:var(--a);box-shadow:0 0 5px rgba(255,149,0,.3)}
+.dg{background:var(--g);box-shadow:0 0 5px rgba(48,209,88,.3)}
+.dgr{background:var(--b2)}
+.bdg{font-size:9.5px;padding:2.5px 8px;border-radius:9px;font-weight:700;display:inline-flex;align-items:center;gap:2px;white-space:nowrap;letter-spacing:.05px}
+.br{background:var(--rbg);color:var(--r);border:.5px solid var(--rbd)}
+.by{background:var(--abg);color:var(--a);border:.5px solid var(--abd)}
+.bgs{background:var(--gbg);color:var(--g);border:.5px solid var(--gbd)}
+.bb{background:var(--pbg);color:var(--p);border:.5px solid var(--pbd)}
+.bgr{background:var(--s2);color:var(--t2);border:.5px solid var(--b1)}
+.cc{display:inline-flex;align-items:center;gap:3px;padding:2.5px 8px;border-radius:7px;font-size:9.5px;background:var(--s2);color:var(--t2);border:.5px solid var(--b2);cursor:pointer;font-weight:500}
+.lbl{font-size:8.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;margin:20px 0 8px;display:block}
+.div1{border-bottom:.5px solid var(--b1)}
+.row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:.5px solid var(--b1)}
+.row:last-child{border:none}
+.tog{width:40px;height:23px;border-radius:12px;position:relative;flex-shrink:0;cursor:pointer}
+.ton{background:var(--g)}
+.tof{background:var(--b2)}
+.tog::after{content:'';width:19px;height:19px;background:#fff;border-radius:50%;position:absolute;top:2px;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.ton::after{left:19px}.tof::after{left:2px}
+.seg{display:flex;gap:1px;background:var(--s2);border-radius:9px;padding:2px;border:.5px solid var(--b1)}
+.seg-i{flex:1;padding:6px;text-align:center;font-size:12px;font-weight:500;border-radius:7px;cursor:pointer;color:var(--t2)}
+.seg-i.sa{background:var(--s3);color:var(--t1);font-weight:600}
+.inp{background:var(--s2);border:.5px solid var(--b2);border-radius:10px;padding:11px 14px;font-size:15px;color:var(--t1);display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.inp-lbl{font-size:9px;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
+.pbar{height:2px;background:var(--b1);border-radius:2px;overflow:hidden}
+.pbf{height:100%;border-radius:2px}
+.btnP{width:100%;padding:14px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;display:block;background:var(--t1);color:var(--bg);border:none;margin:10px 0;letter-spacing:-.15px}
+.btnG{width:100%;padding:11px;border-radius:12px;font-size:13px;cursor:pointer;text-align:center;display:block;color:var(--t2);background:transparent;border:.5px solid var(--b2);margin:6px 0}
+.btnA{width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;background:var(--t1);color:#000;border:none;margin:10px 0;letter-spacing:-.2px}
+.progdots{display:flex;gap:6px;align-items:center;padding:10px 20px;border-bottom:.5px solid var(--b1)}
+.pd{height:3px;border-radius:2px}.pda{width:24px;background:var(--p)}.pdd{width:18px;background:var(--g)}.pdp{width:18px;background:var(--b2)}
+.cta{display:flex;align-items:center;gap:12px;padding:15px 16px;background:var(--s2);border-radius:12px;cursor:pointer;font-size:14px;font-weight:600;color:var(--t1);margin-bottom:9px;border:.5px solid var(--b1)}
+.cta i{font-size:22px;color:var(--p)}
+.who5g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin:14px 0}
+.wo{background:var(--s2);border-radius:12px;border:.5px solid var(--b1);padding:11px 5px;text-align:center;cursor:pointer;font-size:10px;color:var(--t2);line-height:1.4}
+.wo.ws{border-color:var(--pbd);background:var(--pbg);color:var(--p)}
+.won{display:block;font-size:21px;font-weight:800;color:var(--t1);margin-bottom:3px;letter-spacing:-.5px}
+.wo.ws .won{color:var(--p)}
+.qi{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-bottom:.5px solid var(--b1)}
+.qcb{width:16px;height:16px;border:1.5px solid var(--b2);border-radius:5px;flex-shrink:0;margin-top:1px}
+.qt{font-size:12px;color:var(--t1);line-height:1.6;flex:1}
+.setr{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:.5px solid var(--b1);cursor:pointer}
+.edu{padding:12px 20px 8px;font-size:9.5px;color:var(--t3);text-align:center;line-height:1.5;border-top:.5px solid var(--b1);margin-top:6px}
+.mono{font-family:'SF Mono','Cascadia Code','Courier New',monospace;font-variant-numeric:tabular-nums}
+
+/* Waveform animation */
+@keyframes wv{0%,100%{transform:scaleY(.18);opacity:.5}50%{transform:scaleY(1);opacity:1}}
+.wb{width:3px;border-radius:2px;background:var(--p);transform-origin:center;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div id="sb">
+  <div class="shdr"><div class="sbn">Span</div><div class="sbs">18 screens · tap to navigate</div></div>
+  <div class="ml">M0 — Launch</div>
+  <div class="si act" id="si-1" onclick="go(1)"><span class="sin">1</span><span class="sil">Sign In</span></div>
+  <div class="si" id="si-2" onclick="go(2)"><span class="sin">2</span><span class="sil">Consent</span></div>
+  <div class="si" id="si-3" onclick="go(3)"><span class="sin">3</span><span class="sil">Profile — demographics</span></div>
+  <div class="si" id="si-4" onclick="go(4)"><span class="sin">4</span><span class="sil">Profile — clinical flags</span></div>
+  <div class="si" id="si-5" onclick="go(5)"><span class="sin">5</span><span class="sil">Profile — conditions</span></div>
+  <div class="si" id="si-17" onclick="go(17)"><span class="sin">17</span><span class="sil">Settings</span></div>
+  <div class="ml">M1 — Ingest</div>
+  <div class="si" id="si-6" onclick="go(6)"><span class="sin">6</span><span class="sil">First Upload</span></div>
+  <div class="si" id="si-11" onclick="go(11)"><span class="sin">11</span><span class="sil">Upload / Ingest</span></div>
+  <div class="si" id="si-12" onclick="go(12)"><span class="sin">12</span><span class="sil">Self-confirm Review</span></div>
+  <div class="ml">M3 — Core</div>
+  <div class="si" id="si-7" onclick="go(7)"><span class="sin">7</span><span class="sil">Today (home)</span></div>
+  <div class="si" id="si-8" onclick="go(8)"><span class="sin">8</span><span class="sil">Systems tab</span></div>
+  <div class="si" id="si-9" onclick="go(9)"><span class="sin">9</span><span class="sil">System Detail</span></div>
+  <div class="si" id="si-10" onclick="go(10)"><span class="sin">10</span><span class="sil">Parameter Detail</span></div>
+  <div class="si" id="si-18" onclick="go(18)"><span class="sin">18</span><span class="sil">Citation Detail</span></div>
+  <div class="ml">M4 — Check-In</div>
+  <div class="si" id="si-13" onclick="go(13)"><span class="sin">13</span><span class="sil">Check-In</span></div>
+  <div class="ml">M5 — Prep</div>
+  <div class="si" id="si-14" onclick="go(14)"><span class="sin">14</span><span class="sil">Doctor-visit Prep</span></div>
+  <div class="ml">M6 — Advanced</div>
+  <div class="si" id="si-15" onclick="go(15)"><span class="sin">15</span><span class="sil">Biological Age</span></div>
+  <div class="si" id="si-16" onclick="go(16)"><span class="sin">16</span><span class="sil">Span Consultant</span></div>
+</div>
+
+<div id="stage">
+  <div id="ph">
+    <div class="sbar">
+      <span class="sbar-time">9:41</span>
+      <div class="sbar-island"></div>
+      <div class="sbar-right">
+        <!-- Signal bars -->
+        <div style="display:flex;align-items:flex-end;gap:1.5px;height:11px">
+          <div style="width:3px;height:35%;background:rgba(236,234,255,.7);border-radius:1px"></div>
+          <div style="width:3px;height:55%;background:rgba(236,234,255,.7);border-radius:1px"></div>
+          <div style="width:3px;height:75%;background:rgba(236,234,255,.7);border-radius:1px"></div>
+          <div style="width:3px;height:100%;background:rgba(236,234,255,.7);border-radius:1px"></div>
+        </div>
+        <i class="ti ti-wifi" style="font-size:14px;color:rgba(236,234,255,.7)"></i>
+        <!-- Battery -->
+        <div style="display:flex;align-items:center;gap:1px">
+          <div style="width:22px;height:11px;border:1.5px solid rgba(236,234,255,.65);border-radius:3px;padding:1.5px;display:flex;align-items:center">
+            <div style="width:78%;height:100%;background:rgba(236,234,255,.65);border-radius:1px"></div>
+          </div>
+          <div style="width:2px;height:6px;background:rgba(236,234,255,.5);border-radius:0 1px 1px 0"></div>
+        </div>
+      </div>
+    </div>
+    <div id="pc"></div>
+    <div id="ptabs">
+      <div class="tabi" id="t0" onclick="go(7)"><i class="ti ti-home"></i><span class="tabl">Today</span></div>
+      <div class="tabi" id="t1" onclick="go(8)"><i class="ti ti-layout-grid"></i><span class="tabl">Systems</span></div>
+      <div class="tabi" id="t2" onclick="go(13)"><i class="ti ti-clipboard-check"></i><span class="tabl">Check-in</span></div>
+      <div class="tabi" id="t3" onclick="go(14)"><i class="ti ti-stethoscope"></i><span class="tabl">Prep</span></div>
+    </div>
+    <div id="hi"><div></div></div>
+    <div id="ask" onclick="go(16)"><i class="ti ti-microphone"></i>Ask Span</div>
+  </div>
+</div>
+
+<script>
+/* Utilities */
+function sp(d,w,h,c){
+  var mn=Math.min.apply(null,d),mx=Math.max.apply(null,d),r=mx-mn||1;
+  var pts=d.map(function(v,i){return(i/(d.length-1)*w).toFixed(1)+","+(h-(v-mn)/r*(h*.82)+h*.09).toFixed(1)}).join(" ");
+  return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="overflow:visible;display:block"><polyline points="'+pts+'" fill="none" stroke="'+c+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function arc(ts,lb){
+  var p=Math.min(.99,Math.max(.01,(ts-30)/40));
+  var c=ts>55?"#30D158":ts>=45?"#6A6880":ts>=40?"#FF9500":"#FF2D55";
+  var bn=ts>55?"Above avg":ts>=45?"Average":ts>=40?"Mild":"Low";
+  var ex=(60-44*Math.cos(p*Math.PI)).toFixed(1),ey=(52-44*Math.sin(p*Math.PI)).toFixed(1),la=p>.5?1:0;
+  return '<div style="flex:1;background:var(--s2);border-radius:12px;padding:10px 12px;border:.5px solid var(--b1)">'+
+    '<div style="font-size:9px;color:var(--t2);margin-bottom:3px;letter-spacing:.1px">'+lb+'</div>'+
+    '<svg viewBox="0 0 120 56" width="100%" height="38" style="overflow:visible">'+
+    '<path d="M 16 52 A 44 44 0 0 0 104 52" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="6" stroke-linecap="round"/>'+
+    '<path d="M 16 52 A 44 44 0 '+la+' 0 '+ex+' '+ey+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-linecap="round"/>'+
+    '</svg>'+
+    '<div style="font-size:11px;font-weight:700;color:'+c+'">'+bn+'</div>'+
+    '<div style="font-size:9px;color:var(--t3)">T '+ts+'</div></div>';
+}
+function radio(opts,sel){
+  return opts.map(function(o,i){
+    var a=i===sel;
+    return '<div style="display:flex;align-items:center;gap:11px;padding:10px 0;'+(i<opts.length-1?"border-bottom:.5px solid var(--b1)":"")+'">'+'<div style="width:18px;height:18px;border-radius:50%;flex-shrink:0;border:'+(a?"5px solid var(--p)":".5px solid var(--b2)")+'"></div>'+'<span style="font-size:13px;color:'+(a?"var(--t1)":"var(--t2)")+'">'+o+"</span></div>";
+  }).join("");
+}
+function chip(arr){
+  return arr.map(function(it,i){
+    var last=i===arr.length-1;
+    return '<div style="padding:6px 12px;border-radius:14px;font-size:12px;font-weight:500;'+(last?"background:var(--pbg);color:var(--p);border:.5px solid var(--pbd)":"background:var(--s2);color:var(--t1);border:.5px solid var(--b2)")+'">'+it+"</div>";
+  }).join("");
+}
+function sicon(data){
+  return '<div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:'+data[0]+';flex-shrink:0"><i class="ti '+data[1]+'" style="font-size:18px;color:'+data[2]+'"></i></div>';
+}
+function waveform(){
+  var delays=[0,.06,.12,.09,.03,.15,.07,.11,.05,.13,.02,.08,.14,.04,.10,.06,.12,.03,.09,.01];
+  var heights=[18,28,38,30,22,36,26,32,20,34,16,24,40,22,30,28,36,18,26,14];
+  return '<div style="display:flex;align-items:center;justify-content:center;gap:3px;height:44px">'+
+    delays.map(function(d,i){
+      return '<div class="wb" style="height:'+heights[i]+'px;animation:wv 1.1s ease-in-out infinite '+d+'s"></div>';
+    }).join("")+"</div>";
+}
+
+var NO=[1,2,3,4,5,6];
+var ASK=[7,8];
+var TM={7:0,15:0,8:1,9:1,10:1,13:2,14:3,18:3};
+
+/* ── Screens ── */
+var S={
+
+1:function(){return'<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;min-height:580px;text-align:center">'+
+'<div style="margin-bottom:8px">'+
+'<div style="font-size:11px;font-weight:600;letter-spacing:6px;text-transform:uppercase;color:var(--t3);margin-bottom:16px">Health intelligence</div>'+
+'<div style="font-size:80px;font-weight:800;color:var(--t1);letter-spacing:-4px;line-height:.88">Span</div>'+
+'</div>'+
+'<div style="width:40px;height:1.5px;background:var(--p);margin:22px auto 26px;border-radius:1px;opacity:.7"></div>'+
+'<div style="font-size:22px;font-weight:600;color:var(--t1);line-height:1.26;margin-bottom:10px;letter-spacing:-.5px">Your lab reports,<br>finally legible.</div>'+
+'<div style="font-size:14px;color:var(--t2);line-height:1.75;margin-bottom:52px;max-width:240px">8 organ systems. Trend lines across every result. Prep for every doctor visit.</div>'+
+'<div class="btnA" onclick="go(2)"><i class="ti ti-brand-apple" style="font-size:20px"></i>Sign in with Apple</div>'+
+'<div style="font-size:10px;color:var(--t3);margin-top:14px;line-height:1.8">Agree to our <span style="color:var(--p)">Terms</span> · <span style="color:var(--p)">Privacy Policy</span><br>India only · Data stored ap-south-1</div>'+
+'</div>';},
+
+2:function(){return'<div class="nb"><span class="nbk" onclick="go(1)"><i class="ti ti-chevron-left"></i></span><span class="nbt">Data &amp; consent</span></div>'+
+'<div class="sc">'+
+'<div style="font-size:19px;font-weight:700;letter-spacing:-.4px;margin-bottom:5px">How Span uses your data</div>'+
+'<div style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:18px">Span stores your lab reports and measurements on servers in India, under the DPDP Act 2023.</div>'+
+'<span class="lbl" style="margin-top:0">Consents</span>'+
+[["Lab reports &amp; extracted data","show you trends · India (ap-south-1)"],
+ ["Profile (age, sex, conditions)","personalise reference ranges"],
+ ["Doctor-visit prep sheet","prepare you for visits"]].map(function(a){
+  return '<div class="row"><div class="tog ton" style="flex-shrink:0"></div><div><div style="font-size:13px;font-weight:600;color:var(--t1)">'+a[0]+'</div><div style="font-size:10.5px;color:var(--t2);margin-top:2px">Purpose: '+a[1]+"</div></div></div>";
+}).join("")+
+'<div style="font-size:10.5px;color:var(--t3);margin:12px 0 18px;line-height:1.6">Withdraw any consent at any time in Settings.</div>'+
+'<div style="border-top:.5px solid var(--b1);padding-top:18px">'+
+'<div style="background:var(--s2);border-radius:12px;padding:16px;border:.5px solid var(--b1);margin-bottom:20px">'+
+'<div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px">Educational disclaimer</div>'+
+'<div style="font-size:12.5px;color:var(--t2);line-height:1.7">Span is not a medical device. It does not diagnose, prescribe, or treat. All results are educational. Discuss everything with a qualified clinician.</div>'+
+'</div>'+
+'<div class="btnP" onclick="go(3)">I understand — continue</div>'+
+'</div></div>'+
+'<div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+3:function(){return'<div class="progdots"><div class="pd pda"></div><div class="pd pdp"></div><div class="pd pdp"></div><span style="font-size:10px;color:var(--t2);margin-left:7px">Step 1 of 3</span></div>'+
+'<div class="sc">'+
+'<div style="font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:5px">Tell us about yourself</div>'+
+'<div style="font-size:13px;color:var(--t2);margin-bottom:20px">We use this to apply the right reference ranges.</div>'+
+'<span class="lbl" style="margin-top:0">Date of birth</span>'+
+'<div style="display:flex;gap:8px;margin-bottom:18px">'+
+["DD","MM","YYYY"].map(function(p,i){return'<div style="flex:'+(i===2?2:1)+';background:var(--s2);border:.5px solid var(--b2);border-radius:12px;padding:14px 12px;text-align:center;font-size:16px;color:var(--t2)">'+p+"</div>";}).join("")+'</div>'+
+'<span class="lbl">Biological sex</span>'+
+'<div class="seg" style="margin-bottom:20px">'+
+'<div class="seg-i sa">Male</div><div class="seg-i">Female</div>'+
+'</div>'+
+'<span class="lbl">Height &amp; weight</span>'+
+'<div style="display:flex;gap:8px;margin-bottom:10px">'+
+'<div class="inp" style="flex:1;flex-direction:column;align-items:flex-start;gap:2px"><span style="font-size:9px;color:var(--t3);letter-spacing:.6px;text-transform:uppercase">Height</span><div style="display:flex;align-items:baseline;gap:5px"><span class="mono" style="font-size:28px;font-weight:700;color:var(--t1)">175</span><span style="font-size:11px;color:var(--t3)">cm</span></div></div>'+
+'<div class="inp" style="flex:1;flex-direction:column;align-items:flex-start;gap:2px"><span style="font-size:9px;color:var(--t3);letter-spacing:.6px;text-transform:uppercase">Weight</span><div style="display:flex;align-items:baseline;gap:5px"><span class="mono" style="font-size:28px;font-weight:700;color:var(--t1)">74</span><span style="font-size:11px;color:var(--t3)">kg</span></div></div>'+
+'</div>'+
+'<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gbg);border-radius:10px;border:.5px solid var(--gbd);margin-bottom:20px">'+
+'<i class="ti ti-check" style="font-size:15px;color:var(--g)"></i>'+
+'<span style="font-size:12.5px;color:var(--t1)">BMI <span class="mono" style="font-weight:700">24.2</span> — in the healthy range</span>'+
+'</div>'+
+'<div class="btnP" onclick="go(4)">Continue</div>'+
+'<div class="btnG" onclick="go(4)">Skip for now</div>'+
+'</div>';},
+
+4:function(){return'<div class="progdots"><div class="pd pdd"></div><div class="pd pda"></div><div class="pd pdp"></div><span style="font-size:10px;color:var(--t2);margin-left:7px">Step 2 of 3</span></div>'+
+'<div class="sc">'+
+'<div style="font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:5px">A few clinical details</div>'+
+'<div style="font-size:13px;color:var(--t2);margin-bottom:20px">These unlock additional risk estimates. All fields are optional.</div>'+
+'<span class="lbl" style="margin-top:0">Smoking</span>'+
+'<div style="background:var(--s2);border-radius:12px;padding:0 14px;border:.5px solid var(--b1);margin-bottom:18px">'+radio(["Never smoked","Former smoker","Current smoker"],0)+'</div>'+
+'<span class="lbl">Blood pressure</span>'+
+'<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">'+
+'<div class="inp" style="flex:1;flex-direction:column;align-items:flex-start"><span style="font-size:9px;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">Systolic</span><div style="display:flex;align-items:baseline;gap:5px"><span class="mono" style="font-size:28px;font-weight:700;color:var(--t1)">122</span><span style="font-size:11px;color:var(--t3)">mmHg</span></div></div>'+
+'<div style="display:flex;align-items:center;gap:7px"><div class="tog tof"></div><span style="font-size:12px;color:var(--t2)">On treatment</span></div>'+
+'</div>'+
+'<span class="lbl">Diabetes / IFG</span>'+
+'<div style="background:var(--s2);border-radius:12px;padding:0 14px;border:.5px solid var(--b1);margin-bottom:20px">'+radio(["No known diabetes or IFG","Impaired fasting glucose","Type 2 diabetes"],0)+'</div>'+
+'<div class="btnP" onclick="go(5)">Continue</div>'+
+'</div>';},
+
+5:function(){return'<div class="progdots"><div class="pd pdd"></div><div class="pd pdd"></div><div class="pd pda"></div><span style="font-size:10px;color:var(--t2);margin-left:7px">Step 3 of 3</span></div>'+
+'<div class="sc">'+
+'<div style="font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:5px">Almost done</div>'+
+'<div style="font-size:13px;color:var(--t2);margin-bottom:20px">Name only — no doses needed.</div>'+
+'<span class="lbl" style="margin-top:0">Chronic conditions</span>'+
+'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">'+chip(["Hypertension ×","Type 2 DM ×","+ Add condition"])+"</div>"+
+'<span class="lbl">Current medications</span>'+
+'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">'+chip(["Metformin ×","Atorvastatin ×","+ Add medication"])+"</div>"+
+'<span class="lbl">Supplements</span>'+
+'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">'+chip(["Vitamin D ×","Omega-3 ×","+ Add supplement"])+"</div>"+
+'<span class="lbl">Primary focus</span>'+
+'<div style="background:var(--s2);border-radius:12px;padding:0 14px;border:.5px solid var(--b1);margin-bottom:22px">'+radio(["Understanding my lab trends","Preparing for a doctor visit","Tracking my metabolic health","Longevity / healthy ageing"],0)+'</div>'+
+'<div class="btnP" onclick="go(6)">Complete profile</div>'+
+'</div>';},
+
+6:function(){return'<div style="display:flex;flex-direction:column;align-items:center;padding:56px 28px 30px;min-height:550px;text-align:center">'+
+'<div style="width:72px;height:72px;background:var(--gbg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:22px;border:.5px solid var(--gbd);box-shadow:0 0 32px rgba(48,209,88,.15)">'+
+'<i class="ti ti-check" style="font-size:32px;color:var(--g)"></i></div>'+
+'<div style="font-size:22px;font-weight:700;margin-bottom:8px;letter-spacing:-.5px">Profile complete.</div>'+
+'<div style="font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:38px;max-width:240px">Add your first lab report to see your health trends.</div>'+
+'<div style="width:100%">'+
+'<div class="cta" onclick="go(11)"><i class="ti ti-file-upload"></i><div style="text-align:left"><div>Upload from Files / Drive</div><div style="font-size:11px;color:var(--t3);margin-top:2px;font-weight:400">PDF or image · multiple files OK</div></div></div>'+
+'<div class="cta" onclick="go(11)"><i class="ti ti-camera"></i><div style="text-align:left"><div>Scan a paper report</div><div style="font-size:11px;color:var(--t3);margin-top:2px;font-weight:400">Camera · auto-enhanced</div></div></div>'+
+'</div>'+
+'<div class="btnG" onclick="go(7)" style="width:100%;margin-top:8px">I\'ll do this later</div>'+
+'<div style="font-size:10px;color:var(--t3);margin-top:20px;line-height:1.6">Stored securely in India · used only to generate your health trends</div>'+
+'</div>';},
+
+7:function(){
+var rows=[
+  ["METABOLIC","#FF2D55","6.9","% HbA1c","dr",[5.2,5.5,6.1,6.5,6.9]],
+  ["HEART","#FF9500","157","mg/dL LDL","dy",[2.3,2.6,2.8,3.1,3.4]],
+  ["KIDNEY","#30D158","82","eGFR","dg",[68,72,76,80,82]],
+  ["LIVER","#FF9500","31","U/L ALT","dy",[32,34,30,33,31]],
+  ["INFLAMMATION","#FF9500","3.1","mg/L hsCRP","dy",[0.8,1.0,1.4,2.1,3.1]],
+  ["BLOOD","#30D158","14.1","g/dL Hb","dg",[13.0,13.2,13.5,13.8,14.1]],
+  ["THYROID","#FF9500","2.4","mIU/L TSH","dy",[3.2,3.6,2.9,2.6,2.4]],
+  ["NUTRIENTS","#FF9500","13","ng/mL Vit D","dy",[18,16,14,15,13]]
+];
+return'<div style="padding:18px 20px 14px">'+
+'<div style="display:flex;justify-content:space-between;align-items:flex-start">'+
+'<div>'+
+'<div style="font-size:12px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px">14 Jun 2026</div>'+
+'<div style="font-size:26px;font-weight:700;letter-spacing:-.7px;line-height:1.15;color:var(--t1)">Good morning,<br>Anoop.</div>'+
+'</div>'+
+'<i class="ti ti-bell" style="font-size:22px;color:var(--t3);margin-top:4px"></i>'+
+'</div></div>'+
+'<div style="padding:0 20px 14px;border-bottom:.5px solid var(--b1)">'+
+'<div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:9px">Wellbeing</div>'+
+'<div style="display:flex;gap:8px;margin-bottom:6px">'+arc(58,"Physical health")+arc(52,"Mental health")+'</div>'+
+'<div style="font-size:10px;color:var(--t3)">Check-in 10 Jun · <span style="color:var(--p);cursor:pointer" onclick="go(13)">Update →</span></div>'+
+'</div>'+
+'<div style="margin:0 20px 0;padding:12px 0;border-bottom:.5px solid var(--b1)">'+
+'<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--rbg);border-radius:10px;border:.5px solid var(--rbd);border-left:2.5px solid var(--r)">'+
+'<div class="dot dr"></div>'+
+'<div style="flex:1"><div style="font-size:11px;font-weight:700;color:var(--r);margin-bottom:5px">Discuss with your clinician</div>'+
+'<div style="display:flex;gap:5px;flex-wrap:wrap">'+
+'<div class="bdg br" onclick="go(10)" style="cursor:pointer"><i class="ti ti-trending-up" style="font-size:10px"></i>HbA1c 6.9%</div>'+
+'<div class="bdg br" onclick="go(10)" style="cursor:pointer"><i class="ti ti-trending-up" style="font-size:10px"></i>LDL 157</div>'+
+'<div class="bdg bb" style="cursor:pointer"><i class="ti ti-trending-down" style="font-size:10px"></i>Vit D 13</div>'+
+'</div></div></div></div>'+
+'<div style="padding:14px 20px 0">'+
+'<div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Systems</div>'+
+rows.map(function(r){
+  return '<div style="display:flex;align-items:center;padding:12px 0;border-bottom:.5px solid var(--b1);cursor:pointer;gap:12px" onclick="go(9)">'+
+    '<div class="dot '+r[4]+'" style="flex-shrink:0"></div>'+
+    '<div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.5px;flex:1">'+r[0]+"</div>"+
+    sp(r[5],52,16,r[1])+
+    '<div class="mono" style="font-size:16px;font-weight:700;color:'+r[1]+';letter-spacing:-.3px">'+r[2]+'<span style="font-size:9.5px;color:var(--t3);font-weight:400"> '+r[3]+"</span></div></div>";
+}).join("")+
+'<div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;cursor:pointer" onclick="go(15)">'+
+'<div><div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.5px;margin-bottom:3px">BIOLOGICAL AGE</div>'+
+'<div style="font-size:11px;color:var(--g)">3 years younger than chronological</div></div>'+
+'<div class="mono" style="font-size:28px;font-weight:800;color:var(--g);letter-spacing:-1px">39</div>'+
+'</div>'+
+'</div>'+
+'<div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+8:function(){
+var rows=[
+  ["Metabolic","HbA1c 6.9% ↑","dr",[5.2,5.5,6.1,6.5,6.9],"#FF2D55","1 red · 2 amber · 8 params"],
+  ["Heart & Arteries","LDL 157 ↑","dy",[2.3,2.6,2.8,3.1,3.4],"#FF9500","0 red · 3 amber · 9 params"],
+  ["Kidney","eGFR 82 ↗","dg",[68,72,76,80,82],"#30D158","All markers optimal · 4 params"],
+  ["Liver","ALT 31 ⤳","dy",[32,34,30,33,31],"#FF9500","0 red · 1 amber · 7 params"],
+  ["Inflammation","hsCRP 3.1 ↑","dy",[0.8,1.0,1.4,2.1,3.1],"#FF9500","0 red · 1 amber · 5 params"],
+  ["Blood & Immunity","Hb 14.1 ↗","dg",[13.0,13.2,13.5,13.8,14.1],"#30D158","All markers optimal · 11 params"],
+  ["Thyroid","TSH 2.4 ↗","dy",[3.2,3.6,2.9,2.6,2.4],"#FF9500","0 red · 1 amber · 3 params"],
+  ["Nutrients & Bone","Vit D 13 ↓","dy",[18,16,14,15,13],"#FF9500","0 red · 2 amber · 6 params"]
+];
+return'<div class="nb"><span class="nbt">Systems</span></div>'+
+rows.map(function(r){
+  return'<div style="display:flex;align-items:center;padding:14px 20px;border-bottom:.5px solid var(--b1);cursor:pointer;gap:12px" onclick="go(9)">'+
+    '<div class="dot '+r[2]+'" style="flex-shrink:0"></div>'+
+    '<div style="flex:1">'+
+    '<div style="font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-.2px;margin-bottom:2px">'+r[0]+"</div>"+
+    '<div style="font-size:10.5px;color:var(--t2)">'+r[1]+" · "+r[5]+"</div></div>"+
+    sp(r[3],64,18,r[4])+
+    '<i class="ti ti-chevron-right" style="font-size:14px;color:var(--t3)"></i></div>';
+}).join("")+
+'<div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+9:function(){
+var params=[
+  ["HbA1c","6.9","%","dr","br","High ↑",[5.2,5.5,6.1,6.5,6.9],"#FF2D55"],
+  ["Fasting glucose","102","mg/dL","dy","by","Monitor ↗",[110,106,102,99,102],"#FF9500"],
+  ["TyG index","8.7","","dy","by","Monitor",[8.4,8.5,8.6,8.7,8.7],"#FF9500"],
+  ["BMI","24.2","kg/m²","dg","bgs","Optimal",[26.1,25.4,24.8,24.5,24.2],"#30D158"],
+  ["Triglycerides","148","mg/dL","dy","by","Monitor ↑",[120,128,134,141,148],"#FF9500"],
+  ["hsCRP","3.1","mg/L","dr","br","High ↑",[0.6,0.8,1.2,2.0,3.1],"#FF2D55"]
+];
+return'<div class="nb"><span class="nbk" onclick="go(8)"><i class="ti ti-chevron-left"></i>Systems</span><span class="nbt" style="text-align:right">Metabolic</span></div>'+
+'<div style="padding:16px 20px;background:linear-gradient(180deg,rgba(255,45,85,.08) 0%,transparent 100%);border-bottom:.5px solid rgba(255,45,85,.2)">'+
+'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="dot dr"></div><span style="font-size:11px;font-weight:700;color:var(--r)">Attention — 1 red, 2 amber of 8 measured</span></div>'+
+'<div style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:8px">Metabolic dysfunction is a primary driver of cardiovascular disease, dementia, and cancer. Maps to deregulated nutrient-sensing in the Hallmarks of Aging framework.</div>'+
+'<div class="cc" onclick="go(18)"><i class="ti ti-external-link" style="font-size:10px"></i>Tier 1 · ACC/AHA</div>'+
+'</div>'+
+'<div style="padding:0 20px">'+
+params.map(function(p){
+  var vc=p[3]==="dr"?"var(--r)":p[3]==="dg"?"var(--g)":"var(--a)";
+  return'<div style="display:flex;align-items:center;padding:12px 0;border-bottom:.5px solid var(--b1);cursor:pointer;gap:10px" onclick="go(10)">'+
+    '<div class="dot '+p[3]+'" style="flex-shrink:0"></div>'+
+    '<div style="flex:1;font-size:13px;font-weight:500;color:var(--t1)">'+p[0]+"</div>"+
+    sp(p[6],48,16,p[7])+
+    '<div class="mono" style="font-size:14px;font-weight:700;color:'+vc+'">'+p[1]+'<span style="font-size:9px;color:var(--t3);font-weight:400"> '+p[2]+"</span></div>"+
+    '<div class="bdg '+p[4]+'" style="font-size:8.5px">'+p[5]+"</div></div>";
+}).join("")+"</div>"+
+'<div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+10:function(){return'<div class="nb"><span class="nbk" onclick="go(9)"><i class="ti ti-chevron-left"></i>Metabolic</span><span class="nba" onclick="go(18)">source</span></div>'+
+'<div style="padding:20px 20px 16px;border-bottom:.5px solid var(--b1)">'+
+'<div style="font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Glycated haemoglobin</div>'+
+'<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">'+
+'<span class="mono" style="font-size:72px;font-weight:800;color:var(--r);letter-spacing:-3px;line-height:.95">6.9<span style="font-size:32px">%</span></span>'+
+'<div class="bdg br" style="font-size:10px;padding:4px 10px;align-self:center">High ↑</div>'+
+'</div>'+
+'<div style="font-size:11.5px;color:var(--t3)">Mar 2026 · Thyrocare · +0.4% since Sep 2025</div>'+
+'</div>'+
+'<div style="display:flex;gap:6px;padding:12px 20px;border-bottom:.5px solid var(--b1)">'+
+["28d","1y","All"].map(function(w,i){return'<div style="padding:5px 16px;border-radius:14px;font-size:12px;font-weight:600;cursor:pointer;'+(i===2?"background:var(--pbg);color:var(--p);border:.5px solid var(--pbd)":"background:var(--s2);color:var(--t2);border:.5px solid var(--b2)")+'">'+w+"</div>";}).join("")+"</div>"+
+'<div style="padding:16px 20px;border-bottom:.5px solid var(--b1)">'+
+'<svg viewBox="0 0 335 190" width="100%" style="display:block;overflow:visible">'+
+'<defs>'+
+'<linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF2D55" stop-opacity=".4"/><stop offset="70%" stop-color="#FF2D55" stop-opacity=".05"/><stop offset="100%" stop-color="#FF2D55" stop-opacity="0"/></linearGradient>'+
+'</defs>'+
+'<rect x="0" y="105" width="335" height="60" fill="rgba(48,209,88,.04)" rx="4"/>'+
+'<line x1="0" y1="68" x2="335" y2="68" stroke="rgba(255,45,85,.25)" stroke-width=".75" stroke-dasharray="5,4"/>'+
+'<text x="0" y="63" font-size="8.5" fill="rgba(255,45,85,.5)">6.4% — ADA diagnostic</text>'+
+'<line x1="0" y1="105" x2="335" y2="105" stroke="rgba(48,209,88,.25)" stroke-width=".75"/>'+
+'<text x="2" y="120" font-size="8.5" fill="rgba(48,209,88,.45)">Optimal ≤5.4%</text>'+
+'<path d="M 30 120 L 100 108 L 175 84 L 248 70 L 322 53 L 322 170 L 30 170 Z" fill="url(#rg)"/>'+
+'<polyline points="30,120 100,108 175,84 248,70 322,53" fill="none" stroke="#FF2D55" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+
+'<line x1="248" y1="28" x2="248" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3,3"/>'+
+'<text x="252" y="37" font-size="8" fill="rgba(255,255,255,.28)" font-style="italic">Crossed threshold</text>'+
+'<text x="252" y="48" font-size="8" fill="rgba(255,255,255,.28)" font-style="italic">Sep 2025</text>'+
+'<circle cx="30" cy="120" r="5" fill="#30D158" stroke="#09090F" stroke-width="2.5"/>'+
+'<circle cx="100" cy="108" r="5" fill="#30D158" stroke="#09090F" stroke-width="2.5"/>'+
+'<circle cx="175" cy="84" r="5" fill="#FF9500" stroke="#09090F" stroke-width="2.5"/>'+
+'<circle cx="248" cy="70" r="5" fill="#FF2D55" stroke="#09090F" stroke-width="2.5"/>'+
+'<circle cx="322" cy="53" r="14" fill="rgba(255,45,85,.12)"/>'+
+'<circle cx="322" cy="53" r="9" fill="rgba(255,45,85,.22)"/>'+
+'<circle cx="322" cy="53" r="5" fill="#FF2D55" stroke="#09090F" stroke-width="2.5"/>'+
+'<text x="322" y="41" text-anchor="middle" font-size="10" font-weight="700" fill="#FF2D55">6.9%</text>'+
+'<text x="30" y="184" text-anchor="middle" font-size="8.5" fill="#3A3852">Mar \'24</text>'+
+'<text x="100" y="184" text-anchor="middle" font-size="8.5" fill="#3A3852">Sep \'24</text>'+
+'<text x="175" y="184" text-anchor="middle" font-size="8.5" fill="#3A3852">Mar \'25</text>'+
+'<text x="248" y="184" text-anchor="middle" font-size="8.5" fill="#3A3852">Sep \'25</text>'+
+'<text x="322" y="184" text-anchor="middle" font-size="8.5" fill="#3A3852">Mar \'26</text>'+
+'<text x="0" y="72" font-size="7" fill="#3A3852">6.4</text>'+
+'<text x="0" y="109" font-size="7" fill="#3A3852">5.4</text>'+
+'</svg>'+
+'</div>'+
+'<div class="sc" style="padding-top:16px">'+
+'<div style="background:var(--s2);border-radius:14px;padding:14px 16px;border:.5px solid var(--b1);margin-bottom:16px">'+
+'<div style="font-size:12px;font-weight:700;color:var(--t1);margin-bottom:8px">How unusual is this?</div>'+
+'<div style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:10px">About <strong style="color:var(--t1);font-weight:700">23 in 100</strong> people your age and sex have HbA1c this high.</div>'+
+'<div style="display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin-bottom:8px">'+
+Array.from({length:100},function(_,i){return'<div style="aspect-ratio:1;border-radius:50%;background:'+(i<23?'var(--r)':'rgba(255,255,255,.06)')+(i<23?';box-shadow:0 0 4px rgba(255,45,85,.35)':'')+'"></div>';}).join("")+
+'</div><div style="font-size:9.5px;color:var(--t3);line-height:1.4">NHANES reference data. May not be calibrated for Indian populations.</div></div>'+
+'<div style="display:flex;gap:6px;margin-bottom:16px">'+
+'<div class="cc" onclick="go(18)"><i class="ti ti-external-link" style="font-size:9px"></i>Tier 1 · ADA 2024</div>'+
+'<div class="cc" onclick="go(18)"><i class="ti ti-external-link" style="font-size:9px"></i>Tier 2 · Optimal</div>'+
+'</div>'+
+'<span class="lbl" style="margin-top:0">All readings</span>'+
+'<table style="width:100%;border-collapse:collapse">'+
+'<thead><tr style="border-bottom:.5px solid var(--b1)">'+
+["Date","Value","Lab","Status"].map(function(h,i){return'<th style="padding:6px 0;text-align:'+(i===3?"right":"left")+';font-size:8.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);font-weight:600">'+h+"</th>";}).join("")+
+'</tr></thead><tbody>'+
+[["Mar 2026","6.9%","Thyrocare","br","High"],["Sep 2025","6.5%","Thyrocare","br","High"],["Mar 2025","6.1%","Tata 1mg","by","Monitor"],["Sep 2024","5.5%","Thyrocare","bgs","Optimal"],["Mar 2024","5.2%","Thyrocare","bgs","Optimal"]].map(function(r){
+  return'<tr style="border-bottom:.5px solid var(--b1)"><td style="padding:9px 0;font-size:12px;color:var(--t2)">'+r[0]+'</td><td style="padding:9px 0;font-family:monospace;font-weight:700;color:var(--t1);font-size:13px">'+r[1]+'</td><td style="padding:9px 0;font-size:12px;color:var(--t2)">'+r[2]+'</td><td style="padding:9px 0;text-align:right"><span class="bdg '+r[3]+'">'+r[4]+"</span></td></tr>";
+}).join("")+"</tbody></table>"+
+'</div><div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+11:function(){return'<div class="nb"><span class="nbt">Add reports</span></div>'+
+'<div class="sc">'+
+'<div class="cta"><i class="ti ti-file-upload"></i><div><div>Select from Files / Drive</div><div style="font-size:11px;color:var(--t3);margin-top:2px;font-weight:400">PDF, image, or scan</div></div></div>'+
+'<div class="cta"><i class="ti ti-camera"></i><div><div>Scan a paper report</div><div style="font-size:11px;color:var(--t3);margin-top:2px;font-weight:400">Camera · auto-corrected</div></div></div>'+
+'<span class="lbl">Recent</span>'+
+[["Thyrocare_Mar26.pdf","Done","42 measurements saved","ti-circle-check","#30D158",null],
+ ["Healthians_Feb26.pdf","Parsing","usually <2 min","ti-loader","#FF9500","80"],
+ ["CLUMAX_Jan26.pdf","Review","3 extractions to verify","ti-alert-triangle","#FF9500",null,true],
+ ["Tata1mg_Dec25.pdf","Done","38 measurements saved","ti-circle-check","#30D158",null],
+ ["Thyrocare_Sep25.pdf","Done","31 measurements saved","ti-circle-check","#30D158",null]
+].map(function(r){
+  return'<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:.5px solid var(--b1)">'+
+    '<div style="width:36px;height:36px;border-radius:10px;background:var(--s2);border:.5px solid var(--b1);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+
+    '<i class="ti '+r[3]+'" style="font-size:18px;color:'+r[4]+'"></i></div>'+
+    '<div style="flex:1"><div style="font-size:12.5px;font-weight:600;color:var(--t1)">'+r[0]+'</div>'+
+    '<div style="font-size:10.5px;color:'+r[4]+';margin-top:2px">'+r[1]+' · '+r[2]+'</div>'+
+    (r[5]?'<div class="pbar" style="margin-top:5px"><div class="pbf" style="width:'+r[5]+'%;background:var(--p)"></div></div>':"")+
+    "</div>"+(r[6]?'<div class="bdg by" style="cursor:pointer" onclick="go(12)">Review</div>':"")+
+    "</div>";
+}).join("")+"</div>";},
+
+12:function(){return'<div class="nb"><span class="nbk" onclick="go(11)"><i class="ti ti-chevron-left"></i></span><span class="nbt">Confirm extraction</span><span class="nba" style="color:var(--t3)">2 of 4</span></div>'+
+'<div class="sc">'+
+'<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Found this value in your report — please confirm.</div>'+
+'<div style="border:.5px solid var(--b1);border-radius:14px;overflow:hidden;margin-bottom:18px">'+
+'<div style="height:96px;background:var(--s2);display:flex;align-items:center;justify-content:center;position:relative">'+
+'<div style="font-size:11px;color:var(--b2);font-style:italic">[ Report image crop ]</div>'+
+'<div style="position:absolute;border:2px solid var(--a);background:rgba(255,149,0,.08);border-radius:4px;padding:6px 20px;font-family:monospace;font-size:20px;font-weight:700;color:var(--a)">6.7</div>'+
+'</div>'+
+'<div style="padding:14px 16px;border-top:.5px solid var(--b1)">'+
+'<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:10px">Extracted values</div>'+
+[["Parameter","HbA1c"],["Value","6.7"],["Unit","%"],["Date","March 14, 2026"],["Lab","Thyrocare"]].map(function(r){
+  return'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:.5px solid var(--b1)"><span style="font-size:11px;color:var(--t3)">'+r[0]+'</span><span style="font-size:'+(r[0]==="Value"?"17":"13")+'px;font-weight:'+(r[0]==="Value"?"700":"500")+';color:var(--t1);font-family:'+(r[0]==="Value"?"monospace":"inherit")+'">'+r[1]+"</span></div>";
+}).join("")+"</div></div>"+
+'<div style="font-size:16px;font-weight:700;letter-spacing:-.3px;margin-bottom:14px">Is this correct?</div>'+
+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px">'+
+'<div class="btnP" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:13px;margin:0"><i class="ti ti-check" style="font-size:17px"></i>Correct</div>'+
+'<div class="btnG" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:13px;margin:0"><i class="ti ti-pencil" style="font-size:15px"></i>Edit</div>'+
+'</div>'+
+'<div class="btnG" style="color:var(--r);border-color:var(--rbd);display:flex;align-items:center;justify-content:center;gap:7px"><i class="ti ti-x" style="font-size:15px"></i>Skip this extraction</div>'+
+'<div class="pbar" style="margin-top:20px;height:3px"><div class="pbf" style="width:50%;background:var(--p)"></div></div>'+
+'<div style="font-size:10.5px;color:var(--t3);text-align:center;margin-top:6px">2 of 4 reviewed</div>'+
+'</div>';},
+
+13:function(){return'<div class="nb"><span class="nbk" onclick="go(7)"><i class="ti ti-chevron-left"></i></span><span class="nbt">Check-in</span><span class="nba" style="color:var(--t3)">1 of 5</span></div>'+
+'<div class="sc">'+
+'<div style="padding:14px 16px;background:var(--s2);border-radius:14px;border:.5px solid var(--b1);border-left:2.5px solid var(--p);margin-bottom:22px">'+
+'<div style="font-size:9px;font-weight:700;color:var(--p);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px">WHO-5 Wellbeing Index</div>'+
+'<div style="font-size:14px;color:var(--t1);line-height:1.65;font-style:italic">"Over the past two weeks, I have felt cheerful and in good spirits."</div>'+
+'</div>'+
+'<div class="who5g">'+
+[["5","All of the time"],["4","Most of the time"],["3","More than half"],["2","Less than half"],["1","Some of the time"],["0","At no time"]].map(function(a,i){
+  return'<div class="wo'+(i===2?" ws":"")+'"><span class="won">'+a[0]+"</span>"+a[1]+"</div>";
+}).join("")+"</div>"+
+'<div class="pbar" style="height:3px;margin-top:20px"><div class="pbf" style="width:20%;background:var(--p)"></div></div>'+
+'<div style="font-size:10.5px;color:var(--t3);text-align:center;margin-top:7px">1 of 5 · takes about 2 minutes</div>'+
+'</div><div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+14:function(){return'<div class="nb"><span class="nbt">Doctor-visit prep</span><span class="nba"><i class="ti ti-share" style="font-size:16px"></i></span></div>'+
+'<div class="sc" style="padding-top:16px">'+
+'<span class="lbl" style="margin-top:0">Raise first</span>'+
+'<div style="background:var(--rbg);border-radius:14px;padding:14px 16px;border:.5px solid var(--rbd);border-left:3px solid var(--r);margin-bottom:20px">'+
+'<div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:var(--r);font-weight:700;margin-bottom:6px">Most urgent</div>'+
+'<div style="font-size:13px;color:rgba(255,45,85,.9);line-height:1.65">HbA1c has risen from 5.2% → 6.9% over 24 months, crossing the ADA diagnostic threshold of 6.5%. <span class="cc" onclick="go(18)" style="display:inline-flex">Tier 1 · ADA 2024</span></div>'+
+'</div>'+
+'<span class="lbl">Key markers</span>'+
+'<table style="width:100%;border-collapse:collapse;margin-bottom:20px">'+
+'<thead><tr style="border-bottom:.5px solid var(--b1)">'+
+["Marker","Value","Ref","Status"].map(function(h,i){return'<th style="padding:6px 0;text-align:'+(i===3?"right":"left")+';font-size:8.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);font-weight:600">'+h+"</th>";}).join("")+
+'</tr></thead><tbody>'+
+[["HbA1c","6.9%","<6.5%","br","High"],["LDL","157","<100 mg/dL","br","High"],["hsCRP","3.1","<1.0 mg/L","br","High"],["eGFR","82","≥60","bgs","Normal"],["ApoB","—","<90 mg/dL","bgr","Not tested"],["Lp(a)","—","<75 nmol/L","bgr","Never tested"]].map(function(r){
+  return'<tr style="border-bottom:.5px solid var(--b1)"><td style="padding:9px 0;font-size:13px;color:var(--t2)">'+r[0]+'</td><td style="padding:9px 0;font-family:monospace;font-weight:700;color:var(--t1);font-size:13px">'+r[1]+'</td><td style="padding:9px 0;font-size:10.5px;color:var(--t3)">'+r[2]+'</td><td style="padding:9px 0;text-align:right"><span class="bdg '+r[3]+'">'+r[4]+"</span></td></tr>";
+}).join("")+"</tbody></table>"+
+'<span class="lbl">Questions to ask</span>'+
+'<div style="font-size:9.5px;font-weight:700;color:var(--a);letter-spacing:.4px;text-transform:uppercase;margin:4px 0 8px">Metabolic</div>'+
+["My HbA1c has crossed 6.5% — should I be formally tested for diabetes?","Is my fasting glucose pattern concerning given my family history?"].map(function(q){return'<div class="qi"><div class="qcb"></div><div class="qt">'+q+"</div></div>";}).join("")+
+'<div style="font-size:9.5px;font-weight:700;color:var(--a);letter-spacing:.4px;text-transform:uppercase;margin:12px 0 8px">Heart &amp; arteries</div>'+
+["My LDL has risen to 157 mg/dL — what is my cardiovascular risk?","I have never tested ApoB or Lp(a) — should I?"].map(function(q){return'<div class="qi"><div class="qcb"></div><div class="qt">'+q+"</div></div>";}).join("")+
+'<div style="font-size:9.5px;font-weight:700;color:var(--a);letter-spacing:.4px;text-transform:uppercase;margin:12px 0 8px">Inflammation</div>'+
+'<div class="qi"><div class="qcb"></div><div class="qt">My hsCRP is elevated at 3.1 mg/L — what could be driving this?</div></div>'+
+'<span class="lbl">Supplements to discuss</span>'+
+[["Omega-3","Omega-3 index 4.2%, likely below optimal 8%. Discuss dose with Dr.","bgs","Tier 1 · ASCEND"],["NMN","No human outcome RCT to date.","by","Tier 3 · contested"]].map(function(r){
+  return'<div style="padding:10px 0;border-bottom:.5px solid var(--b1)">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
+    '<span style="font-size:14px;font-weight:700;color:var(--t1)">'+r[0]+'</span><span class="bdg '+r[2]+'">'+r[2].includes("bgs")?"Reasonable":"Unproven"+"</span></div>"+
+    '<div style="font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:5px">'+r[1]+'</div>'+
+    '<div class="cc" onclick="go(18)"><i class="ti ti-external-link" style="font-size:9px"></i>'+r[3]+"</div></div>";
+}).join("")+
+'<span class="lbl">Gaps to flag</span>'+
+["ApoB last tested Jan 2024 — LDL has risen +40% since.","Lp(a) never tested (one-time test; ACC/AHA 2022 recommends once in lifetime).","ACR only tested once — kidney risk unmonitored."].map(function(g){
+  return'<div style="display:flex;gap:9px;padding:9px 0;border-bottom:.5px solid var(--b1)">'+
+    '<div style="width:5px;height:5px;border-radius:50%;background:var(--t3);flex-shrink:0;margin-top:5px"></div>'+
+    '<span style="font-size:12.5px;color:var(--t1);line-height:1.6">'+g+"</span></div>";
+}).join("")+"</div>"+
+'<div style="padding:13px 20px;background:var(--s2);border-top:.5px solid var(--b1);font-size:10.5px;color:var(--t3);line-height:1.65">Not a medical device. Educational only. Do not adjust medication based on this sheet. Generated by AI.</div>'+
+'<div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+15:function(){return'<div class="nb"><span class="nbk" onclick="go(7)"><i class="ti ti-chevron-left"></i></span><span class="nbt">Biological age</span></div>'+
+'<div class="sc" style="padding-top:14px">'+
+'<div style="background:var(--s2);border-radius:14px;padding:14px 16px;border:.5px solid var(--b1);margin-bottom:18px">'+
+'<div style="font-size:11px;font-weight:600;color:var(--t1);margin-bottom:5px">About this estimate</div>'+
+'<div style="font-size:12.5px;color:var(--t2);line-height:1.65">PhenoAge algorithm (Levine 2018, NHANES calibration) using 9 blood markers. Directional only. Not validated for Indian populations.</div>'+
+'</div>'+
+'<div style="display:flex;align-items:center;justify-content:center;padding:10px 0 20px;gap:24px">'+
+'<svg viewBox="0 0 200 200" width="170" height="170">'+
+'<circle cx="100" cy="100" r="78" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="14"/>'+
+'<circle cx="100" cy="100" r="78" fill="none" stroke="#30D158" stroke-width="14" stroke-linecap="round" stroke-dasharray="451 490" transform="rotate(-90 100 100)" style="filter:drop-shadow(0 0 10px rgba(48,209,88,.4))"/>'+
+'<text x="100" y="86" text-anchor="middle" font-size="10" fill="#6A6880" font-family="Inter,sans-serif" font-weight="600" letter-spacing="1">BIOLOGICAL</text>'+
+'<text x="100" y="122" text-anchor="middle" font-size="52" font-weight="800" fill="#ECEAFF" font-family="monospace" letter-spacing="-3">39</text>'+
+'<text x="100" y="140" text-anchor="middle" font-size="11" fill="#6A6880" font-family="Inter,sans-serif">years</text>'+
+'</svg>'+
+'<div>'+
+'<div style="font-size:11px;font-weight:700;color:var(--g);margin-bottom:4px">−3 years</div>'+
+'<div style="font-size:11px;color:var(--t2)">vs chronological<br>age of 42</div>'+
+'</div>'+
+'</div>'+
+'<div style="background:var(--s2);border-radius:12px;padding:12px 14px;border:.5px solid var(--b1);margin-bottom:18px">'+
+'<div style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:10px">Trend over time</div>'+
+'<svg viewBox="0 0 295 72" width="100%" height="72">'+
+'<defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#30D158" stop-opacity=".28"/><stop offset="100%" stop-color="#30D158" stop-opacity="0"/></defs>'+
+'<line x1="5" y1="15" x2="288" y2="45" stroke="rgba(255,255,255,.06)" stroke-width="1.5" stroke-dasharray="4,4"/>'+
+'<text x="180" y="38" font-size="8" fill="#3A3852">Chronological age</text>'+
+'<path d="M 10 34 L 80 31 L 148 28 L 218 26 L 285 23 L 285 65 L 10 65 Z" fill="url(#gg)"/>'+
+'<polyline points="10,34 80,31 148,28 218,26 285,23" fill="none" stroke="#30D158" stroke-width="2.2" stroke-linecap="round"/>'+
+[10,80,148,218,285].map(function(x,i){return'<circle cx="'+x+'" cy="'+[34,31,28,26,23][i]+'" r="3.5" fill="#30D158" stroke="#0F0F1A" stroke-width="2"/>';}).join("")+
+'<text x="10" y="68" font-size="7.5" fill="#3A3852">Jan \'24</text><text x="250" y="68" font-size="7.5" fill="#3A3852">Mar \'26</text>'+
+'</svg></div>'+
+'<span class="lbl" style="margin-top:0">9 required markers — all present</span>'+
+[["Albumin","4.2 g/dL"],["Creatinine","0.9 mg/dL"],["Fasting glucose","102 mg/dL"],["hsCRP","3.1 mg/L"],["Lymphocyte %","31%"],["MCV","88 fL"],["RDW","13.2%"],["ALP","62 U/L"],["WBC","6.8 ×10³/µL"]].map(function(r){
+  return'<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--b1)"><i class="ti ti-circle-check" style="font-size:16px;color:var(--g);flex-shrink:0"></i><span style="flex:1;font-size:13px;color:var(--t1)">'+r[0]+'</span><span class="mono" style="font-size:11.5px;color:var(--t2)">'+r[1]+"</span></div>";
+}).join("")+
+'</div><div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+16:function(){return'<div class="nb"><span class="nbk" onclick="go(7)"><i class="ti ti-chevron-left"></i></span><span class="nbt">Ask Span</span></div>'+
+'<div class="sc" style="padding-top:20px">'+
+'<div style="text-align:center;padding:20px 0 24px">'+
+'<div style="font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--p);margin-bottom:22px">Listening</div>'+
+waveform()+
+'<div style="font-size:17px;font-weight:600;color:var(--t1);margin-top:22px;margin-bottom:5px;letter-spacing:-.3px">Ask anything.</div>'+
+'<div style="font-size:13px;color:var(--t2)">Your results. Your trends. Your questions.</div>'+
+'</div>'+
+'<div style="border:.5px solid var(--b1);border-radius:16px;overflow:hidden;margin-bottom:16px">'+
+'<div style="padding:10px 16px;border-bottom:.5px solid var(--b1);display:flex;justify-content:space-between;align-items:center;background:var(--s2)">'+
+'<span style="font-size:10px;color:var(--t3);font-weight:500;letter-spacing:.1px">Transcript · 14 Jun 2026</span>'+
+'<span style="font-size:10px;color:var(--t3)">2:14</span></div>'+
+'<div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">'+
+'<div style="font-size:13px;color:var(--t2);padding:11px 13px;background:var(--s2);border-radius:11px;line-height:1.5">Why has my HbA1c been rising?</div>'+
+'<div style="font-size:13px;color:var(--t1);line-height:1.65;padding:11px 13px;background:var(--pbg);border-radius:11px;border:.5px solid var(--pbd)">Your HbA1c has gone from 5.2% in March 2024 to 6.9% this month — a 33% increase over 24 months, crossing the ADA\'s diagnostic threshold of 6.5%.<br><br>This, alongside your fasting glucose and TyG index, points to worsening insulin sensitivity. Worth raising as your first question at your next visit.<br><br><span style="font-size:10.5px;color:var(--p)">Discuss with your clinician before drawing conclusions.</span></div>'+
+'</div></div>'+
+'<div style="font-size:12px;color:var(--t3);margin-bottom:8px">Can\'t use voice?</div>'+
+'<div style="border:.5px solid var(--b2);border-radius:12px;padding:13px 15px;font-size:14px;color:var(--t3);background:var(--s2)">Type your question…</div>'+
+'<div style="font-size:10px;color:var(--t3);text-align:center;margin-top:16px;line-height:1.6">Sarvam AI · transcript only, no audio stored</div>'+
+'</div><div class="edu">Educational only · discuss any result with your clinician.</div>';},
+
+17:function(){return'<div class="nb"><span class="nbt">Settings</span></div>'+
+'<div class="sc" style="padding-top:16px">'+
+'<div style="display:flex;align-items:center;gap:16px;padding-bottom:20px;border-bottom:.5px solid var(--b1)">'+
+'<div style="width:64px;height:64px;border-radius:50%;background:var(--pbg);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:var(--p);border:.5px solid var(--pbd);flex-shrink:0;letter-spacing:-.5px">AN</div>'+
+'<div><div style="font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.5px">Anoop Narayanan</div><div style="font-size:12px;color:var(--t3);margin-top:3px">Member since Jan 2024</div></div>'+
+'</div>'+
+'<span class="lbl" style="margin-top:0">Profile</span>'+
+[["Date of birth","1 Jan 1984"],["Biological sex","Male"],["Height / weight","175 cm · 74 kg"],["Conditions","Hypertension, Type 2 DM"],["Medications","Metformin, Atorvastatin"]].map(function(r){
+  return'<div class="setr"><div style="font-size:14px;color:var(--t1)">'+r[0]+'</div><div style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--t2)">'+r[1]+'<i class="ti ti-chevron-right" style="font-size:13px;color:var(--t3)"></i></div></div>';
+}).join("")+
+'<span class="lbl">Data</span>'+
+'<div class="setr"><div style="font-size:14px;color:var(--t1)">HealthKit permissions</div><div style="font-size:13px;color:var(--p)">Manage →</div></div>'+
+'<div class="setr"><div style="font-size:14px;color:var(--t1)">Export all data</div><div style="font-size:13px;color:var(--p)">CSV + JSON</div></div>'+
+'<div class="setr"><div style="font-size:14px;color:var(--r)">Delete my account</div><i class="ti ti-chevron-right" style="font-size:13px;color:var(--t3)"></i></div>'+
+'<span class="lbl">Consents</span>'+
+[["Lab reports &amp; extraction","Granted Jan 2024",true],["Profile storage","Granted Jan 2024",true],["Doctor-visit prep","Granted Jan 2024",true],["Voice transcripts","Not granted",false]].map(function(r){
+  return'<div class="setr"><div><div style="font-size:14px;color:var(--t1)">'+r[0]+'</div><div style="font-size:11px;color:var(--t3);margin-top:2px">'+r[1]+'</div></div><div class="tog '+(r[2]?"ton":"tof")+'"></div></div>';
+}).join("")+
+'<span class="lbl">Voice transcripts</span>'+
+'<div class="setr"><div style="font-size:14px;color:var(--t1)">View past transcripts</div><i class="ti ti-chevron-right" style="font-size:13px;color:var(--t3)"></i></div>'+
+'<div class="setr"><div style="font-size:14px;color:var(--r)">Delete all transcripts</div><i class="ti ti-chevron-right" style="font-size:13px;color:var(--t3)"></i></div>'+
+'<div style="font-size:10.5px;color:var(--t3);text-align:center;margin-top:22px;line-height:1.65">Span v1.0 · India only · ap-south-1</div>'+
+'</div>';},
+
+18:function(){return'<div style="background:rgba(0,0,0,.7);min-height:580px;display:flex;flex-direction:column;justify-content:flex-end">'+
+'<div style="background:var(--s2);border-radius:22px 22px 0 0;border-top:.5px solid var(--b2)">'+
+'<div style="display:flex;justify-content:center;padding:12px 0 7px"><div style="width:34px;height:4px;border-radius:2px;background:var(--b2)"></div></div>'+
+'<div style="display:flex;justify-content:space-between;align-items:center;padding:2px 20px 16px">'+
+'<span style="font-size:19px;font-weight:700;color:var(--t1);letter-spacing:-.4px">Source</span>'+
+'<i class="ti ti-x" style="font-size:20px;color:var(--t2);cursor:pointer" onclick="go(10)"></i></div>'+
+'<div style="padding:0 20px 24px">'+
+'<div style="display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:9px;background:var(--gbg);color:var(--g);border:.5px solid var(--gbd);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:16px">'+
+'<div style="width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 5px rgba(48,209,88,.5)"></div>'+
+'Tier 1 — Consensus guideline</div>'+
+'<div style="font-size:19px;font-weight:700;color:var(--t1);margin-bottom:6px;line-height:1.28;letter-spacing:-.4px">ADA Standards of Medical Care in Diabetes — 2024</div>'+
+'<div style="font-size:13px;color:var(--t2);margin-bottom:18px">American Diabetes Association · Diabetes Care, 2024</div>'+
+'<div style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:8px">This source supports:</div>'+
+'<div style="font-size:14px;color:var(--t1);line-height:1.7;padding:14px 16px;background:var(--s3);border-radius:12px;border:.5px solid var(--b1);margin-bottom:18px">HbA1c ≥ 6.5% as a diagnostic threshold for type 2 diabetes, and HbA1c &lt; 5.7% as normal.</div>'+
+'<div class="btnP" style="display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-external-link" style="font-size:16px"></i>Open source</div>'+
+'<div style="border-top:.5px solid var(--b1);padding-top:16px;margin-top:16px">'+
+'<div style="font-size:10.5px;font-weight:700;color:var(--t2);margin-bottom:10px;letter-spacing:.1px">Evidence tiers</div>'+
+[["Tier 1","Consensus guidelines — WHO, ADA, ACC/AHA"],["Tier 2","Peer-reviewed research with human outcomes"],["Tier 3","Expert opinion / contested / no RCT"]].map(function(r){
+  return'<div style="display:flex;gap:11px;padding:6px 0"><span style="font-size:11px;font-weight:700;color:var(--t2);min-width:46px;flex-shrink:0">'+r[0]+'</span><span style="font-size:11px;color:var(--t3);line-height:1.5">'+r[1]+"</span></div>";
+}).join("")+"</div></div></div></div>";}
+
+};
+
+function go(id){
+  if(!S[id])return;
+  document.querySelectorAll(".si").forEach(function(e){e.classList.remove("act")});
+  var sel=document.getElementById("si-"+id);
+  if(sel){sel.classList.add("act");sel.scrollIntoView({block:"nearest",behavior:"smooth"})}
+  document.getElementById("pc").innerHTML=S[id]();
+  document.getElementById("pc").scrollTop=0;
+  var notabs=NO.indexOf(id)>-1;
+  document.getElementById("ptabs").style.display=notabs?"none":"flex";
+  document.getElementById("ask").style.display=ASK.indexOf(id)>-1?"flex":"none";
+  var ti=TM[id];
+  document.querySelectorAll(".tabi").forEach(function(t,i){t.classList.toggle("ta",ti===i)});
+}
+go(1);
+</script>
+</body>
+</html>
