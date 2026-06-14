@@ -11,8 +11,10 @@ import SwiftUI
 
 @main
 struct SpanApp: App {
-    // Swap `MockSpanAPI()` → `LiveSpanAPI()` to talk to the EC2 backend.
-    @State private var env = AppEnvironment(api: MockSpanAPI())
+    // Using `BundledSpanAPI()` — renders real parsed lab data from the bundled
+    // sample-data.json offline. Swap to `MockSpanAPI()` for the old hardcoded
+    // sample, or `LiveSpanAPI()` to talk to the EC2 backend.
+    @State private var env = AppEnvironment(api: BundledSpanAPI())
     @State private var session = SessionState()
 
     var body: some Scene {
