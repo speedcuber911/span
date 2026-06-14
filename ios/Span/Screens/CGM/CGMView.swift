@@ -14,6 +14,7 @@
 
 import SwiftUI
 import CoreBluetooth
+import UIKit
 
 struct CGMView: View {
     @State private var glucose = GlucoseHealthKitManager()
@@ -362,6 +363,7 @@ private struct CalibrationView: View {
     let peripheralID: UUID
     @Environment(\.dismiss) private var dismiss
     @State private var reference = ""
+    @State private var copied = false
 
     private var peripheral: DiscoveredPeripheral? { manager.peripheral(id: peripheralID) }
     private var refMgdl: Double? { Double(reference) }
@@ -392,6 +394,25 @@ private struct CalibrationView: View {
                         // Run calibration over the latest payload + the distinct history.
                         let payloads = ([p.manufacturerHex].compactMap { $0 } + p.mfgHistory)
                         let distinct = Array(Set(payloads))
+
+                        // Copy ALL distinct payloads (+ ref) so the full untruncated
+                        // structure can be analysed off-device.
+                        Button {
+                            var lines = ["Vixxa=\(reference.isEmpty ? "?" : reference) mg/dL  device=\(p.name)  count=\(distinct.count)"]
+                            lines += distinct.sorted().map { "  \($0)" }
+                            UIPasteboard.general.string = lines.joined(separator: "\n")
+                            copied = true
+                        } label: {
+                            HStack {
+                                Image(systemName: copied ? "checkmark.circle.fill" : "doc.on.doc")
+                                Text(copied ? "Copied \(distinct.count) payloads" : "Copy all \(distinct.count) payloads")
+                            }
+                            .font(SpanFont.callout)
+                            .foregroundStyle(copied ? SpanColor.statusGreen : SpanColor.accent)
+                            .frame(maxWidth: .infinity)
+                            .padding(SpanSpacing.gutter)
+                            .spanCard(fill: SpanColor.accentBg, border: SpanColor.accentBorder)
+                        }
 
                         if let ref = refMgdl {
                             let matches = distinct.flatMap { hex in
