@@ -1,0 +1,60 @@
+# XcodeGen spec for the Span iOS app.
+#
+#   brew install xcodegen      # one time
+#   cd ios && xcodegen generate # produces Span.xcodeproj
+#   open Span.xcodeproj
+#
+# The same Span/ sources are also compiled by Package.swift for `swift build`
+# type-checking without Xcode.
+name: Span
+options:
+  bundleIdPrefix: ai.sigiq
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    DEVELOPMENT_TEAM: "269X7P2C7H"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+
+targets:
+  Span:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Span
+        excludes:
+          - "App/Info.plist"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.sigiq.span
+        PRODUCT_NAME: Span
+        INFOPLIST_FILE: Span/App/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1"  # iPhone
+        SUPPORTS_MACCATALYST: NO
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_STRICT_CONCURRENCY: minimal
+    info:
+      path: Span/App/Info.plist
+      properties:
+        CFBundleDisplayName: Span
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        ITSAppUsesNonExemptEncryption: false
+        NSCameraUsageDescription: "Span uses the camera to scan paper lab reports."
+        NSHealthShareUsageDescription: "Span reads steps, sleep, HRV and resting heart rate to show whole-person trends."
+        NSMicrophoneUsageDescription: "Span uses the microphone for the Ask Span voice consultant. Audio is never stored."
+    entitlements:
+      path: Span/App/Span.entitlements
+      properties:
+        com.apple.developer.applesignin:
+          - Default
